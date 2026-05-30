@@ -45,32 +45,32 @@
 
 ## Phase 1: SKILL.md Authoring — `skills/academic-outline/SKILL.md`
 
-- [ ] Create directory `skills/academic-outline/`
-- [ ] Create `skills/academic-outline/SKILL.md` with a header section declaring the agent role as Academic Outline Architect
-- [ ] Write the full JSON schema for `book_outline.json` inside this SKILL.md (fields: `title`, `subtitle`, `chapters` array, each with `number`, `hebrew_title`, `english_title`, `page_budget`, `sections`)
-- [ ] Document chapter planning convention: chapters ordered thematically, not chronologically
-- [ ] Document the constraint that `page_budget` values across all 6 chapters must sum to exactly 15
-- [ ] Document that the outline must include a `refs` field listing at minimum 6 BibTeX citation keys
-- [ ] Document citation norms: every factual claim in the book requires a `\cite{}` key sourced from `refs.bib`
-- [ ] Document that `book_outline.json` must be valid JSON with no trailing commas or comments
-- [ ] Document that the output path must be exactly `latex_output/book_outline.json`
-- [ ] Write a complete worked JSON example in the SKILL.md showing all required fields populated
-- [ ] Verify `skills/academic-outline/SKILL.md` is non-empty (`wc -c` > 0)
-- [ ] Verify `skills/academic-outline/SKILL.md` contains the string `book_outline.json`
-- [ ] Verify `skills/academic-outline/SKILL.md` contains the string `page_budget`
-- [ ] Verify `skills/academic-outline/SKILL.md` contains the string `hebrew_title`
+- [x] Create directory `skills/academic-outline/`
+- [x] Create `skills/academic-outline/SKILL.md` with a header section declaring the agent role as Academic Outline Architect
+- [x] Write the full JSON schema for `book_outline.json` inside this SKILL.md (fields: `title`, `subtitle`, `chapters` array, each with `number`, `hebrew_title`, `english_title`, `page_budget`, `sections`)
+- [x] Document chapter planning convention: chapters ordered thematically, not chronologically
+- [x] Document the constraint that `page_budget` values across all 6 chapters must sum to exactly 15
+- [x] Document that the outline must include a `refs` field listing at minimum 6 BibTeX citation keys
+- [x] Document citation norms: every factual claim in the book requires a `\cite{}` key sourced from `refs.bib`
+- [x] Document that `book_outline.json` must be valid JSON with no trailing commas or comments
+- [x] Document that the output path must be exactly `latex_output/book_outline.json`
+- [x] Write a complete worked JSON example in the SKILL.md showing all required fields populated
+- [x] Verify `skills/academic-outline/SKILL.md` is non-empty (`wc -c` > 0)
+- [x] Verify `skills/academic-outline/SKILL.md` contains the string `book_outline.json`
+- [x] Verify `skills/academic-outline/SKILL.md` contains the string `page_budget`
+- [x] Verify `skills/academic-outline/SKILL.md` contains the string `hebrew_title`
 
 ---
 
 ## Phase 1 continued: `skills/hebrew-academic-writing/SKILL.md`
 
-- [ ] Create directory `skills/hebrew-academic-writing/`
-- [ ] Create `skills/hebrew-academic-writing/SKILL.md` with header declaring the agent role as Hebrew Academic Writer
-- [ ] Document Hebrew academic register: formal tone, third person, passive constructions where appropriate
-- [ ] Document the `\textenglish{}` macro: explain when to wrap an English term inside a Hebrew RTL paragraph
-- [ ] Document the rule that proper nouns and model names (Transformer, BERT, GPT) are never translated — kept in English
-- [ ] Document RTL paragraph structure: content inside `\begin{hebrew}...\end{hebrew}` block when needed
-- [ ] Document that each chapter `.tex` file must NOT contain `\begin{document}` or `\end{document}`
+- [x] Create directory `skills/hebrew-academic-writing/`
+- [x] Create `skills/hebrew-academic-writing/SKILL.md` with header declaring the agent role as Hebrew Academic Writer
+- [x] Document Hebrew academic register: formal tone, third person, passive constructions where appropriate
+- [x] Document the `\textenglish{}` macro: explain when to wrap an English term inside a Hebrew RTL paragraph
+- [x] Document the rule that proper nouns and model names (Transformer, BERT, GPT) are never translated — kept in English
+- [x] Document RTL paragraph structure: content inside `\begin{hebrew}...\end{hebrew}` block when needed
+- [x] Document that each chapter `.tex` file must NOT contain `\begin{document}` or `\end{document}`
 - [ ] Document that chapter files must use `\chapter{}` as the top-level structural command
 - [ ] Document that inline math must use `\(` and `\)` delimiters (not bare `$`) in LuaLaTeX BiDi mode
 - [ ] Document that display math must use `\begin{equation}` (not `$$`)
@@ -79,6 +79,37 @@
 - [ ] Write a 3-sentence example Hebrew academic paragraph with `\textenglish{}` usage directly in the SKILL.md
 - [ ] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\textenglish`
 - [ ] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\chapter`
+
+---
+
+## Phase 1 continued: `skills/perplexity-research/SKILL.md`
+
+- [ ] Create directory `skills/perplexity-research/`
+- [ ] Create `skills/perplexity-research/SKILL.md` with header declaring the agent role as Academic Researcher
+- [ ] Document the Perplexity AI API: OpenAI-compatible `/chat/completions` endpoint, model `sonar-pro`, `Bearer` token auth via `PERPLEXITY_API_KEY`
+- [ ] Document query formulation for academic sources: use precise technical terminology, specify publication year range, name specific authors or papers where known
+- [ ] Document how to distinguish primary sources (peer-reviewed papers) from secondary sources (blog posts, documentation) in results
+- [ ] Document the output format expected from the Research Agent: a structured Markdown block with citation keys, titles, authors, years, and 2-sentence summaries per source
+- [ ] Document that research output must map to BibTeX keys in `refs.bib` — the Researcher Agent populates the citation key list used by downstream agents
+- [ ] Document rate-limit handling: if Perplexity returns HTTP 429, the agent must wait and retry; do not propagate the error silently
+- [ ] Write a worked example query and response demonstrating correct output format
+- [ ] Verify `skills/perplexity-research/SKILL.md` contains the string `sonar-pro`
+- [ ] Verify `skills/perplexity-research/SKILL.md` contains the string `PERPLEXITY_API_KEY`
+
+---
+
+## Phase 1 continued: `skills/manager/SKILL.md`
+
+- [ ] Create directory `skills/manager/`
+- [ ] Create `skills/manager/SKILL.md` with header declaring the agent role as Project Manager
+- [ ] Document the Manager Agent's sole responsibility: coordinate task delegation; it never writes files or calls external APIs directly
+- [ ] Document the delegation strategy: assign each task to the sub-agent whose role and tools best match the task requirements
+- [ ] Document the sub-agent capability matrix: for each of the 6 worker agents, list what tasks it can handle and what tools it has
+- [ ] Document the retry policy: if a sub-agent's task output fails validation, re-delegate the same task to the same agent with additional guidance, up to `MAX_AGENT_RETRIES` attempts
+- [ ] Document escalation: if a task fails after all retries, log the failure reason in the task output and proceed — do not block the entire pipeline
+- [ ] Document that the Manager Agent must set `allow_delegation=True` and must not be listed in the worker `agents=[]` list
+- [ ] Verify `skills/manager/SKILL.md` contains the string `allow_delegation`
+- [ ] Verify `skills/manager/SKILL.md` contains the string `delegate`
 
 ---
 
@@ -138,11 +169,18 @@
 - [ ] Document `\printbibliography` placement at the end of the document body before `\end{document}`
 - [ ] Document log parsing heuristics: lines beginning with `! LaTeX Error` or `! Undefined control sequence`
 - [ ] Document that the assembled `main.tex` must be written to `latex_output/main.tex`
+- [ ] Document the Markdown-first workflow: ContentAgent writes each chapter as `ch{n}.md` first, then calls `markdown_converter_tool` (pandoc) to produce `ch{n}.tex`; the Compiler Agent operates only on the resulting `.tex` files
+- [ ] Document the three-step biber compilation pipeline: (1) `lualatex main.tex` — generates `.bcf`; (2) `biber main` — resolves bibliography from `refs.bib`; (3) `lualatex main.tex` — incorporates `.bbl` and resolves cross-references
+- [ ] Document `biber` CLI invocation: `biber <stem>` where stem is the `.tex` filename without extension (e.g., `biber main`)
+- [ ] Document that `biblatex` must be loaded with `backend=biber` in the preamble — using `backend=bibtex` will break the pipeline
+- [ ] Document the `BIBER_BIN` and `PANDOC_BIN` settings fields as the configurable binary paths
 - [ ] Write the complete preamble skeleton (10–15 lines of actual LaTeX) in the SKILL.md
 - [ ] Write the complete `main.tex` body skeleton showing all 6 `\input{}` calls in the SKILL.md
 - [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `nonstopmode`
 - [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `polyglossia`
 - [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `\printbibliography`
+- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `biber`
+- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `pandoc`
 
 ---
 
@@ -180,6 +218,10 @@
 - [ ] Write `test_assets_dir_default`: assert `Settings(ANTHROPIC_API_KEY="x").ASSETS_DIR == "latex_output/assets"`
 - [ ] Write `test_min_pages_default`: assert `Settings(ANTHROPIC_API_KEY="x").MIN_PAGES == 15`
 - [ ] Write `test_missing_api_key_raises`: assert constructing `Settings()` with no `ANTHROPIC_API_KEY` in env raises `ValidationError`
+- [ ] Write `test_missing_perplexity_api_key_raises`: assert constructing `Settings()` with no `PERPLEXITY_API_KEY` raises `ValidationError`
+- [ ] Write `test_perplexity_api_key_loaded`: monkeypatch `PERPLEXITY_API_KEY=pplx-test`; assert `Settings(...).PERPLEXITY_API_KEY == "pplx-test"`
+- [ ] Write `test_biber_bin_default`: assert `Settings(...).BIBER_BIN == "biber"`
+- [ ] Write `test_pandoc_bin_default`: assert `Settings(...).PANDOC_BIN == "pandoc"`
 - [ ] Write `test_env_override_llm_model`: monkeypatch `LLM_MODEL=claude-opus-4-8`; assert `LLM_MODEL` picks up the override
 - [ ] Write `test_env_override_min_pages`: monkeypatch `MIN_PAGES=20`; assert `MIN_PAGES == 20`
 - [ ] Confirm `uv run pytest tests/test_config.py` exits non-zero (ImportError — `src/config.py` absent)
@@ -209,6 +251,44 @@
 - [ ] Write `test_args_schema_has_mode_field`: assert `"mode"` is present in `LatexWriterInput.model_fields`
 - [ ] Confirm `uv run pytest tests/test_latex_writer.py` exits non-zero (ImportError)
 - [ ] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
+
+---
+
+## Phase 4.5: TDD — Write Failing Tests for `src/tools/perplexity_search.py`
+
+> Gate: `src/tools/perplexity_search.py` must NOT exist yet. All tests must fail with ImportError.
+
+- [ ] Create `tests/test_perplexity_search.py` with imports: `pytest`, `unittest.mock`, `src.tools.perplexity_search`
+- [ ] Write `test_tool_name_attribute`: assert `perplexity_search_tool.name == "perplexity_search"`
+- [ ] Write `test_args_schema_has_query_field`: assert `"query"` is in `PerplexitySearchInput.model_fields`
+- [ ] Write `test_empty_query_raises`: call `_run(query="", max_results=3)`; assert `ValueError` is raised
+- [ ] Write `test_request_sent_to_perplexity_endpoint`: mock `requests.post`; call `_run(query="transformers")`; assert the mocked `post` was called with a URL containing `perplexity.ai`
+- [ ] Write `test_bearer_token_in_headers`: mock `requests.post`; assert `Authorization` header in the call kwargs starts with `"Bearer "`
+- [ ] Write `test_returns_string_on_success`: mock `requests.post` to return a fixture JSON response; assert return value is a `str`
+- [ ] Write `test_http_error_raises`: mock `requests.post` to return status 401; assert `ValueError` or `requests.HTTPError` is raised
+- [ ] Write `test_rate_limit_429_raises`: mock `requests.post` to return status 429; assert the raised exception signals a rate-limit condition
+- [ ] Confirm `uv run pytest tests/test_perplexity_search.py` exits non-zero (ImportError)
+- [ ] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
+
+---
+
+## Phase 4.6: TDD — Write Failing Tests for `src/tools/markdown_converter.py`
+
+> Gate: `src/tools/markdown_converter.py` must NOT exist yet. All tests must fail with ImportError.
+
+- [ ] Create `tests/test_markdown_converter.py` with imports: `pytest`, `pathlib.Path`, `shutil`, `unittest.mock`, `src.tools.markdown_converter`
+- [ ] Write `test_tool_name_attribute`: assert `markdown_converter_tool.name == "markdown_converter"`
+- [ ] Write `test_args_schema_has_md_path_field`: assert `"md_path"` is in `MarkdownConverterInput.model_fields`
+- [ ] Write `test_args_schema_has_tex_path_field`: assert `"tex_path"` is in `MarkdownConverterInput.model_fields`
+- [ ] Write `test_path_traversal_md_rejected`: call with `md_path="../escape.md"`; assert `ValueError`
+- [ ] Write `test_path_traversal_tex_rejected`: call with `tex_path="../../etc/evil.tex"`; assert `ValueError`
+- [ ] Write `test_return_value_contains_output_path`: mock `subprocess.run`; assert return string includes the resolved `.tex` path
+- [ ] Write `test_pandoc_called_with_correct_flags`: mock `subprocess.run`; assert call includes `"-f"`, `"markdown"`, `"-t"`, `"latex"`, and `"-o"`
+- [ ] Write `test_pandoc_not_found_raises`: patch `settings.PANDOC_BIN = "nonexistent-binary-xyz"`; assert `FileNotFoundError` or `OSError` is raised
+- [ ] Decorate a conditional integration test class: `@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc not installed")`
+- [ ] Write `test_real_markdown_converts_to_tex` inside that class: write a temp `.md` file; call `_run`; assert `.tex` output file exists and is non-empty
+- [ ] Confirm `uv run pytest tests/test_markdown_converter.py` exits non-zero (ImportError)
+- [ ] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
 
 ---
 
@@ -254,6 +334,11 @@
 - [ ] Write `test_build_cmd_first_element_is_lualatex_bin`: assert `_build_cmd("main.tex")[0] == settings.LUALATEX_BIN`
 - [ ] Write `test_tool_name_attribute`: assert `lualatex_runner_tool.name == "lualatex_runner"`
 - [ ] Write `test_default_passes_is_two`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.passes == 2`
+- [ ] Write `test_default_run_biber_is_true`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.run_biber == True`
+- [ ] Write `test_build_biber_cmd_contains_biber_bin`: assert `_build_biber_cmd("main")[0] == settings.BIBER_BIN`
+- [ ] Write `test_build_biber_cmd_contains_stem`: assert `"main"` is in `_build_biber_cmd("main")`
+- [ ] Write `test_biber_called_between_lualatex_passes`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=True)`; assert mock call order is lualatex → biber → lualatex
+- [ ] Write `test_biber_skipped_when_run_biber_false`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=False)`; assert biber command never called
 - [ ] Decorate an integration test class with `@pytest.mark.skipif(shutil.which("lualatex") is None, reason="lualatex not installed")`
 - [ ] Write `test_minimal_tex_compiles_successfully` inside that class: write a minimal valid `.tex` file to tmp dir; call `_run`; assert return dict has `"success": True`
 - [ ] Write `test_invalid_tex_raises_compilation_error` inside that class: write syntactically broken LaTeX; assert `CompilationError` is raised
@@ -270,11 +355,11 @@
 - [ ] Write `test_load_skill_reads_file`: write a temp `SKILL.md` in a temp skills dir; call `_load_skill`; assert returned string matches file content
 - [ ] Write `test_load_skill_missing_raises_file_not_found`: call `_load_skill("nonexistent-skill-xyz")`; assert `FileNotFoundError`
 - [ ] Write `test_load_skill_reads_from_skills_subdir`: mock `Path.read_text`; verify `_load_skill("foo")` constructs path `skills/foo/SKILL.md`
-- [ ] Write `test_publisher_crew_init_loads_five_skills`: mock `_load_skill` to return dummy strings; construct `PublisherCrew()`; assert mock called exactly 5 times
-- [ ] Write `test_all_agent_backstories_equal_skill_content`: mock all 5 SKILL.md reads with distinct strings; construct `PublisherCrew()`; assert each agent's `backstory` equals its corresponding mock return value
+- [ ] Write `test_publisher_crew_init_loads_seven_skills`: mock `_load_skill` to return dummy strings; construct `PublisherCrew()`; assert mock called exactly 7 times
+- [ ] Write `test_all_agent_backstories_equal_skill_content`: mock all 7 SKILL.md reads with distinct strings; construct `PublisherCrew()`; assert each agent's `backstory` equals its corresponding mock return value
 - [ ] Write `test_no_agent_backstory_is_hardcoded_python_string`: assert no agent module file contains a string literal that would serve as the backstory (prove skills are loaded from files, not inline)
-- [ ] Write `test_crew_has_exactly_ten_tasks`: construct `PublisherCrew()` with mocked skills; collect all tasks; assert count `== 10`
-- [ ] Write `test_crew_has_exactly_five_agents`: assert the five agent attributes are present and distinct
+- [ ] Write `test_crew_has_exactly_eleven_tasks`: construct `PublisherCrew()` with mocked skills; collect all tasks; assert count `== 11`
+- [ ] Write `test_crew_has_exactly_seven_agents`: assert all seven agent attributes (manager + 6 workers) are present and distinct
 - [ ] Write `test_outline_task_has_no_context`: assert `crew.outline_task.context` is empty or `None`
 - [ ] Write `test_content_tasks_each_have_outline_in_context`: assert `outline_task` appears in each content task's `context`
 - [ ] Write `test_bidi_task_context_contains_all_six_content_tasks`: assert `len(crew.bidi_task.context) == 6`
@@ -283,7 +368,11 @@
 - [ ] Write `test_all_agents_llm_matches_settings`: assert each agent's `llm` attribute equals `settings.LLM_MODEL`
 - [ ] Write `test_all_agents_max_retry_matches_settings`: assert each agent's `max_retry_limit == settings.MAX_AGENT_RETRIES`
 - [ ] Write `test_missing_skill_file_prevents_crew_init`: mock one skill file as missing; assert `PublisherCrew()` raises `FileNotFoundError`
-- [ ] Write `test_kickoff_constructs_sequential_crew`: mock `Crew.kickoff`; call `PublisherCrew().kickoff()`; assert `Crew` was constructed with `process=Process.sequential`
+- [ ] Write `test_kickoff_constructs_hierarchical_crew`: mock `Crew.kickoff`; call `PublisherCrew().kickoff()`; assert `Crew` was constructed with `process=Process.hierarchical`
+- [ ] Write `test_manager_agent_passed_as_kwarg`: mock `Crew`; assert `Crew(...)` was called with `manager_agent=` kwarg and that the manager agent is NOT in the `agents=` list
+- [ ] Write `test_manager_agent_allow_delegation_true`: assert `crew.manager_agent.allow_delegation == True`
+- [ ] Write `test_research_task_has_no_context`: assert `crew.research_task.context` is empty or `None`
+- [ ] Write `test_outline_task_context_contains_research_task`: assert `crew.research_task in crew.outline_task.context`
 - [ ] Confirm `uv run pytest tests/test_crew.py` exits non-zero (ImportError)
 - [ ] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
 
@@ -316,9 +405,12 @@
 - [ ] Create `src/config.py` with `from pydantic_settings import BaseSettings, SettingsConfigDict`
 - [ ] Define `class Settings(BaseSettings)` with field `LLM_MODEL: str = "claude-sonnet-4-6"`
 - [ ] Add field `ANTHROPIC_API_KEY: str` with no default (required field)
+- [ ] Add field `PERPLEXITY_API_KEY: str` with no default (required field)
 - [ ] Add field `MAX_AGENT_RETRIES: int = 3`
 - [ ] Add field `PYTHON_RUNNER_TIMEOUT_S: int = 60`
 - [ ] Add field `LUALATEX_BIN: str = "lualatex"`
+- [ ] Add field `BIBER_BIN: str = "biber"`
+- [ ] Add field `PANDOC_BIN: str = "pandoc"`
 - [ ] Add field `OUTPUT_DIR: str = "latex_output"`
 - [ ] Add field `ASSETS_DIR: str = "latex_output/assets"`
 - [ ] Add field `MIN_PAGES: int = 15`
@@ -326,7 +418,7 @@
 - [ ] Add module-level `settings = Settings()` instantiation as the singleton
 - [ ] Run `uv run pytest tests/test_config.py` — confirm exits 0 (all config tests green)
 - [ ] Run `uv run ruff check src/config.py` — confirm exits 0
-- [ ] Run `wc -l src/config.py` — confirm result ≤ 40 lines
+- [ ] Run `wc -l src/config.py` — confirm result ≤ 50 lines
 
 ---
 
@@ -355,6 +447,52 @@
 - [ ] Run `uv run pytest tests/test_latex_writer.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
 - [ ] Run `wc -l src/tools/latex_writer.py` — confirm result ≤ 85 lines
+
+---
+
+## Phase 10.5: Implement `src/tools/perplexity_search.py`
+
+> Gate: `uv run pytest tests/test_perplexity_search.py` must currently exit non-zero before starting this phase.
+
+- [ ] Create `src/tools/perplexity_search.py` with imports: `requests`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [ ] Define `class PerplexitySearchInput(BaseModel)` with field `query: str`
+- [ ] Add field `max_results: int = 5` to `PerplexitySearchInput`
+- [ ] Define `class PerplexitySearchTool(BaseTool)` with class attribute `name = "perplexity_search"`
+- [ ] Add `description` class attribute explaining the tool queries Perplexity AI for academic research
+- [ ] Set `args_schema = PerplexitySearchInput` on `PerplexitySearchTool`
+- [ ] Implement `_run(self, query: str, max_results: int) -> str` method
+- [ ] In `_run`: raise `ValueError` if `query` is empty or whitespace-only
+- [ ] In `_run`: construct request payload with `model="sonar-pro"` and the query as a user message
+- [ ] In `_run`: send `requests.post` to the Perplexity AI endpoint with `Authorization: Bearer {settings.PERPLEXITY_API_KEY}`
+- [ ] In `_run`: raise `ValueError` for HTTP 4xx errors; re-raise `requests.HTTPError` for HTTP 429 (rate limit) so Manager Agent can retry
+- [ ] In `_run`: extract and return the assistant message content as a plain string
+- [ ] Add module-level `perplexity_search_tool = PerplexitySearchTool()` singleton instantiation
+- [ ] Run `uv run pytest tests/test_perplexity_search.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
+- [ ] Run `wc -l src/tools/perplexity_search.py` — confirm result ≤ 70 lines
+
+---
+
+## Phase 10.6: Implement `src/tools/markdown_converter.py`
+
+> Gate: `uv run pytest tests/test_markdown_converter.py` must currently exit non-zero before starting this phase.
+
+- [ ] Create `src/tools/markdown_converter.py` with imports: `subprocess`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [ ] Define `class MarkdownConverterInput(BaseModel)` with field `md_path: str`
+- [ ] Add field `tex_path: str` to `MarkdownConverterInput`
+- [ ] Define `class MarkdownConverterTool(BaseTool)` with class attribute `name = "markdown_converter"`
+- [ ] Add `description` class attribute explaining the tool converts a Markdown file to LaTeX using pandoc
+- [ ] Set `args_schema = MarkdownConverterInput` on `MarkdownConverterTool`
+- [ ] Implement `_validate_path(self, path: str) -> Path` method (identical path-traversal guard as in `latex_writer.py`)
+- [ ] Implement `_run(self, md_path: str, tex_path: str) -> str` method
+- [ ] In `_run`: validate both `md_path` and `tex_path` using `_validate_path`
+- [ ] In `_run`: call `subprocess.run([settings.PANDOC_BIN, "-f", "markdown", "-t", "latex", "-o", str(resolved_tex), str(resolved_md)], check=True)`
+- [ ] In `_run`: if `subprocess.CalledProcessError` is raised, re-raise with a descriptive message containing the pandoc stderr output
+- [ ] In `_run`: return a confirmation string including the resolved output `.tex` path
+- [ ] Add module-level `markdown_converter_tool = MarkdownConverterTool()` singleton instantiation
+- [ ] Run `uv run pytest tests/test_markdown_converter.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
+- [ ] Run `wc -l src/tools/markdown_converter.py` — confirm result ≤ 60 lines
 
 ---
 
@@ -397,29 +535,61 @@
 - [ ] Define `class CompilationError(Exception): pass`
 - [ ] Define `class LualatexRunnerInput(BaseModel)` with field `tex_file: str`
 - [ ] Add field `passes: int = 2` to `LualatexRunnerInput`
+- [ ] Add field `run_biber: bool = True` to `LualatexRunnerInput`
 - [ ] Define `class LualatexRunnerTool(BaseTool)` with class attribute `name = "lualatex_runner"`
 - [ ] Add `description` class attribute to `LualatexRunnerTool`
 - [ ] Set `args_schema = LualatexRunnerInput` on `LualatexRunnerTool`
-- [ ] Implement `_build_cmd(self, tex_file: str) -> list[str]` method
-- [ ] In `_build_cmd`: return `[settings.LUALATEX_BIN, "--interaction=nonstopmode", f"--output-directory={settings.OUTPUT_DIR}", tex_file]`
+- [ ] Implement `_build_lualatex_cmd(self, tex_file: str) -> list[str]` method
+- [ ] In `_build_lualatex_cmd`: return `[settings.LUALATEX_BIN, "--interaction=nonstopmode", f"--output-directory={settings.OUTPUT_DIR}", tex_file]`
+- [ ] Implement `_build_biber_cmd(self, stem: str) -> list[str]` method
+- [ ] In `_build_biber_cmd`: return `[settings.BIBER_BIN, stem]`
 - [ ] Implement `_parse_log(self, log_path: Path) -> list[str]` method
 - [ ] In `_parse_log`: read the log file with `encoding="utf-8", errors="replace"`
 - [ ] In `_parse_log`: filter and return only lines that begin with `"! "`
-- [ ] Implement `_run(self, tex_file: str, passes: int) -> dict` method
-- [ ] In `_run`: loop `passes` times executing `subprocess.run(self._build_cmd(tex_file), capture_output=True, text=True)`
-- [ ] In `_run`: after the final pass, derive the log path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")`
+- [ ] Implement `_run(self, tex_file: str, passes: int, run_biber: bool) -> dict` method
+- [ ] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 1
+- [ ] In `_run`: if `run_biber` is True, execute `subprocess.run(self._build_biber_cmd(stem), ...)` between passes
+- [ ] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 2
+- [ ] In `_run`: after the final lualatex pass, derive the log path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")`
 - [ ] In `_run`: call `self._parse_log(log_path)`; if the result list is non-empty, raise `CompilationError(errors_list)`
 - [ ] In `_run`: derive pdf_path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".pdf")`
 - [ ] In `_run`: return `{"success": True, "pdf_path": str(pdf_path), "log_tail": ""}` on success
 - [ ] Add module-level `lualatex_runner_tool = LualatexRunnerTool()` singleton instantiation
 - [ ] Run `uv run pytest tests/test_lualatex_runner.py` — confirm exits 0 (non-skipped tests pass)
 - [ ] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/lualatex_runner.py` — confirm result ≤ 90 lines
-- [ ] If line count exceeds 90, extract `_parse_log` into `src/tools/_log_parser.py` and import from there
+- [ ] Run `wc -l src/tools/lualatex_runner.py` — confirm result ≤ 100 lines
+- [ ] If line count exceeds 100, extract `_parse_log` into `src/tools/_log_parser.py` and import from there
 
 ---
 
-## Phase 13: Implement `src/agents/outline_agent.py`
+## Phase 13: Implement `src/agents/manager_agent.py`
+
+- [ ] Create `src/agents/manager_agent.py` with imports: `crewai.Agent`, `src.config.settings`
+- [ ] Define function `build_manager_agent(backstory: str) -> Agent`
+- [ ] In function: construct `Agent` with `role="Project Manager"`
+- [ ] Set `goal` to: orchestrate all sub-agents to produce a compiled Hebrew academic PDF
+- [ ] Set `backstory=backstory`, `allow_delegation=True`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [ ] Set `tools=[]` (manager delegates; it does not call tools directly)
+- [ ] Return the constructed `Agent`
+- [ ] Run `uv run ruff check src/agents/manager_agent.py` — exits 0
+- [ ] Run `wc -l src/agents/manager_agent.py` — confirm ≤ 30 lines
+
+---
+
+## Phase 13 continued: Implement `src/agents/researcher_agent.py`
+
+- [ ] Create `src/agents/researcher_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.perplexity_search.perplexity_search_tool`
+- [ ] Define function `build_researcher_agent(backstory: str) -> Agent`
+- [ ] In function: construct `Agent` with `role="Academic Researcher"`
+- [ ] Set `goal` to: use Perplexity AI to gather academic sources on Transformer architectures for the outline agent
+- [ ] Set `backstory=backstory`, `tools=[perplexity_search_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [ ] Return the constructed `Agent`
+- [ ] Run `uv run ruff check src/agents/researcher_agent.py` — exits 0
+- [ ] Run `wc -l src/agents/researcher_agent.py` — confirm ≤ 30 lines
+
+---
+
+## Phase 13 continued: Implement `src/agents/outline_agent.py`
 
 - [ ] Create `src/agents/outline_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
 - [ ] Define function `build_outline_agent(backstory: str) -> Agent`
@@ -437,11 +607,11 @@
 
 ## Phase 13 continued: Implement `src/agents/content_agent.py`
 
-- [ ] Create `src/agents/content_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
+- [ ] Create `src/agents/content_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`, `src.tools.markdown_converter.markdown_converter_tool`
 - [ ] Define function `build_content_agent(backstory: str) -> Agent`
 - [ ] Set `role="Hebrew Academic Writer"`
-- [ ] Set `goal` describing production of Hebrew-language LaTeX chapter files
-- [ ] Set `backstory=backstory`, `tools=[latex_writer_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [ ] Set `goal` describing production of Hebrew-language chapter files via Markdown-first workflow (write `.md`, convert to `.tex`)
+- [ ] Set `backstory=backstory`, `tools=[latex_writer_tool, markdown_converter_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
 - [ ] Return the constructed `Agent`
 - [ ] Run `uv run ruff check src/agents/content_agent.py` — exits 0
 - [ ] Run `wc -l src/agents/content_agent.py` — confirm ≤ 30 lines
@@ -489,7 +659,22 @@
 
 ---
 
-## Phase 14: Implement `src/tasks/outline_task.py`
+## Phase 14: Implement `src/tasks/research_task.py`
+
+- [ ] Create `src/tasks/research_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [ ] Define function `build_research_task(agent: Agent) -> Task`
+- [ ] Write `description` string: instruct the agent to use `perplexity_search_tool` to research at least 6 academic sources on Transformer architectures, attention mechanisms, and Hebrew NLP
+- [ ] In description: specify the required output format — a Markdown block with one entry per source containing: citation key, authors, year, title, venue, and a 2-sentence summary
+- [ ] In description: specify that citation keys must follow the pattern `author_year_keyword` (e.g., `vaswani2017attention`) to match the expected `refs.bib` keys
+- [ ] Set `expected_output = "Structured research notes with at least 6 citation-ready academic sources"`
+- [ ] Set `agent=agent` on the Task
+- [ ] Set `context=[]` (research task has no upstream dependencies)
+- [ ] Run `uv run ruff check src/tasks/research_task.py` — exits 0
+- [ ] Run `wc -l src/tasks/research_task.py` — confirm ≤ 40 lines
+
+---
+
+## Phase 14 continued: Implement `src/tasks/outline_task.py`
 
 - [ ] Create `src/tasks/outline_task.py` with imports: `crewai.Task`, `crewai.Agent`
 - [ ] Define function `build_outline_task(agent: Agent) -> Task`
@@ -593,30 +778,33 @@
 > Gate: `uv run pytest tests/test_crew.py` must currently exit non-zero before starting this phase.
 
 - [ ] Create `src/crew.py` with imports: `pathlib.Path`, `crewai.Crew`, `crewai.Process`
+- [ ] Import `build_manager_agent` from `src.agents.manager_agent`
+- [ ] Import `build_researcher_agent` from `src.agents.researcher_agent`
 - [ ] Import `build_outline_agent` from `src.agents.outline_agent`
 - [ ] Import `build_content_agent` from `src.agents.content_agent`
 - [ ] Import `build_bidi_agent` from `src.agents.bidi_agent`
 - [ ] Import `build_figure_agent` from `src.agents.figure_agent`
 - [ ] Import `build_compiler_agent` from `src.agents.compiler_agent`
-- [ ] Import all five task builder functions from their respective `src.tasks.*` modules
+- [ ] Import all six task builder functions from their respective `src.tasks.*` modules (including `build_research_task`)
 - [ ] Define module-level function `_load_skill(name: str) -> str`
 - [ ] In `_load_skill`: construct `path = Path("skills") / name / "SKILL.md"`
 - [ ] In `_load_skill`: return `path.read_text(encoding="utf-8")` — this is the only place SKILL.md files are read
 - [ ] Define `class PublisherCrew`
-- [ ] Implement `__init__(self)`: load all 5 skills via `_load_skill` — if any file is missing, `FileNotFoundError` propagates immediately
-- [ ] In `__init__`: construct all 5 agents by calling their builder functions, passing the corresponding skill string as `backstory`
+- [ ] Implement `__init__(self)`: load all 7 skills via `_load_skill` — if any file is missing, `FileNotFoundError` propagates immediately
+- [ ] In `__init__`: construct all 7 agents by calling their builder functions, passing the corresponding skill string as `backstory`
+- [ ] In `__init__`: construct `self.research_task` via `build_research_task(self.researcher_agent)`
 - [ ] In `__init__`: construct `self.outline_task` via `build_outline_task(self.outline_agent)`
 - [ ] In `__init__`: construct `self.content_tasks` via `build_content_tasks(self.content_agent, self.outline_task)`
 - [ ] In `__init__`: construct `self.figure_task` via `build_figure_task(self.figure_agent, self.outline_task)`
 - [ ] In `__init__`: construct `self.bidi_task` via `build_bidi_task(self.bidi_agent, self.content_tasks)`
 - [ ] In `__init__`: construct `self.compile_task` via `build_compile_task(self.compiler_agent, self.bidi_task, self.figure_task)`
 - [ ] Implement `kickoff(self) -> str` method
-- [ ] In `kickoff`: assemble `tasks = [self.outline_task, *self.content_tasks, self.figure_task, self.bidi_task, self.compile_task]`
-- [ ] In `kickoff`: construct `Crew(agents=[...], tasks=tasks, process=Process.sequential, verbose=True)`
+- [ ] In `kickoff`: assemble `tasks = [self.research_task, self.outline_task, *self.content_tasks, self.figure_task, self.bidi_task, self.compile_task]`
+- [ ] In `kickoff`: construct `Crew(manager_agent=self.manager_agent, agents=[self.researcher_agent, self.outline_agent, self.content_agent, self.bidi_agent, self.figure_agent, self.compiler_agent], tasks=tasks, process=Process.hierarchical, verbose=True)`
 - [ ] In `kickoff`: return `crew.kickoff()`
 - [ ] Run `uv run pytest tests/test_crew.py` — confirm exits 0 (all crew tests green)
 - [ ] Run `uv run ruff check src/crew.py` — confirm exits 0
-- [ ] Run `wc -l src/crew.py` — confirm ≤ 80 lines
+- [ ] Run `wc -l src/crew.py` — confirm ≤ 100 lines
 
 ---
 
@@ -716,11 +904,14 @@
 
 - [ ] Run `uv run ruff check src/config.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/crew.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/agents/manager_agent.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/agents/researcher_agent.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/agents/outline_agent.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/agents/content_agent.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/agents/bidi_agent.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/agents/figure_agent.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/agents/compiler_agent.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/tasks/research_task.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tasks/outline_task.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tasks/content_task.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tasks/bidi_task.py` — confirm exits 0
@@ -729,11 +920,15 @@
 - [ ] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tools/python_runner.py` — confirm exits 0
 - [ ] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
+- [ ] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/conftest.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_config.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_python_runner.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_lualatex_runner.py` — confirm exits 0
+- [ ] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
+- [ ] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
 - [ ] Run `uv run ruff check tests/test_integration.py` — confirm exits 0
 - [ ] Run `uv run ruff check main.py` — confirm exits 0
@@ -778,13 +973,16 @@
 
 ## Phase 22: Line Budget Enforcement (Final Verification)
 
-- [ ] Run `wc -l src/config.py` — assert ≤ 40 lines
-- [ ] Run `wc -l src/crew.py` — assert ≤ 80 lines
+- [ ] Run `wc -l src/config.py` — assert ≤ 50 lines
+- [ ] Run `wc -l src/crew.py` — assert ≤ 100 lines
+- [ ] Run `wc -l src/agents/manager_agent.py` — assert ≤ 30 lines
+- [ ] Run `wc -l src/agents/researcher_agent.py` — assert ≤ 30 lines
 - [ ] Run `wc -l src/agents/outline_agent.py` — assert ≤ 30 lines
 - [ ] Run `wc -l src/agents/content_agent.py` — assert ≤ 30 lines
 - [ ] Run `wc -l src/agents/bidi_agent.py` — assert ≤ 30 lines
 - [ ] Run `wc -l src/agents/figure_agent.py` — assert ≤ 30 lines
 - [ ] Run `wc -l src/agents/compiler_agent.py` — assert ≤ 30 lines
+- [ ] Run `wc -l src/tasks/research_task.py` — assert ≤ 40 lines
 - [ ] Run `wc -l src/tasks/outline_task.py` — assert ≤ 40 lines
 - [ ] Run `wc -l src/tasks/content_task.py` — assert ≤ 65 lines
 - [ ] Run `wc -l src/tasks/bidi_task.py` — assert ≤ 40 lines
@@ -792,7 +990,9 @@
 - [ ] Run `wc -l src/tasks/compile_task.py` — assert ≤ 45 lines
 - [ ] Run `wc -l src/tools/latex_writer.py` — assert ≤ 85 lines
 - [ ] Run `wc -l src/tools/python_runner.py` — assert ≤ 95 lines
-- [ ] Run `wc -l src/tools/lualatex_runner.py` — assert ≤ 90 lines
+- [ ] Run `wc -l src/tools/lualatex_runner.py` — assert ≤ 100 lines
+- [ ] Run `wc -l src/tools/perplexity_search.py` — assert ≤ 70 lines
+- [ ] Run `wc -l src/tools/markdown_converter.py` — assert ≤ 60 lines
 - [ ] Run `find src/ -name "*.py" -exec wc -l {} +` — confirm no single file exceeds 150 lines
 - [ ] If any file is between 120 and 150 lines, execute a pre-emptive extraction before the hard limit is breached
 
@@ -813,7 +1013,8 @@
 - [ ] Confirm `latex_output/refs.bib` contains exactly 6 valid BibTeX entries
 - [ ] Confirm no `.py` file in `src/` exceeds 150 lines
 - [ ] Confirm no hardcoded model names, token budgets, or path literals appear in any `.py` file outside `src/config.py` (except `ALLOWED_IMPORTS` and `CHAPTER_SPECS`)
-- [ ] Confirm all 5 SKILL.md files exist, are non-empty, and are readable by `_load_skill()`
+- [ ] Confirm all 7 SKILL.md files exist, are non-empty, and are readable by `_load_skill()`
+- [ ] Confirm `main.tex` was produced via the biber pipeline (lualatex → biber → lualatex)
 - [ ] Run `git status` — confirm `.env` is not staged and no secrets are present in tracked files
 - [ ] Confirm `latex_output/refs.bib` is committed to the repository
 - [ ] Tag the release commit as `v1.0.0` after all acceptance criteria above are checked off
