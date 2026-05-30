@@ -71,14 +71,14 @@
 - [x] Document the rule that proper nouns and model names (Transformer, BERT, GPT) are never translated — kept in English
 - [x] Document RTL paragraph structure: content inside `\begin{hebrew}...\end{hebrew}` block when needed
 - [x] Document that each chapter `.tex` file must NOT contain `\begin{document}` or `\end{document}`
-- [ ] Document that chapter files must use `\chapter{}` as the top-level structural command
-- [ ] Document that inline math must use `\(` and `\)` delimiters (not bare `$`) in LuaLaTeX BiDi mode
-- [ ] Document that display math must use `\begin{equation}` (not `$$`)
-- [ ] Document page budget enforcement: ContentAgent must target the `page_budget` from `book_outline.json`
-- [ ] Document a list of at least 5 forbidden Hebrew typographic errors (wrong quote marks, improper dagesh usage, missing maqaf)
-- [ ] Write a 3-sentence example Hebrew academic paragraph with `\textenglish{}` usage directly in the SKILL.md
-- [ ] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\textenglish`
-- [ ] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\chapter`
+- [x] Document that chapter files must use `\chapter{}` as the top-level structural command
+- [x] Document that inline math must use `\(` and `\)` delimiters (not bare `$`) in LuaLaTeX BiDi mode
+- [x] Document that display math must use `\begin{equation}` (not `$$`)
+- [x] Document page budget enforcement: ContentAgent must target the `page_budget` from `book_outline.json`
+- [x] Document a list of at least 5 forbidden Hebrew typographic errors (wrong quote marks, improper dagesh usage, missing maqaf)
+- [x] Write a 3-sentence example Hebrew academic paragraph with `\textenglish{}` usage directly in the SKILL.md
+- [x] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\textenglish`
+- [x] Verify `skills/hebrew-academic-writing/SKILL.md` contains the string `\chapter`
 
 ---
 
