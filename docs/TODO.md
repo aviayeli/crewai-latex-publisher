@@ -85,16 +85,16 @@
 ## Phase 1 continued: `skills/perplexity-research/SKILL.md`
 
 - [x] Create directory `skills/perplexity-research/`
-- [ ] Create `skills/perplexity-research/SKILL.md` with header declaring the agent role as Academic Researcher
-- [ ] Document the Perplexity AI API: OpenAI-compatible `/chat/completions` endpoint, model `sonar-pro`, `Bearer` token auth via `PERPLEXITY_API_KEY`
-- [ ] Document query formulation for academic sources: use precise technical terminology, specify publication year range, name specific authors or papers where known
-- [ ] Document how to distinguish primary sources (peer-reviewed papers) from secondary sources (blog posts, documentation) in results
-- [ ] Document the output format expected from the Research Agent: a structured Markdown block with citation keys, titles, authors, years, and 2-sentence summaries per source
-- [ ] Document that research output must map to BibTeX keys in `refs.bib` — the Researcher Agent populates the citation key list used by downstream agents
-- [ ] Document rate-limit handling: if Perplexity returns HTTP 429, the agent must wait and retry; do not propagate the error silently
-- [ ] Write a worked example query and response demonstrating correct output format
-- [ ] Verify `skills/perplexity-research/SKILL.md` contains the string `sonar-pro`
-- [ ] Verify `skills/perplexity-research/SKILL.md` contains the string `PERPLEXITY_API_KEY`
+- [x] Create `skills/perplexity-research/SKILL.md` with header declaring the agent role as Academic Researcher
+- [x] Document the Perplexity AI API: OpenAI-compatible `/chat/completions` endpoint, model `sonar-pro`, `Bearer` token auth via `PERPLEXITY_API_KEY`
+- [x] Document query formulation for academic sources: use precise technical terminology, specify publication year range, name specific authors or papers where known
+- [x] Document how to distinguish primary sources (peer-reviewed papers) from secondary sources (blog posts, documentation) in results
+- [x] Document the output format expected from the Research Agent: a structured Markdown block with citation keys, titles, authors, years, and 2-sentence summaries per source
+- [x] Document that research output must map to BibTeX keys in `refs.bib` — the Researcher Agent populates the citation key list used by downstream agents
+- [x] Document rate-limit handling: if Perplexity returns HTTP 429, the agent must wait and retry; do not propagate the error silently
+- [x] Write a worked example query and response demonstrating correct output format
+- [x] Verify `skills/perplexity-research/SKILL.md` contains the string `sonar-pro`
+- [x] Verify `skills/perplexity-research/SKILL.md` contains the string `PERPLEXITY_API_KEY`
 
 ---
 
@@ -102,10 +102,10 @@
 
 - [x] Create directory `skills/manager/`
 - [x] Create `skills/manager/SKILL.md` with header declaring the agent role as Project Manager
-- [ ] Document the Manager Agent's sole responsibility: coordinate task delegation; it never writes files or calls external APIs directly
-- [ ] Document the delegation strategy: assign each task to the sub-agent whose role and tools best match the task requirements
-- [ ] Document the sub-agent capability matrix: for each of the 6 worker agents, list what tasks it can handle and what tools it has
-- [ ] Document the retry policy: if a sub-agent's task output fails validation, re-delegate the same task to the same agent with additional guidance, up to `MAX_AGENT_RETRIES` attempts
+- [x] Document the Manager Agent's sole responsibility: coordinate task delegation; it never writes files or calls external APIs directly
+- [x] Document the delegation strategy: assign each task to the sub-agent whose role and tools best match the task requirements
+- [x] Document the sub-agent capability matrix: for each of the 6 worker agents, list what tasks it can handle and what tools it has
+- [x] Document the retry policy: if a sub-agent's task output fails validation, re-delegate the same task to the same agent with additional guidance, up to `MAX_AGENT_RETRIES` attempts
 - [ ] Document escalation: if a task fails after all retries, log the failure reason in the task output and proceed — do not block the entire pipeline
 - [ ] Document that the Manager Agent must set `allow_delegation=True` and must not be listed in the worker `agents=[]` list
 - [ ] Verify `skills/manager/SKILL.md` contains the string `allow_delegation`

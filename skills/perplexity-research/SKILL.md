@@ -1,0 +1,162 @@
+---
+name: perplexity-research
+description: Instructs the Academic Researcher agent on how to perform deep internet research using the Perplexity AI sonar-pro API to gather peer-reviewed academic sources specifically about Transformer model architectures, attention mechanisms, and Hebrew NLP. The agent queries Perplexity AI with precise technical terminology, filters results to prioritize primary peer-reviewed sources over secondary blogs or documentation, and produces a structured Markdown research block whose citation keys map directly to BibTeX entries in refs.bib. This skill also documents the OpenAI-compatible API endpoint, Bearer token authentication via PERPLEXITY_API_KEY, rate-limit handling for HTTP 429 responses, and the exact output format required by downstream outline and content agents.
+metadata:
+  author: Avi Ayeli
+  version: "1.0"
+---
+
+# Academic Researcher
+
+## Role
+
+The Academic Researcher agent uses the Perplexity AI API to gather peer-reviewed academic sources on Transformer architectures, attention mechanisms, and Hebrew NLP. Its output feeds directly into the Outline Agent: every citation key produced here must appear in `refs.bib` and be citable via `\cite{}` in the chapter `.tex` files.
+
+---
+
+## Perplexity AI API
+
+The Perplexity API is OpenAI-compatible. Use the `/chat/completions` endpoint:
+
+```
+POST https://api.perplexity.ai/chat/completions
+```
+
+### Authentication
+
+Pass the API key as a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer <PERPLEXITY_API_KEY>
+```
+
+The key is loaded from `settings.PERPLEXITY_API_KEY`. Never hardcode the key in Python source.
+
+### Model
+
+Always use:
+
+```json
+"model": "sonar-pro"
+```
+
+`sonar-pro` is the Perplexity model optimised for academic and technical search with inline citations. Do not substitute another model — other models do not return source URLs needed for citation validation.
+
+### Minimal Request Payload
+
+```json
+{
+  "model": "sonar-pro",
+  "messages": [
+    {
+      "role": "user",
+      "content": "<your research query here>"
+    }
+  ]
+}
+```
+
+---
+
+## Query Formulation for Academic Sources
+
+Well-formed queries produce higher-quality sources. Apply these rules:
+
+1. **Use precise technical terminology** — name the exact concept: "scaled dot-product attention", "multi-head self-attention", "positional encoding", not "how transformers work".
+2. **Specify a publication year range** — append `published between 2017 and 2024` or `after 2020` to filter stale pre-deep-learning results.
+3. **Name specific authors or venues where known** — e.g., "Vaswani et al. attention mechanism NeurIPS 2017" or "ACL 2023 Hebrew NLP BiDi".
+4. **Request peer-reviewed sources explicitly** — add "peer-reviewed journal or conference paper" to the query.
+5. **Scope to the book topic** — every query must be relevant to Transformer architectures or Hebrew academic publishing.
+
+### Example Queries
+
+```
+Vaswani 2017 attention is all you need transformer architecture peer-reviewed NeurIPS
+
+BERT pre-training bidirectional transformers Devlin 2019 ACL peer-reviewed
+
+Hebrew NLP natural language processing transformer models 2020 to 2024 conference paper
+```
+
+---
+
+## Distinguishing Primary from Secondary Sources
+
+| Source Type | Definition | Treatment |
+|---|---|---|
+| **Primary** | Peer-reviewed paper published at a conference (NeurIPS, ACL, EMNLP, ICML, ICLR) or journal (JMLR, TACL) | Include; generate a BibTeX entry |
+| **Secondary** | Blog post, documentation page, arXiv preprint without peer review, Stack Overflow | Exclude from citation list; may be used for background context only |
+
+If Perplexity returns a result without a venue or DOI, classify it as secondary and do not add it to `refs.bib`.
+
+---
+
+## Required Output Format
+
+The Research Agent must return a single Markdown block. Each source occupies one entry with these fields:
+
+```markdown
+## Research Output
+
+### [author_year_keyword]
+- **Title:** Full paper title
+- **Authors:** Last, F.; Last, F.
+- **Year:** YYYY
+- **Venue:** Conference or journal name
+- **Summary:** First sentence describes the paper's main contribution. Second sentence explains its relevance to Transformer architectures or Hebrew NLP for this book.
+
+### [author_year_keyword]
+...
+```
+
+- **Citation key** (`author_year_keyword`) must follow the pattern: first author's last name + year + one lowercase keyword. Example: `vaswani2017attention`, `devlin2019bert`, `touvron2023llama`.
+- **Minimum 6 entries** must be produced per research task.
+- All citation keys produced here are used verbatim as BibTeX entry keys in `refs.bib` and `\cite{}` commands in chapter files.
+
+---
+
+## Mapping to `refs.bib`
+
+Every citation key in the research output must have a corresponding BibTeX entry written to `latex_output/refs.bib`. The Outline Agent will use these keys when populating the `refs` field of `book_outline.json`. The Content Agent will use them in `\cite{}` commands. Any key produced by the Researcher but missing from `refs.bib` will cause a Biber compilation error.
+
+---
+
+## Rate-Limit Handling
+
+If the Perplexity API returns HTTP **429 Too Many Requests**:
+
+1. **Do not propagate the error silently.** Re-raise `requests.HTTPError` with the 429 status so the Manager Agent's retry policy can handle it.
+2. Wait before retrying — the Manager Agent applies exponential backoff via its retry policy (up to `MAX_AGENT_RETRIES` attempts).
+3. Do not swallow the exception or return an empty result string.
+
+For HTTP **4xx errors other than 429** (e.g., 401 Unauthorized, 400 Bad Request): raise `ValueError` with the status code and response body so the operator can diagnose the cause.
+
+---
+
+## Worked Example
+
+### Query Sent to Perplexity
+
+```
+Vaswani 2017 attention transformer architecture peer-reviewed NeurIPS scaled dot-product multi-head
+```
+
+### Expected Response Block
+
+```markdown
+## Research Output
+
+### vaswani2017attention
+- **Title:** Attention Is All You Need
+- **Authors:** Vaswani, A.; Shazeer, N.; Parmar, N.; Uszkoreit, J.; Jones, L.; Gomez, A. N.; Kaiser, Ł.; Polosukhin, I.
+- **Year:** 2017
+- **Venue:** Advances in Neural Information Processing Systems (NeurIPS)
+- **Summary:** Introduces the Transformer architecture based entirely on self-attention mechanisms, eliminating recurrence and convolution. This paper is the foundational reference for every chapter discussing attention and the encoder-decoder design in this book.
+
+### devlin2019bert
+- **Title:** BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+- **Authors:** Devlin, J.; Chang, M.-W.; Lee, K.; Toutanova, K.
+- **Year:** 2019
+- **Venue:** North American Chapter of the Association for Computational Linguistics (NAACL)
+- **Summary:** Presents BERT, a bidirectional Transformer pre-trained on masked language modelling and next-sentence prediction. Relevant to the fine-tuning and applications chapter as the canonical example of transfer learning from Transformer representations.
+```
