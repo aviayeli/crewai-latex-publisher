@@ -106,10 +106,10 @@
 - [x] Document the delegation strategy: assign each task to the sub-agent whose role and tools best match the task requirements
 - [x] Document the sub-agent capability matrix: for each of the 6 worker agents, list what tasks it can handle and what tools it has
 - [x] Document the retry policy: if a sub-agent's task output fails validation, re-delegate the same task to the same agent with additional guidance, up to `MAX_AGENT_RETRIES` attempts
-- [ ] Document escalation: if a task fails after all retries, log the failure reason in the task output and proceed — do not block the entire pipeline
-- [ ] Document that the Manager Agent must set `allow_delegation=True` and must not be listed in the worker `agents=[]` list
-- [ ] Verify `skills/manager/SKILL.md` contains the string `allow_delegation`
-- [ ] Verify `skills/manager/SKILL.md` contains the string `delegate`
+- [x] Document escalation: if a task fails after all retries, log the failure reason in the task output and proceed — do not block the entire pipeline
+- [x] Document that the Manager Agent must set `allow_delegation=True` and must not be listed in the worker `agents=[]` list
+- [x] Verify `skills/manager/SKILL.md` contains the string `allow_delegation`
+- [x] Verify `skills/manager/SKILL.md` contains the string `delegate`
 
 ---
 
