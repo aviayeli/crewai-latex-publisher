@@ -84,7 +84,7 @@
 
 ## Phase 1 continued: `skills/perplexity-research/SKILL.md`
 
-- [ ] Create directory `skills/perplexity-research/`
+- [x] Create directory `skills/perplexity-research/`
 - [ ] Create `skills/perplexity-research/SKILL.md` with header declaring the agent role as Academic Researcher
 - [ ] Document the Perplexity AI API: OpenAI-compatible `/chat/completions` endpoint, model `sonar-pro`, `Bearer` token auth via `PERPLEXITY_API_KEY`
 - [ ] Document query formulation for academic sources: use precise technical terminology, specify publication year range, name specific authors or papers where known
@@ -100,8 +100,8 @@
 
 ## Phase 1 continued: `skills/manager/SKILL.md`
 
-- [ ] Create directory `skills/manager/`
-- [ ] Create `skills/manager/SKILL.md` with header declaring the agent role as Project Manager
+- [x] Create directory `skills/manager/`
+- [x] Create `skills/manager/SKILL.md` with header declaring the agent role as Project Manager
 - [ ] Document the Manager Agent's sole responsibility: coordinate task delegation; it never writes files or calls external APIs directly
 - [ ] Document the delegation strategy: assign each task to the sub-agent whose role and tools best match the task requirements
 - [ ] Document the sub-agent capability matrix: for each of the 6 worker agents, list what tasks it can handle and what tools it has
@@ -156,8 +156,8 @@
 
 ## Phase 1 continued: `skills/lualatex-build/SKILL.md`
 
-- [ ] Create directory `skills/lualatex-build/`
-- [ ] Create `skills/lualatex-build/SKILL.md` with header declaring the agent role as LaTeX Build Engineer
+- [x] Create directory `skills/lualatex-build/`
+- [x] Create `skills/lualatex-build/SKILL.md` with header declaring the agent role as LaTeX Build Engineer
 - [ ] Document the exact `lualatex` CLI flags to use: `--interaction=nonstopmode` and `--output-directory`
 - [ ] Document the two-pass compilation strategy and why it is required (cross-references, bibliography)
 - [ ] Document the required preamble package list: `fontspec`, `polyglossia`, `biblatex`, `geometry`, `graphicx`, `amsmath`, `hyperref`, `tikz`, `booktabs`, `xcolor`
