@@ -276,19 +276,19 @@
 
 > Gate: `src/tools/markdown_converter.py` must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_markdown_converter.py` with imports: `pytest`, `pathlib.Path`, `shutil`, `unittest.mock`, `src.tools.markdown_converter`
-- [ ] Write `test_tool_name_attribute`: assert `markdown_converter_tool.name == "markdown_converter"`
-- [ ] Write `test_args_schema_has_md_path_field`: assert `"md_path"` is in `MarkdownConverterInput.model_fields`
-- [ ] Write `test_args_schema_has_tex_path_field`: assert `"tex_path"` is in `MarkdownConverterInput.model_fields`
-- [ ] Write `test_path_traversal_md_rejected`: call with `md_path="../escape.md"`; assert `ValueError`
-- [ ] Write `test_path_traversal_tex_rejected`: call with `tex_path="../../etc/evil.tex"`; assert `ValueError`
-- [ ] Write `test_return_value_contains_output_path`: mock `subprocess.run`; assert return string includes the resolved `.tex` path
-- [ ] Write `test_pandoc_called_with_correct_flags`: mock `subprocess.run`; assert call includes `"-f"`, `"markdown"`, `"-t"`, `"latex"`, and `"-o"`
-- [ ] Write `test_pandoc_not_found_raises`: patch `settings.PANDOC_BIN = "nonexistent-binary-xyz"`; assert `FileNotFoundError` or `OSError` is raised
-- [ ] Decorate a conditional integration test class: `@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc not installed")`
-- [ ] Write `test_real_markdown_converts_to_tex` inside that class: write a temp `.md` file; call `_run`; assert `.tex` output file exists and is non-empty
-- [ ] Confirm `uv run pytest tests/test_markdown_converter.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
+- [x] Create `tests/test_markdown_converter.py` with imports: `pytest`, `pathlib.Path`, `shutil`, `unittest.mock`, `src.tools.markdown_converter`
+- [x] Write `test_tool_name_attribute`: assert `markdown_converter_tool.name == "markdown_converter"`
+- [x] Write `test_args_schema_has_md_path_field`: assert `"md_path"` is in `MarkdownConverterInput.model_fields`
+- [x] Write `test_args_schema_has_tex_path_field`: assert `"tex_path"` is in `MarkdownConverterInput.model_fields`
+- [x] Write `test_path_traversal_md_rejected`: call with `md_path="../escape.md"`; assert `ValueError`
+- [x] Write `test_path_traversal_tex_rejected`: call with `tex_path="../../etc/evil.tex"`; assert `ValueError`
+- [x] Write `test_return_value_contains_output_path`: mock `subprocess.run`; assert return string includes the resolved `.tex` path
+- [x] Write `test_pandoc_called_with_correct_flags`: mock `subprocess.run`; assert call includes `"-f"`, `"markdown"`, `"-t"`, `"latex"`, and `"-o"`
+- [x] Write `test_pandoc_not_found_raises`: patch `settings.PANDOC_BIN = "nonexistent-binary-xyz"`; assert `FileNotFoundError` or `OSError` is raised
+- [x] Decorate a conditional integration test class: `@pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc not installed")`
+- [x] Write `test_real_markdown_converts_to_tex` inside that class: write a temp `.md` file; call `_run`; assert `.tex` output file exists and is non-empty
+- [x] Confirm `uv run pytest tests/test_markdown_converter.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
 
 ---
 
@@ -477,22 +477,22 @@
 
 > Gate: `uv run pytest tests/test_markdown_converter.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/tools/markdown_converter.py` with imports: `subprocess`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
-- [ ] Define `class MarkdownConverterInput(BaseModel)` with field `md_path: str`
-- [ ] Add field `tex_path: str` to `MarkdownConverterInput`
-- [ ] Define `class MarkdownConverterTool(BaseTool)` with class attribute `name = "markdown_converter"`
-- [ ] Add `description` class attribute explaining the tool converts a Markdown file to LaTeX using pandoc
-- [ ] Set `args_schema = MarkdownConverterInput` on `MarkdownConverterTool`
-- [ ] Implement `_validate_path(self, path: str) -> Path` method (identical path-traversal guard as in `latex_writer.py`)
-- [ ] Implement `_run(self, md_path: str, tex_path: str) -> str` method
-- [ ] In `_run`: validate both `md_path` and `tex_path` using `_validate_path`
-- [ ] In `_run`: call `subprocess.run([settings.PANDOC_BIN, "-f", "markdown", "-t", "latex", "-o", str(resolved_tex), str(resolved_md)], check=True)`
-- [ ] In `_run`: if `subprocess.CalledProcessError` is raised, re-raise with a descriptive message containing the pandoc stderr output
-- [ ] In `_run`: return a confirmation string including the resolved output `.tex` path
-- [ ] Add module-level `markdown_converter_tool = MarkdownConverterTool()` singleton instantiation
-- [ ] Run `uv run pytest tests/test_markdown_converter.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/markdown_converter.py` — confirm result ≤ 60 lines
+- [x] Create `src/tools/markdown_converter.py` with imports: `subprocess`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [x] Define `class MarkdownConverterInput(BaseModel)` with field `md_path: str`
+- [x] Add field `tex_path: str` to `MarkdownConverterInput`
+- [x] Define `class MarkdownConverterTool(BaseTool)` with class attribute `name = "markdown_converter"`
+- [x] Add `description` class attribute explaining the tool converts a Markdown file to LaTeX using pandoc
+- [x] Set `args_schema = MarkdownConverterInput` on `MarkdownConverterTool`
+- [x] Implement `_validate_path(self, path: str) -> Path` method (identical path-traversal guard as in `latex_writer.py`)
+- [x] Implement `_run(self, md_path: str, tex_path: str) -> str` method
+- [x] In `_run`: validate both `md_path` and `tex_path` using `_validate_path`
+- [x] In `_run`: call `subprocess.run([settings.PANDOC_BIN, "-f", "markdown", "-t", "latex", "-o", str(resolved_tex), str(resolved_md)], check=True)`
+- [x] In `_run`: if `subprocess.CalledProcessError` is raised, re-raise with a descriptive message containing the pandoc stderr output
+- [x] In `_run`: return a confirmation string including the resolved output `.tex` path
+- [x] Add module-level `markdown_converter_tool = MarkdownConverterTool()` singleton instantiation
+- [x] Run `uv run pytest tests/test_markdown_converter.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
+- [x] Run `wc -l src/tools/markdown_converter.py` — confirm result ≤ 60 lines
 
 ---
 
