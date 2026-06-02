@@ -296,25 +296,25 @@
 
 > Gate: `src/tools/python_runner.py` must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_python_runner.py` with imports: `pytest`, `pathlib.Path`, `src.tools.python_runner`
-- [ ] Write `test_valid_simple_script_executes`: run script `print("hello")`; assert return value contains `"hello"`
-- [ ] Write `test_valid_matplotlib_script_produces_png`: run a script that imports `matplotlib.pyplot` and `numpy` and saves a PNG to `tmp_output_dir`; assert the PNG file exists
-- [ ] Write `test_disallowed_import_subprocess_rejected`: script contains `import subprocess`; assert `ValueError` is raised before execution
-- [ ] Write `test_disallowed_import_sys_rejected`: script contains `import sys`; assert `ValueError` is raised
-- [ ] Write `test_disallowed_import_shutil_rejected`: script contains `import shutil`; assert `ValueError` is raised
-- [ ] Write `test_disallowed_import_requests_rejected`: script contains `import requests`; assert `ValueError` is raised
-- [ ] Write `test_allowed_import_numpy_passes_scan`: script contains `import numpy`; assert `_scan_imports` returns an empty list
-- [ ] Write `test_allowed_import_pathlib_passes_scan`: script contains `from pathlib import Path`; assert `_scan_imports` returns an empty list
-- [ ] Write `test_allowed_import_os_passes_scan`: script contains `import os`; assert `_scan_imports` returns an empty list
-- [ ] Write `test_ast_scan_catches_from_import_disallowed_module`: script contains `from requests import get`; assert `ValueError` (requests not in allowed set)
-- [ ] Write `test_timeout_enforced`: script contains an infinite loop `while True: pass`; assert a timeout-related exception is raised within `PYTHON_RUNNER_TIMEOUT_S` seconds
-- [ ] Write `test_syntax_error_reported`: script contains `def foo(:` (invalid syntax); assert the return value contains stderr output and does not raise unhandled exception
-- [ ] Write `test_import_whitelist_is_frozenset`: assert `type(ALLOWED_IMPORTS) is frozenset`
-- [ ] Write `test_scan_detects_multiple_bad_imports`: script has `import subprocess\nimport requests`; assert `ValueError` message references both disallowed names
-- [ ] Write `test_tool_name_attribute`: assert `python_runner_tool.name == "python_runner"`
-- [ ] Write `test_script_stdout_captured`: script prints a unique UUID string; assert that exact string appears in the return value
-- [ ] Confirm `uv run pytest tests/test_python_runner.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_python_runner.py` — confirm exits 0
+- [x] Create `tests/test_python_runner.py` with imports: `pytest`, `pathlib.Path`, `src.tools.python_runner`
+- [x] Write `test_valid_simple_script_executes`: run script `print("hello")`; assert return value contains `"hello"`
+- [x] Write `test_valid_matplotlib_script_produces_png`: run a script that imports `matplotlib.pyplot` and `numpy` and saves a PNG to `tmp_output_dir`; assert the PNG file exists
+- [x] Write `test_disallowed_import_subprocess_rejected`: script contains `import subprocess`; assert `ValueError` is raised before execution
+- [x] Write `test_disallowed_import_sys_rejected`: script contains `import sys`; assert `ValueError` is raised
+- [x] Write `test_disallowed_import_shutil_rejected`: script contains `import shutil`; assert `ValueError` is raised
+- [x] Write `test_disallowed_import_requests_rejected`: script contains `import requests`; assert `ValueError` is raised
+- [x] Write `test_allowed_import_numpy_passes_scan`: script contains `import numpy`; assert `_scan_imports` returns an empty list
+- [x] Write `test_allowed_import_pathlib_passes_scan`: script contains `from pathlib import Path`; assert `_scan_imports` returns an empty list
+- [x] Write `test_allowed_import_os_passes_scan`: script contains `import os`; assert `_scan_imports` returns an empty list
+- [x] Write `test_ast_scan_catches_from_import_disallowed_module`: script contains `from requests import get`; assert `ValueError` (requests not in allowed set)
+- [x] Write `test_timeout_enforced`: script contains an infinite loop `while True: pass`; assert a timeout-related exception is raised within `PYTHON_RUNNER_TIMEOUT_S` seconds
+- [x] Write `test_syntax_error_reported`: script contains `def foo(:` (invalid syntax); assert the return value contains stderr output and does not raise unhandled exception
+- [x] Write `test_import_whitelist_is_frozenset`: assert `type(ALLOWED_IMPORTS) is frozenset`
+- [x] Write `test_scan_detects_multiple_bad_imports`: script has `import subprocess\nimport requests`; assert `ValueError` message references both disallowed names
+- [x] Write `test_tool_name_attribute`: assert `python_runner_tool.name == "python_runner"`
+- [x] Write `test_script_stdout_captured`: script prints a unique UUID string; assert that exact string appears in the return value
+- [x] Confirm `uv run pytest tests/test_python_runner.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_python_runner.py` — confirm exits 0
 
 ---
 
@@ -500,30 +500,30 @@
 
 > Gate: `uv run pytest tests/test_python_runner.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/tools/python_runner.py` with imports: `ast`, `subprocess`, `tempfile`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
-- [ ] Define `ALLOWED_IMPORTS: frozenset` at module level containing `{"matplotlib", "numpy", "pathlib", "os"}`
-- [ ] Add a comment on `ALLOWED_IMPORTS` explaining it is a security invariant, not a tuneable hyperparameter, and must not be moved to `.env`
-- [ ] Define `class PythonRunnerInput(BaseModel)` with field `script: str`
-- [ ] Define `class PythonRunnerTool(BaseTool)` with class attribute `name = "python_runner"`
-- [ ] Add `description` class attribute to `PythonRunnerTool`
-- [ ] Set `args_schema = PythonRunnerInput` on `PythonRunnerTool`
-- [ ] Implement `_scan_imports(self, script: str) -> list[str]` method
-- [ ] In `_scan_imports`: call `ast.parse(script)` to obtain the AST tree
-- [ ] In `_scan_imports`: walk the tree; collect top-level names from all `ast.Import` nodes
-- [ ] In `_scan_imports`: walk the tree; collect module names from all `ast.ImportFrom` nodes
-- [ ] In `_scan_imports`: compute the set difference against `ALLOWED_IMPORTS`; return the disallowed names as a sorted list
-- [ ] Implement `_run(self, script: str) -> str` method
-- [ ] In `_run`: call `self._scan_imports(script)`; if the result is non-empty, raise `ValueError` listing the disallowed import names
-- [ ] In `_run`: write the script to a `tempfile.NamedTemporaryFile` with suffix `".py"` and `delete=False`
-- [ ] In `_run`: call `subprocess.run(["python3", tmpfile_path], capture_output=True, text=True, timeout=settings.PYTHON_RUNNER_TIMEOUT_S)`
-- [ ] In `_run`: if `returncode != 0`, return the stderr string so the agent can inspect and retry
-- [ ] In `_run`: if `returncode == 0`, return the stdout string
-- [ ] In `_run`: catch `subprocess.TimeoutExpired` and re-raise it (let CrewAI handle retry)
-- [ ] Add module-level `python_runner_tool = PythonRunnerTool()` singleton instantiation
-- [ ] Run `uv run pytest tests/test_python_runner.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/python_runner.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/python_runner.py` — confirm result ≤ 95 lines
-- [ ] If line count exceeds 95, extract `_scan_imports` logic into `src/tools/_import_scanner.py` and import from there
+- [x] Create `src/tools/python_runner.py` with imports: `ast`, `subprocess`, `tempfile`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [x] Define `ALLOWED_IMPORTS: frozenset` at module level containing `{"matplotlib", "numpy", "pathlib", "os"}`
+- [x] Add a comment on `ALLOWED_IMPORTS` explaining it is a security invariant, not a tuneable hyperparameter, and must not be moved to `.env`
+- [x] Define `class PythonRunnerInput(BaseModel)` with field `script: str`
+- [x] Define `class PythonRunnerTool(BaseTool)` with class attribute `name = "python_runner"`
+- [x] Add `description` class attribute to `PythonRunnerTool`
+- [x] Set `args_schema = PythonRunnerInput` on `PythonRunnerTool`
+- [x] Implement `_scan_imports(self, script: str) -> list[str]` method
+- [x] In `_scan_imports`: call `ast.parse(script)` to obtain the AST tree
+- [x] In `_scan_imports`: walk the tree; collect top-level names from all `ast.Import` nodes
+- [x] In `_scan_imports`: walk the tree; collect module names from all `ast.ImportFrom` nodes
+- [x] In `_scan_imports`: compute the set difference against `ALLOWED_IMPORTS`; return the disallowed names as a sorted list
+- [x] Implement `_run(self, script: str) -> str` method
+- [x] In `_run`: call `self._scan_imports(script)`; if the result is non-empty, raise `ValueError` listing the disallowed import names
+- [x] In `_run`: write the script to a `tempfile.NamedTemporaryFile` with suffix `".py"` and `delete=False`
+- [x] In `_run`: call `subprocess.run(["python3", tmpfile_path], capture_output=True, text=True, timeout=settings.PYTHON_RUNNER_TIMEOUT_S)`
+- [x] In `_run`: if `returncode != 0`, return the stderr string so the agent can inspect and retry
+- [x] In `_run`: if `returncode == 0`, return the stdout string
+- [x] In `_run`: catch `subprocess.TimeoutExpired` and re-raise it (let CrewAI handle retry)
+- [x] Add module-level `python_runner_tool = PythonRunnerTool()` singleton instantiation
+- [x] Run `uv run pytest tests/test_python_runner.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/python_runner.py` — confirm exits 0
+- [x] Run `wc -l src/tools/python_runner.py` — confirm result ≤ 95 lines
+- [x] If line count exceeds 95, extract `_scan_imports` logic into `src/tools/_import_scanner.py` and import from there
 
 ---
 
