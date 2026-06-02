@@ -27,4 +27,5 @@ select = ["E", "F", "I"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=src"
+pythonpath = ["."]
 markers = ["slow: end-to-end tests requiring API key and lualatex binary"]

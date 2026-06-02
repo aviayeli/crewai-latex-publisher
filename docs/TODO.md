@@ -186,21 +186,21 @@
 
 ## Phase 2: Test Infrastructure — `tests/conftest.py`
 
-- [ ] Create `tests/conftest.py` with imports: `pytest`, `pathlib.Path`, `unittest.mock`
-- [ ] Write `tmp_output_dir` fixture with `scope="function"` using `tmp_path`
-- [ ] In `tmp_output_dir`: create `assets/` subdirectory inside the temp path
-- [ ] In `tmp_output_dir`: create `chapters/` subdirectory inside the temp path
-- [ ] In `tmp_output_dir`: create `figures/` subdirectory inside the temp path
-- [ ] In `tmp_output_dir`: patch `src.config.settings.OUTPUT_DIR` to point at the temp path string
-- [ ] In `tmp_output_dir`: patch `src.config.settings.ASSETS_DIR` to point at `tmp_path / "assets"` string
-- [ ] In `tmp_output_dir`: `yield` the temp path, then allow teardown to happen automatically
-- [ ] Write `mock_settings` fixture: construct a `Settings` instance with test values, no `.env` required
-- [ ] In `mock_settings`: set `LLM_MODEL = "claude-haiku-4-5-20251001"` for speed in unit tests
-- [ ] In `mock_settings`: set `ANTHROPIC_API_KEY = "test-key-placeholder"`
-- [ ] In `mock_settings`: set `MAX_AGENT_RETRIES = 1`
-- [ ] In `mock_settings`: set `PYTHON_RUNNER_TIMEOUT_S = 10`
-- [ ] Verify `tests/conftest.py` is ≤ 40 lines: run `wc -l tests/conftest.py`
-- [ ] Run `uv run ruff check tests/conftest.py` — confirm exits 0
+- [x] Create `tests/conftest.py` with imports: `pytest`, `pathlib.Path`, `unittest.mock`
+- [x] Write `tmp_output_dir` fixture with `scope="function"` using `tmp_path`
+- [x] In `tmp_output_dir`: create `assets/` subdirectory inside the temp path
+- [x] In `tmp_output_dir`: create `chapters/` subdirectory inside the temp path
+- [x] In `tmp_output_dir`: create `figures/` subdirectory inside the temp path
+- [x] In `tmp_output_dir`: patch `src.config.settings.OUTPUT_DIR` to point at the temp path string
+- [x] In `tmp_output_dir`: patch `src.config.settings.ASSETS_DIR` to point at `tmp_path / "assets"` string
+- [x] In `tmp_output_dir`: `yield` the temp path, then allow teardown to happen automatically
+- [x] Write `mock_settings` fixture: construct a `Settings` instance with test values, no `.env` required
+- [x] In `mock_settings`: set `LLM_MODEL = "claude-haiku-4-5-20251001"` for speed in unit tests
+- [x] In `mock_settings`: set `ANTHROPIC_API_KEY = "test-key-placeholder"`
+- [x] In `mock_settings`: set `MAX_AGENT_RETRIES = 1`
+- [x] In `mock_settings`: set `PYTHON_RUNNER_TIMEOUT_S = 10`
+- [x] Verify `tests/conftest.py` is ≤ 40 lines: run `wc -l tests/conftest.py`
+- [x] Run `uv run ruff check tests/conftest.py` — confirm exits 0
 
 ---
 
