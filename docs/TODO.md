@@ -322,28 +322,28 @@
 
 > Gate: `src/tools/lualatex_runner.py` must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_lualatex_runner.py` with imports: `pytest`, `shutil`, `pathlib.Path`, `src.tools.lualatex_runner`
-- [ ] Write `test_compilation_error_is_exception_subclass`: assert `issubclass(CompilationError, Exception)`
-- [ ] Write `test_log_parser_detects_error_line`: create a string containing `"! LaTeX Error: File not found"`; write to a temp file; call `tool._parse_log(path)`; assert returned list is non-empty
-- [ ] Write `test_log_parser_clean_log_returns_empty_list`: create a log string with no `!` error lines; call `_parse_log`; assert returned list is empty
-- [ ] Write `test_log_parser_detects_undefined_control_sequence`: feed `"! Undefined control sequence."` in log; assert it is captured
-- [ ] Write `test_log_parser_ignores_info_lines`: log contains only `"This is LuaTeX, ..."` info lines; assert empty list returned
-- [ ] Write `test_build_cmd_contains_nonstopmode`: call `tool._build_cmd("main.tex")`; assert `"--interaction=nonstopmode"` is in the result list
-- [ ] Write `test_build_cmd_contains_output_directory_flag`: assert the result of `_build_cmd` contains a string starting with `"--output-directory="`
-- [ ] Write `test_build_cmd_contains_tex_filename`: assert `"main.tex"` is in `_build_cmd("main.tex")`
-- [ ] Write `test_build_cmd_first_element_is_lualatex_bin`: assert `_build_cmd("main.tex")[0] == settings.LUALATEX_BIN`
-- [ ] Write `test_tool_name_attribute`: assert `lualatex_runner_tool.name == "lualatex_runner"`
-- [ ] Write `test_default_passes_is_two`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.passes == 2`
-- [ ] Write `test_default_run_biber_is_true`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.run_biber == True`
-- [ ] Write `test_build_biber_cmd_contains_biber_bin`: assert `_build_biber_cmd("main")[0] == settings.BIBER_BIN`
-- [ ] Write `test_build_biber_cmd_contains_stem`: assert `"main"` is in `_build_biber_cmd("main")`
-- [ ] Write `test_biber_called_between_lualatex_passes`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=True)`; assert mock call order is lualatex → biber → lualatex
-- [ ] Write `test_biber_skipped_when_run_biber_false`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=False)`; assert biber command never called
-- [ ] Decorate an integration test class with `@pytest.mark.skipif(shutil.which("lualatex") is None, reason="lualatex not installed")`
-- [ ] Write `test_minimal_tex_compiles_successfully` inside that class: write a minimal valid `.tex` file to tmp dir; call `_run`; assert return dict has `"success": True`
-- [ ] Write `test_invalid_tex_raises_compilation_error` inside that class: write syntactically broken LaTeX; assert `CompilationError` is raised
-- [ ] Confirm `uv run pytest tests/test_lualatex_runner.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_lualatex_runner.py` — confirm exits 0
+- [x] Create `tests/test_lualatex_runner.py` with imports: `pytest`, `shutil`, `pathlib.Path`, `src.tools.lualatex_runner`
+- [x] Write `test_compilation_error_is_exception_subclass`: assert `issubclass(CompilationError, Exception)`
+- [x] Write `test_log_parser_detects_error_line`: create a string containing `"! LaTeX Error: File not found"`; write to a temp file; call `tool._parse_log(path)`; assert returned list is non-empty
+- [x] Write `test_log_parser_clean_log_returns_empty_list`: create a log string with no `!` error lines; call `_parse_log`; assert returned list is empty
+- [x] Write `test_log_parser_detects_undefined_control_sequence`: feed `"! Undefined control sequence."` in log; assert it is captured
+- [x] Write `test_log_parser_ignores_info_lines`: log contains only `"This is LuaTeX, ..."` info lines; assert empty list returned
+- [x] Write `test_build_cmd_contains_nonstopmode`: call `tool._build_cmd("main.tex")`; assert `"--interaction=nonstopmode"` is in the result list
+- [x] Write `test_build_cmd_contains_output_directory_flag`: assert the result of `_build_cmd` contains a string starting with `"--output-directory="`
+- [x] Write `test_build_cmd_contains_tex_filename`: assert `"main.tex"` is in `_build_cmd("main.tex")`
+- [x] Write `test_build_cmd_first_element_is_lualatex_bin`: assert `_build_cmd("main.tex")[0] == settings.LUALATEX_BIN`
+- [x] Write `test_tool_name_attribute`: assert `lualatex_runner_tool.name == "lualatex_runner"`
+- [x] Write `test_default_passes_is_two`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.passes == 2`
+- [x] Write `test_default_run_biber_is_true`: instantiate `LualatexRunnerInput(tex_file="main.tex")`; assert `.run_biber == True`
+- [x] Write `test_build_biber_cmd_contains_biber_bin`: assert `_build_biber_cmd("main")[0] == settings.BIBER_BIN`
+- [x] Write `test_build_biber_cmd_contains_stem`: assert `"main"` is in `_build_biber_cmd("main")`
+- [x] Write `test_biber_called_between_lualatex_passes`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=True)`; assert mock call order is lualatex → biber → lualatex
+- [x] Write `test_biber_skipped_when_run_biber_false`: mock `subprocess.run`; call `_run("main.tex", passes=2, run_biber=False)`; assert biber command never called
+- [x] Decorate an integration test class with `@pytest.mark.skipif(shutil.which("lualatex") is None, reason="lualatex not installed")`
+- [x] Write `test_minimal_tex_compiles_successfully` inside that class: write a minimal valid `.tex` file to tmp dir; call `_run`; assert return dict has `"success": True`
+- [x] Write `test_invalid_tex_raises_compilation_error` inside that class: write syntactically broken LaTeX; assert `CompilationError` is raised
+- [x] Confirm `uv run pytest tests/test_lualatex_runner.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_lualatex_runner.py` — confirm exits 0
 
 ---
 
@@ -531,34 +531,31 @@
 
 > Gate: `uv run pytest tests/test_lualatex_runner.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/tools/lualatex_runner.py` with imports: `subprocess`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
-- [ ] Define `class CompilationError(Exception): pass`
-- [ ] Define `class LualatexRunnerInput(BaseModel)` with field `tex_file: str`
-- [ ] Add field `passes: int = 2` to `LualatexRunnerInput`
-- [ ] Add field `run_biber: bool = True` to `LualatexRunnerInput`
-- [ ] Define `class LualatexRunnerTool(BaseTool)` with class attribute `name = "lualatex_runner"`
-- [ ] Add `description` class attribute to `LualatexRunnerTool`
-- [ ] Set `args_schema = LualatexRunnerInput` on `LualatexRunnerTool`
-- [ ] Implement `_build_lualatex_cmd(self, tex_file: str) -> list[str]` method
-- [ ] In `_build_lualatex_cmd`: return `[settings.LUALATEX_BIN, "--interaction=nonstopmode", f"--output-directory={settings.OUTPUT_DIR}", tex_file]`
-- [ ] Implement `_build_biber_cmd(self, stem: str) -> list[str]` method
-- [ ] In `_build_biber_cmd`: return `[settings.BIBER_BIN, stem]`
-- [ ] Implement `_parse_log(self, log_path: Path) -> list[str]` method
-- [ ] In `_parse_log`: read the log file with `encoding="utf-8", errors="replace"`
-- [ ] In `_parse_log`: filter and return only lines that begin with `"! "`
-- [ ] Implement `_run(self, tex_file: str, passes: int, run_biber: bool) -> dict` method
-- [ ] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 1
-- [ ] In `_run`: if `run_biber` is True, execute `subprocess.run(self._build_biber_cmd(stem), ...)` between passes
-- [ ] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 2
-- [ ] In `_run`: after the final lualatex pass, derive the log path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")`
-- [ ] In `_run`: call `self._parse_log(log_path)`; if the result list is non-empty, raise `CompilationError(errors_list)`
-- [ ] In `_run`: derive pdf_path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".pdf")`
-- [ ] In `_run`: return `{"success": True, "pdf_path": str(pdf_path), "log_tail": ""}` on success
-- [ ] Add module-level `lualatex_runner_tool = LualatexRunnerTool()` singleton instantiation
-- [ ] Run `uv run pytest tests/test_lualatex_runner.py` — confirm exits 0 (non-skipped tests pass)
-- [ ] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/lualatex_runner.py` — confirm result ≤ 100 lines
-- [ ] If line count exceeds 100, extract `_parse_log` into `src/tools/_log_parser.py` and import from there
+- [x] Create `src/tools/lualatex_runner.py` with imports: `subprocess`, `pathlib.Path`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [x] Define `class CompilationError(Exception): pass`
+- [x] Define `class LualatexRunnerInput(BaseModel)` with field `tex_file: str`
+- [x] Add field `passes: int = 2` to `LualatexRunnerInput`
+- [x] Add field `run_biber: bool = True` to `LualatexRunnerInput`
+- [x] Define `class LualatexRunnerTool(BaseTool)` with class attribute `name = "lualatex_runner"`
+- [x] Add `description` class attribute to `LualatexRunnerTool`
+- [x] Set `args_schema = LualatexRunnerInput` on `LualatexRunnerTool`
+- [x] Implement `_build_lualatex_cmd(self, tex_file: str) -> list[str]` method
+- [x] In `_build_lualatex_cmd`: return `[settings.LUALATEX_BIN, "--interaction=nonstopmode", f"--output-directory={settings.OUTPUT_DIR}", tex_file]`
+- [x] Implement `_build_biber_cmd(self, stem: str) -> list[str]` method
+- [x] In `_build_biber_cmd`: return `[settings.BIBER_BIN, stem]`
+- [x] Implement `_parse_log(self, log_path: Path) -> list[str]` method
+- [x] In `_parse_log`: read the log file with `encoding="utf-8", errors="replace"`
+- [x] In `_parse_log`: filter and return only lines that begin with `"! "`
+- [x] Implement `_run(self, tex_file: str, passes: int, run_biber: bool) -> dict` method
+- [x] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 1
+- [x] In `_run`: if `run_biber` is True, execute `subprocess.run(self._build_biber_cmd(stem), ...)` between passes
+- [x] In `_run`: execute `subprocess.run(self._build_lualatex_cmd(tex_file), ...)` for pass 2
+- [x] In `_run`: after the final lualatex pass, derive the log path from `Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")`
+- [x] In `_run`: call `self._parse_log(log_path)`; if the result list is non-empty, raise `CompilationError(errors_list)`
+- [x] Add module-level `lualatex_runner_tool = LualatexRunnerTool()` singleton instantiation
+- [x] Run `uv run pytest tests/test_lualatex_runner.py` — confirm exits 0 (non-skipped tests pass)
+- [x] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
+- [x] Run `wc -l src/tools/lualatex_runner.py` — confirm result ≤ 100 lines
 
 ---
 
