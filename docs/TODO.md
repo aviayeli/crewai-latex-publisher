@@ -115,42 +115,42 @@
 
 ## Phase 1 continued: `skills/lualatex-bidi/SKILL.md`
 
-- [ ] Create directory `skills/lualatex-bidi/`
-- [ ] Create `skills/lualatex-bidi/SKILL.md` with header declaring the agent role as LaTeX BiDi Typesetting Specialist
-- [ ] Document the `bidi` package: explain that it is automatically loaded by `polyglossia` when Hebrew is set as main language
-- [ ] Document `polyglossia` language switching: `\setmainlanguage{hebrew}` and `\setotherlanguage{english}`
-- [ ] Document the `\textenglish{}` command for inline English within Hebrew RTL paragraphs
-- [ ] Document the `\begin{english}...\end{english}` environment for multi-line English blocks
-- [ ] Document the `\begin{LTR}...\end{LTR}` environment for left-to-right code or data blocks
-- [ ] Document the three mandatory BiDi constructs required in Chapter 3: (1) RTL paragraph with inline `\textenglish{}`, (2) LTR `equation` environment, (3) `\begin{LTR}...\end{LTR}` block
-- [ ] Document common RTL/LTR pitfall: punctuation mirroring artifacts in BiDi mode and how to fix them
-- [ ] Write a validation checklist of at least 10 items an agent must verify before marking a chapter as BiDi-clean
-- [ ] Document that BidiAgent must validate all 6 chapters, not only Chapter 3
-- [ ] Document the fix procedure: how to insert missing BiDi constructs without breaking surrounding context
-- [ ] Write a concrete example of a BiDi-correct paragraph in the SKILL.md
-- [ ] Write a concrete example of a common BiDi mistake paired with its corrected form
-- [ ] Verify `skills/lualatex-bidi/SKILL.md` contains the string `\setmainlanguage`
-- [ ] Verify `skills/lualatex-bidi/SKILL.md` contains the string `\begin{LTR}`
+- [x] Create directory `skills/lualatex-bidi/`
+- [x] Create `skills/lualatex-bidi/SKILL.md` with header declaring the agent role as LaTeX BiDi Typesetting Specialist
+- [x] Document the `bidi` package: explain that it is automatically loaded by `polyglossia` when Hebrew is set as main language
+- [x] Document `polyglossia` language switching: `\setmainlanguage{hebrew}` and `\setotherlanguage{english}`
+- [x] Document the `\textenglish{}` command for inline English within Hebrew RTL paragraphs
+- [x] Document the `\begin{english}...\end{english}` environment for multi-line English blocks
+- [x] Document the `\begin{LTR}...\end{LTR}` environment for left-to-right code or data blocks
+- [x] Document the three mandatory BiDi constructs required in Chapter 3: (1) RTL paragraph with inline `\textenglish{}`, (2) LTR `equation` environment, (3) `\begin{LTR}...\end{LTR}` block
+- [x] Document common RTL/LTR pitfall: punctuation mirroring artifacts in BiDi mode and how to fix them
+- [x] Write a validation checklist of at least 10 items an agent must verify before marking a chapter as BiDi-clean
+- [x] Document that BidiAgent must validate all 6 chapters, not only Chapter 3
+- [x] Document the fix procedure: how to insert missing BiDi constructs without breaking surrounding context
+- [x] Write a concrete example of a BiDi-correct paragraph in the SKILL.md
+- [x] Write a concrete example of a common BiDi mistake paired with its corrected form
+- [x] Verify `skills/lualatex-bidi/SKILL.md` contains the string `\setmainlanguage`
+- [x] Verify `skills/lualatex-bidi/SKILL.md` contains the string `\begin{LTR}`
 
 ---
 
 ## Phase 1 continued: `skills/matplotlib-tikz/SKILL.md`
 
-- [ ] Create directory `skills/matplotlib-tikz/`
-- [ ] Create `skills/matplotlib-tikz/SKILL.md` with header declaring the agent role as Scientific Figure Generator
-- [ ] Document matplotlib save-as-PNG at 300 dpi: `plt.savefig(path, dpi=300, bbox_inches='tight')`
-- [ ] Document that the output path must be exactly `latex_output/assets/attention_complexity.png`
-- [ ] Document axis labeling requirements: x-axis = "Sequence Length (n)", y-axis = "Complexity", legend required
-- [ ] Document the three curves the plot must display: O(n²) standard attention, O(n log n) linear attention, O(n) recurrent
-- [ ] Document that the matplotlib script must import only from `matplotlib.pyplot` and `numpy` (no other imports)
-- [ ] Document TikZ syntax for scaled dot-product attention formula diagram with Q, K, V nodes
-- [ ] Document the output path for the TikZ snippet: `latex_output/figures/sdp_attention.tex`
-- [ ] Document how to connect TikZ nodes with arrows to represent the SDP attention data flow
-- [ ] Document `\includegraphics` integration: the LaTeX command to embed the PNG in a figure environment
-- [ ] Write the complete expected matplotlib script structure (with comments for each section) in the SKILL.md
-- [ ] Write the complete expected TikZ skeleton for `sdp_attention.tex` in the SKILL.md
-- [ ] Verify `skills/matplotlib-tikz/SKILL.md` contains the string `dpi=300`
-- [ ] Verify `skills/matplotlib-tikz/SKILL.md` contains the string `sdp_attention.tex`
+- [x] Create directory `skills/matplotlib-tikz/`
+- [x] Create `skills/matplotlib-tikz/SKILL.md` with header declaring the agent role as Scientific Figure Generator
+- [x] Document matplotlib save-as-PNG at 300 dpi: `plt.savefig(path, dpi=300, bbox_inches='tight')`
+- [x] Document that the output path must be exactly `latex_output/assets/attention_complexity.png`
+- [x] Document axis labeling requirements: x-axis = "Sequence Length (n)", y-axis = "Complexity", legend required
+- [x] Document the three curves the plot must display: O(n²) standard attention, O(n log n) linear attention, O(n) recurrent
+- [x] Document that the matplotlib script must import only from `matplotlib.pyplot` and `numpy` (no other imports)
+- [x] Document TikZ syntax for scaled dot-product attention formula diagram with Q, K, V nodes
+- [x] Document the output path for the TikZ snippet: `latex_output/figures/sdp_attention.tex`
+- [x] Document how to connect TikZ nodes with arrows to represent the SDP attention data flow
+- [x] Document `\includegraphics` integration: the LaTeX command to embed the PNG in a figure environment
+- [x] Write the complete expected matplotlib script structure (with comments for each section) in the SKILL.md
+- [x] Write the complete expected TikZ skeleton for `sdp_attention.tex` in the SKILL.md
+- [x] Verify `skills/matplotlib-tikz/SKILL.md` contains the string `dpi=300`
+- [x] Verify `skills/matplotlib-tikz/SKILL.md` contains the string `sdp_attention.tex`
 
 ---
 
@@ -158,29 +158,29 @@
 
 - [x] Create directory `skills/lualatex-build/`
 - [x] Create `skills/lualatex-build/SKILL.md` with header declaring the agent role as LaTeX Build Engineer
-- [ ] Document the exact `lualatex` CLI flags to use: `--interaction=nonstopmode` and `--output-directory`
-- [ ] Document the two-pass compilation strategy and why it is required (cross-references, bibliography)
-- [ ] Document the required preamble package list: `fontspec`, `polyglossia`, `biblatex`, `geometry`, `graphicx`, `amsmath`, `hyperref`, `tikz`, `booktabs`, `xcolor`
-- [ ] Document `\documentclass[17pt,a4paper]{extarticle}` as the document class declaration
-- [ ] Document `fontspec` usage and the Hebrew font fallback chain: `David CLM` → `Frank Ruehl CLM` → `Noto Serif Hebrew`
-- [ ] Document that `polyglossia` must be used as the language package (not `babel`)
-- [ ] Document `biblatex` configuration: `backend=biber`, `addbibresource{refs.bib}`
-- [ ] Document the `\input{}` ordering convention: `chapters/ch1` through `chapters/ch6` in sequence
-- [ ] Document `\printbibliography` placement at the end of the document body before `\end{document}`
-- [ ] Document log parsing heuristics: lines beginning with `! LaTeX Error` or `! Undefined control sequence`
-- [ ] Document that the assembled `main.tex` must be written to `latex_output/main.tex`
-- [ ] Document the Markdown-first workflow: ContentAgent writes each chapter as `ch{n}.md` first, then calls `markdown_converter_tool` (pandoc) to produce `ch{n}.tex`; the Compiler Agent operates only on the resulting `.tex` files
-- [ ] Document the three-step biber compilation pipeline: (1) `lualatex main.tex` — generates `.bcf`; (2) `biber main` — resolves bibliography from `refs.bib`; (3) `lualatex main.tex` — incorporates `.bbl` and resolves cross-references
-- [ ] Document `biber` CLI invocation: `biber <stem>` where stem is the `.tex` filename without extension (e.g., `biber main`)
-- [ ] Document that `biblatex` must be loaded with `backend=biber` in the preamble — using `backend=bibtex` will break the pipeline
-- [ ] Document the `BIBER_BIN` and `PANDOC_BIN` settings fields as the configurable binary paths
-- [ ] Write the complete preamble skeleton (10–15 lines of actual LaTeX) in the SKILL.md
-- [ ] Write the complete `main.tex` body skeleton showing all 6 `\input{}` calls in the SKILL.md
-- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `nonstopmode`
-- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `polyglossia`
-- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `\printbibliography`
-- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `biber`
-- [ ] Verify `skills/lualatex-build/SKILL.md` contains the string `pandoc`
+- [x] Document the exact `lualatex` CLI flags to use: `--interaction=nonstopmode` and `--output-directory`
+- [x] Document the two-pass compilation strategy and why it is required (cross-references, bibliography)
+- [x] Document the required preamble package list: `fontspec`, `polyglossia`, `biblatex`, `geometry`, `graphicx`, `amsmath`, `hyperref`, `tikz`, `booktabs`, `xcolor`
+- [x] Document `\documentclass[17pt,a4paper]{extarticle}` as the document class declaration
+- [x] Document `fontspec` usage and the Hebrew font fallback chain: `David CLM` → `Frank Ruehl CLM` → `Noto Serif Hebrew`
+- [x] Document that `polyglossia` must be used as the language package (not `babel`)
+- [x] Document `biblatex` configuration: `backend=biber`, `addbibresource{refs.bib}`
+- [x] Document the `\input{}` ordering convention: `chapters/ch1` through `chapters/ch6` in sequence
+- [x] Document `\printbibliography` placement at the end of the document body before `\end{document}`
+- [x] Document log parsing heuristics: lines beginning with `! LaTeX Error` or `! Undefined control sequence`
+- [x] Document that the assembled `main.tex` must be written to `latex_output/main.tex`
+- [x] Document the Markdown-first workflow: ContentAgent writes each chapter as `ch{n}.md` first, then calls `markdown_converter_tool` (pandoc) to produce `ch{n}.tex`; the Compiler Agent operates only on the resulting `.tex` files
+- [x] Document the three-step biber compilation pipeline: (1) `lualatex main.tex` — generates `.bcf`; (2) `biber main` — resolves bibliography from `refs.bib`; (3) `lualatex main.tex` — incorporates `.bbl` and resolves cross-references
+- [x] Document `biber` CLI invocation: `biber <stem>` where stem is the `.tex` filename without extension (e.g., `biber main`)
+- [x] Document that `biblatex` must be loaded with `backend=biber` in the preamble — using `backend=bibtex` will break the pipeline
+- [x] Document the `BIBER_BIN` and `PANDOC_BIN` settings fields as the configurable binary paths
+- [x] Write the complete preamble skeleton (10–15 lines of actual LaTeX) in the SKILL.md
+- [x] Write the complete `main.tex` body skeleton showing all 6 `\input{}` calls in the SKILL.md
+- [x] Verify `skills/lualatex-build/SKILL.md` contains the string `nonstopmode`
+- [x] Verify `skills/lualatex-build/SKILL.md` contains the string `polyglossia`
+- [x] Verify `skills/lualatex-build/SKILL.md` contains the string `\printbibliography`
+- [x] Verify `skills/lualatex-build/SKILL.md` contains the string `biber`
+- [x] Verify `skills/lualatex-build/SKILL.md` contains the string `pandoc`
 
 ---
 
