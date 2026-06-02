@@ -208,24 +208,24 @@
 
 > Gate: `src/config.py` must NOT exist yet. All tests in this phase must fail with ImportError.
 
-- [ ] Create `tests/test_config.py` with imports: `pytest`, `os`, `unittest.mock.patch`
-- [ ] Write `test_settings_load_from_env`: monkeypatch `ANTHROPIC_API_KEY=sk-test`, import `Settings`, assert `Settings(ANTHROPIC_API_KEY="sk-test").ANTHROPIC_API_KEY == "sk-test"`
-- [ ] Write `test_llm_model_default`: assert `Settings(ANTHROPIC_API_KEY="x").LLM_MODEL == "claude-sonnet-4-6"`
-- [ ] Write `test_max_agent_retries_default`: assert `Settings(ANTHROPIC_API_KEY="x").MAX_AGENT_RETRIES == 3`
-- [ ] Write `test_python_runner_timeout_default`: assert `Settings(ANTHROPIC_API_KEY="x").PYTHON_RUNNER_TIMEOUT_S == 60`
-- [ ] Write `test_lualatex_bin_default`: assert `Settings(ANTHROPIC_API_KEY="x").LUALATEX_BIN == "lualatex"`
-- [ ] Write `test_output_dir_default`: assert `Settings(ANTHROPIC_API_KEY="x").OUTPUT_DIR == "latex_output"`
-- [ ] Write `test_assets_dir_default`: assert `Settings(ANTHROPIC_API_KEY="x").ASSETS_DIR == "latex_output/assets"`
-- [ ] Write `test_min_pages_default`: assert `Settings(ANTHROPIC_API_KEY="x").MIN_PAGES == 15`
-- [ ] Write `test_missing_api_key_raises`: assert constructing `Settings()` with no `ANTHROPIC_API_KEY` in env raises `ValidationError`
-- [ ] Write `test_missing_perplexity_api_key_raises`: assert constructing `Settings()` with no `PERPLEXITY_API_KEY` raises `ValidationError`
-- [ ] Write `test_perplexity_api_key_loaded`: monkeypatch `PERPLEXITY_API_KEY=pplx-test`; assert `Settings(...).PERPLEXITY_API_KEY == "pplx-test"`
-- [ ] Write `test_biber_bin_default`: assert `Settings(...).BIBER_BIN == "biber"`
-- [ ] Write `test_pandoc_bin_default`: assert `Settings(...).PANDOC_BIN == "pandoc"`
-- [ ] Write `test_env_override_llm_model`: monkeypatch `LLM_MODEL=claude-opus-4-8`; assert `LLM_MODEL` picks up the override
-- [ ] Write `test_env_override_min_pages`: monkeypatch `MIN_PAGES=20`; assert `MIN_PAGES == 20`
-- [ ] Confirm `uv run pytest tests/test_config.py` exits non-zero (ImportError — `src/config.py` absent)
-- [ ] Run `uv run ruff check tests/test_config.py` — confirm exits 0
+- [x] Create `tests/test_config.py` with imports: `pytest`, `os`, `unittest.mock.patch`
+- [x] Write `test_settings_load_from_env`: monkeypatch `ANTHROPIC_API_KEY=sk-test`, import `Settings`, assert `Settings(ANTHROPIC_API_KEY="sk-test").ANTHROPIC_API_KEY == "sk-test"`
+- [x] Write `test_llm_model_default`: assert `Settings(ANTHROPIC_API_KEY="x").LLM_MODEL == "claude-sonnet-4-6"`
+- [x] Write `test_max_agent_retries_default`: assert `Settings(ANTHROPIC_API_KEY="x").MAX_AGENT_RETRIES == 3`
+- [x] Write `test_python_runner_timeout_default`: assert `Settings(ANTHROPIC_API_KEY="x").PYTHON_RUNNER_TIMEOUT_S == 60`
+- [x] Write `test_lualatex_bin_default`: assert `Settings(ANTHROPIC_API_KEY="x").LUALATEX_BIN == "lualatex"`
+- [x] Write `test_output_dir_default`: assert `Settings(ANTHROPIC_API_KEY="x").OUTPUT_DIR == "latex_output"`
+- [x] Write `test_assets_dir_default`: assert `Settings(ANTHROPIC_API_KEY="x").ASSETS_DIR == "latex_output/assets"`
+- [x] Write `test_min_pages_default`: assert `Settings(ANTHROPIC_API_KEY="x").MIN_PAGES == 15`
+- [x] Write `test_missing_api_key_raises`: assert constructing `Settings()` with no `ANTHROPIC_API_KEY` in env raises `ValidationError`
+- [x] Write `test_missing_perplexity_api_key_raises`: assert constructing `Settings()` with no `PERPLEXITY_API_KEY` raises `ValidationError`
+- [x] Write `test_perplexity_api_key_loaded`: monkeypatch `PERPLEXITY_API_KEY=pplx-test`; assert `Settings(...).PERPLEXITY_API_KEY == "pplx-test"`
+- [x] Write `test_biber_bin_default`: assert `Settings(...).BIBER_BIN == "biber"`
+- [x] Write `test_pandoc_bin_default`: assert `Settings(...).PANDOC_BIN == "pandoc"`
+- [x] Write `test_env_override_llm_model`: monkeypatch `LLM_MODEL=claude-opus-4-8`; assert `LLM_MODEL` picks up the override
+- [x] Write `test_env_override_min_pages`: monkeypatch `MIN_PAGES=20`; assert `MIN_PAGES == 20`
+- [x] Confirm `uv run pytest tests/test_config.py` exits non-zero (ImportError — `src/config.py` absent)
+- [x] Run `uv run ruff check tests/test_config.py` — confirm exits 0
 
 ---
 
@@ -402,23 +402,23 @@
 
 > Gate: `uv run pytest tests/test_config.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/config.py` with `from pydantic_settings import BaseSettings, SettingsConfigDict`
-- [ ] Define `class Settings(BaseSettings)` with field `LLM_MODEL: str = "claude-sonnet-4-6"`
-- [ ] Add field `ANTHROPIC_API_KEY: str` with no default (required field)
-- [ ] Add field `PERPLEXITY_API_KEY: str` with no default (required field)
-- [ ] Add field `MAX_AGENT_RETRIES: int = 3`
-- [ ] Add field `PYTHON_RUNNER_TIMEOUT_S: int = 60`
-- [ ] Add field `LUALATEX_BIN: str = "lualatex"`
-- [ ] Add field `BIBER_BIN: str = "biber"`
-- [ ] Add field `PANDOC_BIN: str = "pandoc"`
-- [ ] Add field `OUTPUT_DIR: str = "latex_output"`
-- [ ] Add field `ASSETS_DIR: str = "latex_output/assets"`
-- [ ] Add field `MIN_PAGES: int = 15`
-- [ ] Add `model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")` to `Settings`
-- [ ] Add module-level `settings = Settings()` instantiation as the singleton
-- [ ] Run `uv run pytest tests/test_config.py` — confirm exits 0 (all config tests green)
-- [ ] Run `uv run ruff check src/config.py` — confirm exits 0
-- [ ] Run `wc -l src/config.py` — confirm result ≤ 50 lines
+- [x] Create `src/config.py` with `from pydantic_settings import BaseSettings, SettingsConfigDict`
+- [x] Define `class Settings(BaseSettings)` with field `LLM_MODEL: str = "claude-sonnet-4-6"`
+- [x] Add field `ANTHROPIC_API_KEY: str` with no default (required field)
+- [x] Add field `PERPLEXITY_API_KEY: str` with no default (required field)
+- [x] Add field `MAX_AGENT_RETRIES: int = 3`
+- [x] Add field `PYTHON_RUNNER_TIMEOUT_S: int = 60`
+- [x] Add field `LUALATEX_BIN: str = "lualatex"`
+- [x] Add field `BIBER_BIN: str = "biber"`
+- [x] Add field `PANDOC_BIN: str = "pandoc"`
+- [x] Add field `OUTPUT_DIR: str = "latex_output"`
+- [x] Add field `ASSETS_DIR: str = "latex_output/assets"`
+- [x] Add field `MIN_PAGES: int = 15`
+- [x] Add `model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")` to `Settings`
+- [x] Add module-level `settings = Settings()` instantiation as the singleton
+- [x] Run `uv run pytest tests/test_config.py` — confirm exits 0 (all config tests green)
+- [x] Run `uv run ruff check src/config.py` — confirm exits 0
+- [x] Run `wc -l src/config.py` — confirm result ≤ 50 lines
 
 ---
 
