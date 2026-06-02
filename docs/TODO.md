@@ -233,24 +233,24 @@
 
 > Gate: `src/tools/latex_writer.py` must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_latex_writer.py` with imports: `pytest`, `pathlib.Path`, `src.tools.latex_writer` (will fail at import)
-- [ ] Write `test_write_creates_file`: call `latex_writer_tool._run(path="chapters/ch1.tex", content="\\chapter{Test}", mode="write")`; assert the file exists with exact content
-- [ ] Write `test_write_overwrites_existing_file`: call `_run` twice with different content in write mode; assert only the second content remains
-- [ ] Write `test_append_adds_content`: write then append; assert the file contains both strings concatenated
-- [ ] Write `test_append_to_nonexistent_creates_file`: append to a new path; assert file is created with the content
-- [ ] Write `test_path_traversal_rejected_dotdot`: call with `path="../../../etc/passwd"`; assert `ValueError` is raised
-- [ ] Write `test_path_traversal_rejected_absolute_path`: call with an absolute path outside `OUTPUT_DIR`; assert `ValueError`
-- [ ] Write `test_creates_parent_directories`: write to `chapters/sub/deep/ch1.tex`; assert parent directories were created automatically
-- [ ] Write `test_utf8_encoding_hebrew`: write Hebrew string `"שלום עולם"`; read file back and assert it equals the original string
-- [ ] Write `test_return_value_contains_path`: assert the string returned by `_run` contains the resolved file path
-- [ ] Write `test_write_empty_string`: write empty content in write mode; assert file exists and has zero bytes
-- [ ] Write `test_mode_invalid_raises_validation_error`: call with `mode="overwrite"` (not in `Literal`); assert `ValidationError` or `ValueError`
-- [ ] Write `test_tool_name_attribute`: assert `latex_writer_tool.name == "latex_writer"`
-- [ ] Write `test_args_schema_has_path_field`: introspect `LatexWriterInput.model_fields`; assert `"path"` is present
-- [ ] Write `test_args_schema_has_content_field`: assert `"content"` is present in `LatexWriterInput.model_fields`
-- [ ] Write `test_args_schema_has_mode_field`: assert `"mode"` is present in `LatexWriterInput.model_fields`
-- [ ] Confirm `uv run pytest tests/test_latex_writer.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
+- [x] Create `tests/test_latex_writer.py` with imports: `pytest`, `pathlib.Path`, `src.tools.latex_writer` (will fail at import)
+- [x] Write `test_write_creates_file`: call `latex_writer_tool._run(path="chapters/ch1.tex", content="\\chapter{Test}", mode="write")`; assert the file exists with exact content
+- [x] Write `test_write_overwrites_existing_file`: call `_run` twice with different content in write mode; assert only the second content remains
+- [x] Write `test_append_adds_content`: write then append; assert the file contains both strings concatenated
+- [x] Write `test_append_to_nonexistent_creates_file`: append to a new path; assert file is created with the content
+- [x] Write `test_path_traversal_rejected_dotdot`: call with `path="../../../etc/passwd"`; assert `ValueError` is raised
+- [x] Write `test_path_traversal_rejected_absolute_path`: call with an absolute path outside `OUTPUT_DIR`; assert `ValueError`
+- [x] Write `test_creates_parent_directories`: write to `chapters/sub/deep/ch1.tex`; assert parent directories were created automatically
+- [x] Write `test_utf8_encoding_hebrew`: write Hebrew string `"שלום עולם"`; read file back and assert it equals the original string
+- [x] Write `test_return_value_contains_path`: assert the string returned by `_run` contains the resolved file path
+- [x] Write `test_write_empty_string`: write empty content in write mode; assert file exists and has zero bytes
+- [x] Write `test_mode_invalid_raises_validation_error`: call with `mode="overwrite"` (not in `Literal`); assert `ValidationError` or `ValueError`
+- [x] Write `test_tool_name_attribute`: assert `latex_writer_tool.name == "latex_writer"`
+- [x] Write `test_args_schema_has_path_field`: introspect `LatexWriterInput.model_fields`; assert `"path"` is present
+- [x] Write `test_args_schema_has_content_field`: assert `"content"` is present in `LatexWriterInput.model_fields`
+- [x] Write `test_args_schema_has_mode_field`: assert `"mode"` is present in `LatexWriterInput.model_fields`
+- [x] Confirm `uv run pytest tests/test_latex_writer.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
 
 ---
 
@@ -426,27 +426,27 @@
 
 > Gate: `uv run pytest tests/test_latex_writer.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/tools/latex_writer.py` with imports: `pathlib.Path`, `typing.Literal`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
-- [ ] Define `class LatexWriterInput(BaseModel)` with field `path: str`
-- [ ] Add field `content: str` to `LatexWriterInput`
-- [ ] Add field `mode: Literal["write", "append"]` to `LatexWriterInput`
-- [ ] Define `class LatexWriterTool(BaseTool)` with class attribute `name = "latex_writer"`
-- [ ] Add `description` class attribute: one sentence describing the tool writes or appends LaTeX content to a file inside the output directory
-- [ ] Set `args_schema = LatexWriterInput` on `LatexWriterTool`
-- [ ] Implement `_validate_path(self, path: str) -> Path` method
-- [ ] In `_validate_path`: resolve the path relative to `Path(settings.OUTPUT_DIR)`
-- [ ] In `_validate_path`: call `.is_relative_to(Path(settings.OUTPUT_DIR).resolve())`; raise `ValueError` with a descriptive message if the check fails
-- [ ] In `_validate_path`: return the validated resolved `Path` object
-- [ ] Implement `_run(self, path: str, content: str, mode: str) -> str` method
-- [ ] In `_run`: call `self._validate_path(path)` to obtain the safe resolved path
-- [ ] In `_run`: call `resolved.parent.mkdir(parents=True, exist_ok=True)` to ensure directories exist
-- [ ] In `_run` write branch (`mode == "write"`): open file with `open(resolved, "w", encoding="utf-8")` and write content
-- [ ] In `_run` append branch (`mode == "append"`): open file with `open(resolved, "a", encoding="utf-8")` and write content
-- [ ] In `_run`: return a confirmation string that includes the resolved file path
-- [ ] Add module-level `latex_writer_tool = LatexWriterTool()` singleton instantiation
-- [ ] Run `uv run pytest tests/test_latex_writer.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/latex_writer.py` — confirm result ≤ 85 lines
+- [x] Create `src/tools/latex_writer.py` with imports: `pathlib.Path`, `typing.Literal`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [x] Define `class LatexWriterInput(BaseModel)` with field `path: str`
+- [x] Add field `content: str` to `LatexWriterInput`
+- [x] Add field `mode: Literal["write", "append"]` to `LatexWriterInput`
+- [x] Define `class LatexWriterTool(BaseTool)` with class attribute `name = "latex_writer"`
+- [x] Add `description` class attribute: one sentence describing the tool writes or appends LaTeX content to a file inside the output directory
+- [x] Set `args_schema = LatexWriterInput` on `LatexWriterTool`
+- [x] Implement `_validate_path(self, path: str) -> Path` method
+- [x] In `_validate_path`: resolve the path relative to `Path(settings.OUTPUT_DIR)`
+- [x] In `_validate_path`: call `.is_relative_to(Path(settings.OUTPUT_DIR).resolve())`; raise `ValueError` with a descriptive message if the check fails
+- [x] In `_validate_path`: return the validated resolved `Path` object
+- [x] Implement `_run(self, path: str, content: str, mode: str) -> str` method
+- [x] In `_run`: call `self._validate_path(path)` to obtain the safe resolved path
+- [x] In `_run`: call `resolved.parent.mkdir(parents=True, exist_ok=True)` to ensure directories exist
+- [x] In `_run` write branch (`mode == "write"`): open file with `open(resolved, "w", encoding="utf-8")` and write content
+- [x] In `_run` append branch (`mode == "append"`): open file with `open(resolved, "a", encoding="utf-8")` and write content
+- [x] In `_run`: return a confirmation string that includes the resolved file path
+- [x] Add module-level `latex_writer_tool = LatexWriterTool()` singleton instantiation
+- [x] Run `uv run pytest tests/test_latex_writer.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
+- [x] Run `wc -l src/tools/latex_writer.py` — confirm result ≤ 85 lines
 
 ---
 
