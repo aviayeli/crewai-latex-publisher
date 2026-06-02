@@ -258,17 +258,17 @@
 
 > Gate: `src/tools/perplexity_search.py` must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_perplexity_search.py` with imports: `pytest`, `unittest.mock`, `src.tools.perplexity_search`
-- [ ] Write `test_tool_name_attribute`: assert `perplexity_search_tool.name == "perplexity_search"`
-- [ ] Write `test_args_schema_has_query_field`: assert `"query"` is in `PerplexitySearchInput.model_fields`
-- [ ] Write `test_empty_query_raises`: call `_run(query="", max_results=3)`; assert `ValueError` is raised
-- [ ] Write `test_request_sent_to_perplexity_endpoint`: mock `requests.post`; call `_run(query="transformers")`; assert the mocked `post` was called with a URL containing `perplexity.ai`
-- [ ] Write `test_bearer_token_in_headers`: mock `requests.post`; assert `Authorization` header in the call kwargs starts with `"Bearer "`
-- [ ] Write `test_returns_string_on_success`: mock `requests.post` to return a fixture JSON response; assert return value is a `str`
-- [ ] Write `test_http_error_raises`: mock `requests.post` to return status 401; assert `ValueError` or `requests.HTTPError` is raised
-- [ ] Write `test_rate_limit_429_raises`: mock `requests.post` to return status 429; assert the raised exception signals a rate-limit condition
-- [ ] Confirm `uv run pytest tests/test_perplexity_search.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
+- [x] Create `tests/test_perplexity_search.py` with imports: `pytest`, `unittest.mock`, `src.tools.perplexity_search`
+- [x] Write `test_tool_name_attribute`: assert `perplexity_search_tool.name == "perplexity_search"`
+- [x] Write `test_args_schema_has_query_field`: assert `"query"` is in `PerplexitySearchInput.model_fields`
+- [x] Write `test_empty_query_raises`: call `_run(query="", max_results=3)`; assert `ValueError` is raised
+- [x] Write `test_request_sent_to_perplexity_endpoint`: mock `requests.post`; call `_run(query="transformers")`; assert the mocked `post` was called with a URL containing `perplexity.ai`
+- [x] Write `test_bearer_token_in_headers`: mock `requests.post`; assert `Authorization` header in the call kwargs starts with `"Bearer "`
+- [x] Write `test_returns_string_on_success`: mock `requests.post` to return a fixture JSON response; assert return value is a `str`
+- [x] Write `test_http_error_raises`: mock `requests.post` to return status 401; assert `ValueError` or `requests.HTTPError` is raised
+- [x] Write `test_rate_limit_429_raises`: mock `requests.post` to return status 429; assert the raised exception signals a rate-limit condition
+- [x] Confirm `uv run pytest tests/test_perplexity_search.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
 
 ---
 
@@ -454,22 +454,22 @@
 
 > Gate: `uv run pytest tests/test_perplexity_search.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/tools/perplexity_search.py` with imports: `requests`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
-- [ ] Define `class PerplexitySearchInput(BaseModel)` with field `query: str`
-- [ ] Add field `max_results: int = 5` to `PerplexitySearchInput`
-- [ ] Define `class PerplexitySearchTool(BaseTool)` with class attribute `name = "perplexity_search"`
-- [ ] Add `description` class attribute explaining the tool queries Perplexity AI for academic research
-- [ ] Set `args_schema = PerplexitySearchInput` on `PerplexitySearchTool`
-- [ ] Implement `_run(self, query: str, max_results: int) -> str` method
-- [ ] In `_run`: raise `ValueError` if `query` is empty or whitespace-only
-- [ ] In `_run`: construct request payload with `model="sonar-pro"` and the query as a user message
-- [ ] In `_run`: send `requests.post` to the Perplexity AI endpoint with `Authorization: Bearer {settings.PERPLEXITY_API_KEY}`
-- [ ] In `_run`: raise `ValueError` for HTTP 4xx errors; re-raise `requests.HTTPError` for HTTP 429 (rate limit) so Manager Agent can retry
-- [ ] In `_run`: extract and return the assistant message content as a plain string
-- [ ] Add module-level `perplexity_search_tool = PerplexitySearchTool()` singleton instantiation
-- [ ] Run `uv run pytest tests/test_perplexity_search.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
-- [ ] Run `wc -l src/tools/perplexity_search.py` — confirm result ≤ 70 lines
+- [x] Create `src/tools/perplexity_search.py` with imports: `requests`, `pydantic.BaseModel`, `crewai_tools.BaseTool`, `src.config.settings`
+- [x] Define `class PerplexitySearchInput(BaseModel)` with field `query: str`
+- [x] Add field `max_results: int = 5` to `PerplexitySearchInput`
+- [x] Define `class PerplexitySearchTool(BaseTool)` with class attribute `name = "perplexity_search"`
+- [x] Add `description` class attribute explaining the tool queries Perplexity AI for academic research
+- [x] Set `args_schema = PerplexitySearchInput` on `PerplexitySearchTool`
+- [x] Implement `_run(self, query: str, max_results: int) -> str` method
+- [x] In `_run`: raise `ValueError` if `query` is empty or whitespace-only
+- [x] In `_run`: construct request payload with `model="sonar-pro"` and the query as a user message
+- [x] In `_run`: send `requests.post` to the Perplexity AI endpoint with `Authorization: Bearer {settings.PERPLEXITY_API_KEY}`
+- [x] In `_run`: raise `ValueError` for HTTP 4xx errors; re-raise `requests.HTTPError` for HTTP 429 (rate limit) so Manager Agent can retry
+- [x] In `_run`: extract and return the assistant message content as a plain string
+- [x] Add module-level `perplexity_search_tool = PerplexitySearchTool()` singleton instantiation
+- [x] Run `uv run pytest tests/test_perplexity_search.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
+- [x] Run `wc -l src/tools/perplexity_search.py` — confirm result ≤ 70 lines
 
 ---
 
