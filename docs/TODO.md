@@ -561,212 +561,212 @@
 
 ## Phase 13: Implement `src/agents/manager_agent.py`
 
-- [ ] Create `src/agents/manager_agent.py` with imports: `crewai.Agent`, `src.config.settings`
-- [ ] Define function `build_manager_agent(backstory: str) -> Agent`
-- [ ] In function: construct `Agent` with `role="Project Manager"`
-- [ ] Set `goal` to: orchestrate all sub-agents to produce a compiled Hebrew academic PDF
-- [ ] Set `backstory=backstory`, `allow_delegation=True`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Set `tools=[]` (manager delegates; it does not call tools directly)
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/manager_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/manager_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/manager_agent.py` with imports: `crewai.Agent`, `src.config.settings`
+- [x] Define function `build_manager_agent(backstory: str) -> Agent`
+- [x] In function: construct `Agent` with `role="Project Manager"`
+- [x] Set `goal` to: orchestrate all sub-agents to produce a compiled Hebrew academic PDF
+- [x] Set `backstory=backstory`, `allow_delegation=True`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Set `tools=[]` (manager delegates; it does not call tools directly)
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/manager_agent.py` — exits 0
+- [x] Run `wc -l src/agents/manager_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/researcher_agent.py`
 
-- [ ] Create `src/agents/researcher_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.perplexity_search.perplexity_search_tool`
-- [ ] Define function `build_researcher_agent(backstory: str) -> Agent`
-- [ ] In function: construct `Agent` with `role="Academic Researcher"`
-- [ ] Set `goal` to: use Perplexity AI to gather academic sources on Transformer architectures for the outline agent
-- [ ] Set `backstory=backstory`, `tools=[perplexity_search_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/researcher_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/researcher_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/researcher_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.perplexity_search.perplexity_search_tool`
+- [x] Define function `build_researcher_agent(backstory: str) -> Agent`
+- [x] In function: construct `Agent` with `role="Academic Researcher"`
+- [x] Set `goal` to: use Perplexity AI to gather academic sources on Transformer architectures for the outline agent
+- [x] Set `backstory=backstory`, `tools=[perplexity_search_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/researcher_agent.py` — exits 0
+- [x] Run `wc -l src/agents/researcher_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/outline_agent.py`
 
-- [ ] Create `src/agents/outline_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
-- [ ] Define function `build_outline_agent(backstory: str) -> Agent`
-- [ ] In function: construct `Agent` with `role="Academic Outline Architect"`
-- [ ] Set `goal` to a one-sentence description: produce a structured 6-chapter book outline as a valid JSON file
-- [ ] Set `backstory=backstory` (value injected from SKILL.md by crew.py)
-- [ ] Set `tools=[latex_writer_tool]`
-- [ ] Set `llm=settings.LLM_MODEL` and `max_retry_limit=settings.MAX_AGENT_RETRIES`
-- [ ] Set `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/outline_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/outline_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/outline_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
+- [x] Define function `build_outline_agent(backstory: str) -> Agent`
+- [x] In function: construct `Agent` with `role="Academic Outline Architect"`
+- [x] Set `goal` to a one-sentence description: produce a structured 6-chapter book outline as a valid JSON file
+- [x] Set `backstory=backstory` (value injected from SKILL.md by crew.py)
+- [x] Set `tools=[latex_writer_tool]`
+- [x] Set `llm=settings.LLM_MODEL` and `max_retry_limit=settings.MAX_AGENT_RETRIES`
+- [x] Set `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/outline_agent.py` — exits 0
+- [x] Run `wc -l src/agents/outline_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/content_agent.py`
 
-- [ ] Create `src/agents/content_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`, `src.tools.markdown_converter.markdown_converter_tool`
-- [ ] Define function `build_content_agent(backstory: str) -> Agent`
-- [ ] Set `role="Hebrew Academic Writer"`
-- [ ] Set `goal` describing production of Hebrew-language chapter files via Markdown-first workflow (write `.md`, convert to `.tex`)
-- [ ] Set `backstory=backstory`, `tools=[latex_writer_tool, markdown_converter_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/content_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/content_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/content_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`, `src.tools.markdown_converter.markdown_converter_tool`
+- [x] Define function `build_content_agent(backstory: str) -> Agent`
+- [x] Set `role="Hebrew Academic Writer"`
+- [x] Set `goal` describing production of Hebrew-language chapter files via Markdown-first workflow (write `.md`, convert to `.tex`)
+- [x] Set `backstory=backstory`, `tools=[latex_writer_tool, markdown_converter_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/content_agent.py` — exits 0
+- [x] Run `wc -l src/agents/content_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/bidi_agent.py`
 
-- [ ] Create `src/agents/bidi_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
-- [ ] Define function `build_bidi_agent(backstory: str) -> Agent`
-- [ ] Set `role="LaTeX BiDi Typesetting Specialist"`
-- [ ] Set `goal` describing validation and active enforcement of BiDi correctness across all 6 chapter files
-- [ ] Set `backstory=backstory`, `tools=[latex_writer_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/bidi_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/bidi_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/bidi_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.latex_writer.latex_writer_tool`
+- [x] Define function `build_bidi_agent(backstory: str) -> Agent`
+- [x] Set `role="LaTeX BiDi Typesetting Specialist"`
+- [x] Set `goal` describing validation and active enforcement of BiDi correctness across all 6 chapter files
+- [x] Set `backstory=backstory`, `tools=[latex_writer_tool]`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/bidi_agent.py` — exits 0
+- [x] Run `wc -l src/agents/bidi_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/figure_agent.py`
 
-- [ ] Create `src/agents/figure_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.python_runner.python_runner_tool`, `src.tools.latex_writer.latex_writer_tool`
-- [ ] Define function `build_figure_agent(backstory: str) -> Agent`
-- [ ] Set `role="Scientific Figure Generator"`
-- [ ] Set `goal` describing production of the attention complexity PNG and the TikZ SDP diagram
-- [ ] Set `tools=[python_runner_tool, latex_writer_tool]`
-- [ ] Set `backstory=backstory`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/figure_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/figure_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/figure_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.python_runner.python_runner_tool`, `src.tools.latex_writer.latex_writer_tool`
+- [x] Define function `build_figure_agent(backstory: str) -> Agent`
+- [x] Set `role="Scientific Figure Generator"`
+- [x] Set `goal` describing production of the attention complexity PNG and the TikZ SDP diagram
+- [x] Set `tools=[python_runner_tool, latex_writer_tool]`
+- [x] Set `backstory=backstory`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/figure_agent.py` — exits 0
+- [x] Run `wc -l src/agents/figure_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 13 continued: Implement `src/agents/compiler_agent.py`
 
-- [ ] Create `src/agents/compiler_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.lualatex_runner.lualatex_runner_tool`
-- [ ] Define function `build_compiler_agent(backstory: str) -> Agent`
-- [ ] Set `role="LaTeX Build Engineer"`
-- [ ] Set `goal` describing assembly of `main.tex` preamble and two-pass lualatex compilation to PDF
-- [ ] Set `tools=[lualatex_runner_tool]`
-- [ ] Set `backstory=backstory`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
-- [ ] Return the constructed `Agent`
-- [ ] Run `uv run ruff check src/agents/compiler_agent.py` — exits 0
-- [ ] Run `wc -l src/agents/compiler_agent.py` — confirm ≤ 30 lines
+- [x] Create `src/agents/compiler_agent.py` with imports: `crewai.Agent`, `src.config.settings`, `src.tools.lualatex_runner.lualatex_runner_tool`
+- [x] Define function `build_compiler_agent(backstory: str) -> Agent`
+- [x] Set `role="LaTeX Build Engineer"`
+- [x] Set `goal` describing assembly of `main.tex` preamble and two-pass lualatex compilation to PDF
+- [x] Set `tools=[lualatex_runner_tool]`
+- [x] Set `backstory=backstory`, `llm=settings.LLM_MODEL`, `max_retry_limit=settings.MAX_AGENT_RETRIES`, `verbose=True`
+- [x] Return the constructed `Agent`
+- [x] Run `uv run ruff check src/agents/compiler_agent.py` — exits 0
+- [x] Run `wc -l src/agents/compiler_agent.py` — confirm ≤ 30 lines
 
 ---
 
 ## Phase 14: Implement `src/tasks/research_task.py`
 
-- [ ] Create `src/tasks/research_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define function `build_research_task(agent: Agent) -> Task`
-- [ ] Write `description` string: instruct the agent to use `perplexity_search_tool` to research at least 6 academic sources on Transformer architectures, attention mechanisms, and Hebrew NLP
-- [ ] In description: specify the required output format — a Markdown block with one entry per source containing: citation key, authors, year, title, venue, and a 2-sentence summary
-- [ ] In description: specify that citation keys must follow the pattern `author_year_keyword` (e.g., `vaswani2017attention`) to match the expected `refs.bib` keys
-- [ ] Set `expected_output = "Structured research notes with at least 6 citation-ready academic sources"`
-- [ ] Set `agent=agent` on the Task
-- [ ] Set `context=[]` (research task has no upstream dependencies)
-- [ ] Run `uv run ruff check src/tasks/research_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/research_task.py` — confirm ≤ 40 lines
+- [x] Create `src/tasks/research_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define function `build_research_task(agent: Agent) -> Task`
+- [x] Write `description` string: instruct the agent to use `perplexity_search_tool` to research at least 6 academic sources on Transformer architectures, attention mechanisms, and Hebrew NLP
+- [x] In description: specify the required output format — a Markdown block with one entry per source containing: citation key, authors, year, title, venue, and a 2-sentence summary
+- [x] In description: specify that citation keys must follow the pattern `author_year_keyword` (e.g., `vaswani2017attention`) to match the expected `refs.bib` keys
+- [x] Set `expected_output = "Structured research notes with at least 6 citation-ready academic sources"`
+- [x] Set `agent=agent` on the Task
+- [x] Set `context=[]` (research task has no upstream dependencies)
+- [x] Run `uv run ruff check src/tasks/research_task.py` — exits 0
+- [x] Run `wc -l src/tasks/research_task.py` — confirm ≤ 40 lines
 
 ---
 
 ## Phase 14 continued: Implement `src/tasks/outline_task.py`
 
-- [ ] Create `src/tasks/outline_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define function `build_outline_task(agent: Agent) -> Task`
-- [ ] Write `description` string: instruct the agent to use `latex_writer_tool` in write mode to produce `latex_output/book_outline.json`
-- [ ] In description: embed the full required JSON schema (fields `title`, `subtitle`, `chapters` array with `number`, `hebrew_title`, `english_title`, `page_budget`, `sections`)
-- [ ] In description: state explicitly that all chapter `page_budget` values must sum to 15
-- [ ] In description: state that the JSON must be valid (no trailing commas, no comments)
-- [ ] In description: state that the file path must be exactly `latex_output/book_outline.json`
-- [ ] Set `expected_output = "Valid JSON file at latex_output/book_outline.json with 6 chapters"`
-- [ ] Set `agent=agent` on the Task
-- [ ] Run `uv run ruff check src/tasks/outline_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/outline_task.py` — confirm ≤ 40 lines
+- [x] Create `src/tasks/outline_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define function `build_outline_task(agent: Agent) -> Task`
+- [x] Write `description` string: instruct the agent to use `latex_writer_tool` in write mode to produce `latex_output/book_outline.json`
+- [x] In description: embed the full required JSON schema (fields `title`, `subtitle`, `chapters` array with `number`, `hebrew_title`, `english_title`, `page_budget`, `sections`)
+- [x] In description: state explicitly that all chapter `page_budget` values must sum to 15
+- [x] In description: state that the JSON must be valid (no trailing commas, no comments)
+- [x] In description: state that the file path must be exactly `latex_output/book_outline.json`
+- [x] Set `expected_output = "Valid JSON file at latex_output/book_outline.json with 6 chapters"`
+- [x] Set `agent=agent` on the Task
+- [x] Run `uv run ruff check src/tasks/outline_task.py` — exits 0
+- [x] Run `wc -l src/tasks/outline_task.py` — confirm ≤ 40 lines
 
 ---
 
 ## Phase 14 continued: Implement `src/tasks/content_task.py`
 
-- [ ] Create `src/tasks/content_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define module-level `CHAPTER_SPECS: list[tuple[int, str, str, int]]` constant with 6 entries
-- [ ] Add entry 1: `(1, "מבוא", "Introduction to Transformers", 2)`
-- [ ] Add entry 2: `(2, "ארכיטקטורה", "Transformer Architecture Deep Dive", 3)`
-- [ ] Add entry 3: `(3, "דו-כיווניות", "BiDi Text in Academic Publishing", 2)` — this is the BiDi showcase chapter
-- [ ] Add entry 4: `(4, "יישומים", "Applications and Fine-Tuning", 3)`
-- [ ] Add entry 5: `(5, "הערכה", "Evaluation Methodologies", 2)`
-- [ ] Add entry 6: `(6, "סיכום", "Conclusion and Future Work", 3)`
-- [ ] Add an `assert sum(pages for _, _, _, pages in CHAPTER_SPECS) == 15` guard after the definition
-- [ ] Define function `build_content_tasks(agent: Agent, outline_task: Task) -> list[Task]`
-- [ ] In function: iterate over `CHAPTER_SPECS` unpacking `ch_num, heb_title, eng_title, pages`
-- [ ] For each chapter: construct a `Task` with a `description` parameterized with `ch_num`, `heb_title`, `eng_title`, `pages`
-- [ ] In each description: instruct the agent to write `latex_output/chapters/ch{ch_num}.tex` using `latex_writer_tool`
-- [ ] In each description: specify file must start with `\chapter{heb_title}` and must NOT contain `\begin{document}`
-- [ ] In each description: specify that inline math uses `\(` and `\)`, display math uses `\begin{equation}`
-- [ ] In each description: state the page budget target of `pages` pages
-- [ ] Set `context=[outline_task]` on each content task
-- [ ] Set `expected_output` for each task referencing the chapter file path
-- [ ] Set `agent=agent` on each task
-- [ ] Append each task to a results list and return it
-- [ ] Run `uv run ruff check src/tasks/content_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/content_task.py` — confirm ≤ 65 lines
-- [ ] If count exceeds 65, extract `CHAPTER_SPECS` to `src/tasks/_chapter_specs.py` and import
+- [x] Create `src/tasks/content_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define module-level `CHAPTER_SPECS: list[tuple[int, str, str, int]]` constant with 6 entries
+- [x] Add entry 1: `(1, "מבוא", "Introduction to Transformers", 2)`
+- [x] Add entry 2: `(2, "ארכיטקטורה", "Transformer Architecture Deep Dive", 3)`
+- [x] Add entry 3: `(3, "דו-כיווניות", "BiDi Text in Academic Publishing", 2)` — this is the BiDi showcase chapter
+- [x] Add entry 4: `(4, "יישומים", "Applications and Fine-Tuning", 3)`
+- [x] Add entry 5: `(5, "הערכה", "Evaluation Methodologies", 2)`
+- [x] Add entry 6: `(6, "סיכום", "Conclusion and Future Work", 3)`
+- [x] Add an `assert sum(pages for _, _, _, pages in CHAPTER_SPECS) == 15` guard after the definition
+- [x] Define function `build_content_tasks(agent: Agent, outline_task: Task) -> list[Task]`
+- [x] In function: iterate over `CHAPTER_SPECS` unpacking `ch_num, heb_title, eng_title, pages`
+- [x] For each chapter: construct a `Task` with a `description` parameterized with `ch_num`, `heb_title`, `eng_title`, `pages`
+- [x] In each description: instruct the agent to write `latex_output/chapters/ch{ch_num}.tex` using `latex_writer_tool`
+- [x] In each description: specify file must start with `\chapter{heb_title}` and must NOT contain `\begin{document}`
+- [x] In each description: specify that inline math uses `\(` and `\)`, display math uses `\begin{equation}`
+- [x] In each description: state the page budget target of `pages` pages
+- [x] Set `context=[outline_task]` on each content task
+- [x] Set `expected_output` for each task referencing the chapter file path
+- [x] Set `agent=agent` on each task
+- [x] Append each task to a results list and return it
+- [x] Run `uv run ruff check src/tasks/content_task.py` — exits 0
+- [x] Run `wc -l src/tasks/content_task.py` — confirm ≤ 65 lines
+- [x] If count exceeds 65, extract `CHAPTER_SPECS` to `src/tasks/_chapter_specs.py` and import
 
 ---
 
 ## Phase 14 continued: Implement `src/tasks/bidi_task.py`
 
-- [ ] Create `src/tasks/bidi_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define function `build_bidi_task(agent: Agent, content_tasks: list[Task]) -> Task`
-- [ ] Write `description` string: instruct the agent to read and validate all six chapter files in `latex_output/chapters/`
-- [ ] In description: mandate that `ch3.tex` must contain (1) an RTL paragraph with inline `\textenglish{}`, (2) a `\begin{equation}` environment, (3) a `\begin{LTR}...\end{LTR}` block — and to add any that are missing
-- [ ] In description: instruct the agent to overwrite each chapter file in-place via `latex_writer_tool` if corrections are needed
-- [ ] In description: include the 5-item validation checklist from the lualatex-bidi SKILL.md
-- [ ] Set `context=content_tasks` on the task
-- [ ] Set `expected_output = "All six chapters updated in-place; ch3.tex contains all three mandatory BiDi constructs"`
-- [ ] Set `agent=agent` on the task
-- [ ] Run `uv run ruff check src/tasks/bidi_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/bidi_task.py` — confirm ≤ 40 lines
+- [x] Create `src/tasks/bidi_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define function `build_bidi_task(agent: Agent, content_tasks: list[Task]) -> Task`
+- [x] Write `description` string: instruct the agent to read and validate all six chapter files in `latex_output/chapters/`
+- [x] In description: mandate that `ch3.tex` must contain (1) an RTL paragraph with inline `\textenglish{}`, (2) a `\begin{equation}` environment, (3) a `\begin{LTR}...\end{LTR}` block — and to add any that are missing
+- [x] In description: instruct the agent to overwrite each chapter file in-place via `latex_writer_tool` if corrections are needed
+- [x] In description: include the 5-item validation checklist from the lualatex-bidi SKILL.md
+- [x] Set `context=content_tasks` on the task
+- [x] Set `expected_output = "All six chapters updated in-place; ch3.tex contains all three mandatory BiDi constructs"`
+- [x] Set `agent=agent` on the task
+- [x] Run `uv run ruff check src/tasks/bidi_task.py` — exits 0
+- [x] Run `wc -l src/tasks/bidi_task.py` — confirm ≤ 40 lines
 
 ---
 
 ## Phase 14 continued: Implement `src/tasks/figure_task.py`
 
-- [ ] Create `src/tasks/figure_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define function `build_figure_task(agent: Agent, outline_task: Task) -> Task`
-- [ ] Write `description` string: instruct the agent to write and execute a Python script via `python_runner_tool`
-- [ ] In description: specify the script must save to `latex_output/assets/attention_complexity.png` at 300 dpi
-- [ ] In description: specify three required curves — O(n²) standard attention, O(n log n) linear attention, O(n) recurrent
-- [ ] In description: specify x-axis label "Sequence Length (n)" and y-axis label "Complexity" with a legend
-- [ ] In description: instruct the agent to also write a TikZ block to `latex_output/figures/sdp_attention.tex` via `latex_writer_tool`
-- [ ] In description: specify the TikZ block must represent scaled dot-product attention with Q, K, V node labels
-- [ ] Set `context=[outline_task]` on the task
-- [ ] Set `expected_output = "attention_complexity.png and sdp_attention.tex both exist in their respective output directories"`
-- [ ] Set `agent=agent` on the task
-- [ ] Run `uv run ruff check src/tasks/figure_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/figure_task.py` — confirm ≤ 45 lines
+- [x] Create `src/tasks/figure_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define function `build_figure_task(agent: Agent, outline_task: Task) -> Task`
+- [x] Write `description` string: instruct the agent to write and execute a Python script via `python_runner_tool`
+- [x] In description: specify the script must save to `latex_output/assets/attention_complexity.png` at 300 dpi
+- [x] In description: specify three required curves — O(n²) standard attention, O(n log n) linear attention, O(n) recurrent
+- [x] In description: specify x-axis label "Sequence Length (n)" and y-axis label "Complexity" with a legend
+- [x] In description: instruct the agent to also write a TikZ block to `latex_output/figures/sdp_attention.tex` via `latex_writer_tool`
+- [x] In description: specify the TikZ block must represent scaled dot-product attention with Q, K, V node labels
+- [x] Set `context=[outline_task]` on the task
+- [x] Set `expected_output = "attention_complexity.png and sdp_attention.tex both exist in their respective output directories"`
+- [x] Set `agent=agent` on the task
+- [x] Run `uv run ruff check src/tasks/figure_task.py` — exits 0
+- [x] Run `wc -l src/tasks/figure_task.py` — confirm ≤ 45 lines
 
 ---
 
 ## Phase 14 continued: Implement `src/tasks/compile_task.py`
 
-- [ ] Create `src/tasks/compile_task.py` with imports: `crewai.Task`, `crewai.Agent`
-- [ ] Define function `build_compile_task(agent: Agent, bidi_task: Task, figure_task: Task) -> Task`
-- [ ] Write `description` string: instruct agent to first write `latex_output/main.tex` via `latex_writer_tool`
-- [ ] In description: specify document class `\documentclass[17pt,a4paper]{extarticle}`
-- [ ] In description: specify the 10 required packages in preamble: `fontspec`, `polyglossia`, `biblatex`, `geometry`, `graphicx`, `amsmath`, `hyperref`, `tikz`, `booktabs`, `xcolor`
-- [ ] In description: specify `fontspec` Hebrew font fallback chain: `David CLM` → `Frank Ruehl CLM` → `Noto Serif Hebrew`
-- [ ] In description: specify `\setmainlanguage{hebrew}` and `\setotherlanguage{english}` from polyglossia
-- [ ] In description: specify `\addbibresource{refs.bib}` in the preamble
-- [ ] In description: specify the exact 6 `\input{}` calls in order from `chapters/ch1` to `chapters/ch6`
-- [ ] In description: specify `\printbibliography` after the last `\input{}` call and before `\end{document}`
-- [ ] In description: instruct agent to call `lualatex_runner_tool` with `tex_file="latex_output/main.tex"` and `passes=2`
-- [ ] Set `context=[bidi_task, figure_task]` on the task
-- [ ] Set `expected_output = "latex_output/main.pdf exists; two-pass lualatex exits 0"` on the task
-- [ ] Set `agent=agent` on the task
-- [ ] Run `uv run ruff check src/tasks/compile_task.py` — exits 0
-- [ ] Run `wc -l src/tasks/compile_task.py` — confirm ≤ 45 lines
+- [x] Create `src/tasks/compile_task.py` with imports: `crewai.Task`, `crewai.Agent`
+- [x] Define function `build_compile_task(agent: Agent, bidi_task: Task, figure_task: Task) -> Task`
+- [x] Write `description` string: instruct agent to first write `latex_output/main.tex` via `latex_writer_tool`
+- [x] In description: specify document class `\documentclass[17pt,a4paper]{extarticle}`
+- [x] In description: specify the 10 required packages in preamble: `fontspec`, `polyglossia`, `biblatex`, `geometry`, `graphicx`, `amsmath`, `hyperref`, `tikz`, `booktabs`, `xcolor`
+- [x] In description: specify `fontspec` Hebrew font fallback chain: `David CLM` → `Frank Ruehl CLM` → `Noto Serif Hebrew`
+- [x] In description: specify `\setmainlanguage{hebrew}` and `\setotherlanguage{english}` from polyglossia
+- [x] In description: specify `\addbibresource{refs.bib}` in the preamble
+- [x] In description: specify the exact 6 `\input{}` calls in order from `chapters/ch1` to `chapters/ch6`
+- [x] In description: specify `\printbibliography` after the last `\input{}` call and before `\end{document}`
+- [x] In description: instruct agent to call `lualatex_runner_tool` with `tex_file="latex_output/main.tex"` and `passes=2`
+- [x] Set `context=[bidi_task, figure_task]` on the task
+- [x] Set `expected_output = "latex_output/main.pdf exists; two-pass lualatex exits 0"` on the task
+- [x] Set `agent=agent` on the task
+- [x] Run `uv run ruff check src/tasks/compile_task.py` — exits 0
+- [x] Run `wc -l src/tasks/compile_task.py` — confirm ≤ 45 lines
 
 ---
 
@@ -774,34 +774,34 @@
 
 > Gate: `uv run pytest tests/test_crew.py` must currently exit non-zero before starting this phase.
 
-- [ ] Create `src/crew.py` with imports: `pathlib.Path`, `crewai.Crew`, `crewai.Process`
-- [ ] Import `build_manager_agent` from `src.agents.manager_agent`
-- [ ] Import `build_researcher_agent` from `src.agents.researcher_agent`
-- [ ] Import `build_outline_agent` from `src.agents.outline_agent`
-- [ ] Import `build_content_agent` from `src.agents.content_agent`
-- [ ] Import `build_bidi_agent` from `src.agents.bidi_agent`
-- [ ] Import `build_figure_agent` from `src.agents.figure_agent`
-- [ ] Import `build_compiler_agent` from `src.agents.compiler_agent`
-- [ ] Import all six task builder functions from their respective `src.tasks.*` modules (including `build_research_task`)
-- [ ] Define module-level function `_load_skill(name: str) -> str`
-- [ ] In `_load_skill`: construct `path = Path("skills") / name / "SKILL.md"`
-- [ ] In `_load_skill`: return `path.read_text(encoding="utf-8")` — this is the only place SKILL.md files are read
-- [ ] Define `class PublisherCrew`
-- [ ] Implement `__init__(self)`: load all 7 skills via `_load_skill` — if any file is missing, `FileNotFoundError` propagates immediately
-- [ ] In `__init__`: construct all 7 agents by calling their builder functions, passing the corresponding skill string as `backstory`
-- [ ] In `__init__`: construct `self.research_task` via `build_research_task(self.researcher_agent)`
-- [ ] In `__init__`: construct `self.outline_task` via `build_outline_task(self.outline_agent)`
-- [ ] In `__init__`: construct `self.content_tasks` via `build_content_tasks(self.content_agent, self.outline_task)`
-- [ ] In `__init__`: construct `self.figure_task` via `build_figure_task(self.figure_agent, self.outline_task)`
-- [ ] In `__init__`: construct `self.bidi_task` via `build_bidi_task(self.bidi_agent, self.content_tasks)`
-- [ ] In `__init__`: construct `self.compile_task` via `build_compile_task(self.compiler_agent, self.bidi_task, self.figure_task)`
-- [ ] Implement `kickoff(self) -> str` method
-- [ ] In `kickoff`: assemble `tasks = [self.research_task, self.outline_task, *self.content_tasks, self.figure_task, self.bidi_task, self.compile_task]`
-- [ ] In `kickoff`: construct `Crew(manager_agent=self.manager_agent, agents=[self.researcher_agent, self.outline_agent, self.content_agent, self.bidi_agent, self.figure_agent, self.compiler_agent], tasks=tasks, process=Process.hierarchical, verbose=True)`
-- [ ] In `kickoff`: return `crew.kickoff()`
-- [ ] Run `uv run pytest tests/test_crew.py` — confirm exits 0 (all crew tests green)
-- [ ] Run `uv run ruff check src/crew.py` — confirm exits 0
-- [ ] Run `wc -l src/crew.py` — confirm ≤ 100 lines
+- [x] Create `src/crew.py` with imports: `pathlib.Path`, `crewai.Crew`, `crewai.Process`
+- [x] Import `build_manager_agent` from `src.agents.manager_agent`
+- [x] Import `build_researcher_agent` from `src.agents.researcher_agent`
+- [x] Import `build_outline_agent` from `src.agents.outline_agent`
+- [x] Import `build_content_agent` from `src.agents.content_agent`
+- [x] Import `build_bidi_agent` from `src.agents.bidi_agent`
+- [x] Import `build_figure_agent` from `src.agents.figure_agent`
+- [x] Import `build_compiler_agent` from `src.agents.compiler_agent`
+- [x] Import all six task builder functions from their respective `src.tasks.*` modules (including `build_research_task`)
+- [x] Define module-level function `_load_skill(name: str) -> str`
+- [x] In `_load_skill`: construct `path = Path("skills") / name / "SKILL.md"`
+- [x] In `_load_skill`: return `path.read_text(encoding="utf-8")` — this is the only place SKILL.md files are read
+- [x] Define `class PublisherCrew`
+- [x] Implement `__init__(self)`: load all 7 skills via `_load_skill` — if any file is missing, `FileNotFoundError` propagates immediately
+- [x] In `__init__`: construct all 7 agents by calling their builder functions, passing the corresponding skill string as `backstory`
+- [x] In `__init__`: construct `self.research_task` via `build_research_task(self.researcher_agent)`
+- [x] In `__init__`: construct `self.outline_task` via `build_outline_task(self.outline_agent)`
+- [x] In `__init__`: construct `self.content_tasks` via `build_content_tasks(self.content_agent, self.outline_task)`
+- [x] In `__init__`: construct `self.figure_task` via `build_figure_task(self.figure_agent, self.outline_task)`
+- [x] In `__init__`: construct `self.bidi_task` via `build_bidi_task(self.bidi_agent, self.content_tasks)`
+- [x] In `__init__`: construct `self.compile_task` via `build_compile_task(self.compiler_agent, self.bidi_task, self.figure_task)`
+- [x] Implement `kickoff(self) -> str` method
+- [x] In `kickoff`: assemble `tasks = [self.research_task, self.outline_task, *self.content_tasks, self.figure_task, self.bidi_task, self.compile_task]`
+- [x] In `kickoff`: construct `Crew(manager_agent=self.manager_agent, agents=[self.researcher_agent, self.outline_agent, self.content_agent, self.bidi_agent, self.figure_agent, self.compiler_agent], tasks=tasks, process=Process.hierarchical, verbose=True)`
+- [x] In `kickoff`: return `crew.kickoff()`
+- [x] Run `uv run pytest tests/test_crew.py` — confirm exits 0 (all crew tests green)
+- [x] Run `uv run ruff check src/crew.py` — confirm exits 0
+- [x] Run `wc -l src/crew.py` — confirm ≤ 100 lines
 
 ---
 

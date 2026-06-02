@@ -1,0 +1,19 @@
+from crewai import Agent
+
+from src.config import settings
+from src.tools.lualatex_runner import lualatex_runner_tool
+
+
+def build_compiler_agent(backstory: str) -> Agent:
+    return Agent(
+        role="LaTeX Build Engineer",
+        goal=(
+            "Assemble main.tex preamble and run two-pass"
+            " lualatex compilation to produce main.pdf."
+        ),
+        backstory=backstory,
+        tools=[lualatex_runner_tool],
+        llm=settings.LLM_MODEL,
+        max_retry_limit=settings.MAX_AGENT_RETRIES,
+        verbose=True,
+    )
