@@ -1,6 +1,8 @@
+"""Factory for the Project Manager (orchestrator) agent."""
+
 from crewai import Agent
 
-from src.config import settings
+from src.config import build_llm, settings
 
 
 def build_manager_agent(backstory: str) -> Agent:
@@ -12,7 +14,8 @@ def build_manager_agent(backstory: str) -> Agent:
         ),
         backstory=backstory,
         allow_delegation=True,
-        llm=settings.LLM_MODEL,
+        llm=build_llm(),
+        max_iter=settings.MAX_ITER,
         max_retry_limit=settings.MAX_AGENT_RETRIES,
         verbose=True,
         tools=[],

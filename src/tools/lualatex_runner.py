@@ -1,3 +1,5 @@
+"""CrewAI tool for compiling LuaLaTeX documents with optional Biber bibliography."""
+
 import subprocess
 from pathlib import Path
 
@@ -8,16 +10,20 @@ from src.config import settings
 
 
 class CompilationError(Exception):
-    pass
+    """Raised when lualatex or biber exits non-zero."""
 
 
 class LualatexRunnerInput(BaseModel):
+    """Input schema for the lualatex_runner tool."""
+
     tex_file: str
     passes: int = 2
     run_biber: bool = True
 
 
 class LualatexRunnerTool(BaseTool):
+    """Runs lualatex (and optionally biber) to compile a .tex file to PDF."""
+
     name: str = "lualatex_runner"
     description: str = (
         "Runs lualatex (and optionally biber) to compile a .tex file to PDF."
@@ -25,6 +31,7 @@ class LualatexRunnerTool(BaseTool):
     args_schema: type[BaseModel] = LualatexRunnerInput
 
     def _build_cmd(self, tex_file: str) -> list[str]:
+        """Build the lualatex subprocess command list."""
         return [
             settings.LUALATEX_BIN,
             "--interaction=nonstopmode",
@@ -33,26 +40,31 @@ class LualatexRunnerTool(BaseTool):
         ]
 
     def _build_biber_cmd(self, stem: str) -> list[str]:
+        """Build the biber subprocess command list."""
         return [settings.BIBER_BIN, stem]
 
     def _parse_log(self, log_path: Path) -> list[str]:
+        """Return lines starting with '!' from the lualatex log file."""
         try:
             text = log_path.read_text(encoding="utf-8", errors="replace")
         except FileNotFoundError:
             return []
         return [line for line in text.splitlines() if line.startswith("! ")]
 
-    def _run(self, tex_file: str, passes: int = 2, run_biber: bool = True) -> dict:
+    def _run(
+        self, tex_file: str, passes: int = 2, run_biber: bool = True
+    ) -> dict:
+        """Compile *tex_file*, run biber if requested, and repeat for *passes*."""
         log_path = Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")
 
         def _latex(path: str) -> None:
             try:
                 subprocess.run(self._build_cmd(path), check=True)
-            except subprocess.CalledProcessError:
+            except subprocess.CalledProcessError as exc:
                 errors = self._parse_log(log_path)
                 raise CompilationError(
                     "\n".join(errors) if errors else "lualatex exited non-zero"
-                )
+                ) from exc
 
         _latex(tex_file)
 

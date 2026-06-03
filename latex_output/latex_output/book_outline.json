@@ -1,0 +1,83 @@
+{
+  "title": "Transformer Architectures: From Attention to Hebrew NLP",
+  "subtitle": "A Hebrew-Language Academic Overview of Transformer Models and Their Applications",
+  "language": "hebrew",
+  "refs": [
+    "vaswani_2017_transformer",
+    "devlin_2019_bert",
+    "tay_2022_efficient_transformers",
+    "seker_2022_alephbert",
+    "dao_2022_flashattention",
+    "su_2021_rope",
+    "tsarfaty_2020_hebrew_ud"
+  ],
+  "chapters": [
+    {
+      "number": 1,
+      "hebrew_title": "מבוא ורקע",
+      "english_title": "Introduction and Background",
+      "page_budget": 2,
+      "sections": [
+        "רקע היסטורי: ממודלי רצף לטרנספורמרים",
+        "מוטיבציה ומטרות הספר",
+        "סקירת המקורות המחקריים"
+      ]
+    },
+    {
+      "number": 2,
+      "hebrew_title": "יסודות ארכיטקטורת הטרנספורמר",
+      "english_title": "Foundations of the Transformer Architecture",
+      "page_budget": 3,
+      "sections": [
+        "מנגנון הקשב: שאילתות, מפתחות וערכים",
+        "קשב רב-ראשי ושכבות הטרנספורמר",
+        "קידוד מיקומי: שיטות קלאסיות",
+        "ארכיטקטורת קודד-מפענח"
+      ]
+    },
+    {
+      "number": 3,
+      "hebrew_title": "מנגנוני קשב מתקדמים",
+      "english_title": "Advanced Attention Mechanisms",
+      "page_budget": 3,
+      "sections": [
+        "קידוד מיקומי רוטציוני (RoPE)",
+        "FlashAttention: קשב יעיל לזיכרון",
+        "מגבלות הקשב הריבועי ואתגרי הרצפים הארוכים"
+      ]
+    },
+    {
+      "number": 4,
+      "hebrew_title": "טרנספורמרים יעילים",
+      "english_title": "Efficient Transformers",
+      "page_budget": 2,
+      "sections": [
+        "סקירת X-formers: Linformer, Performer, Longformer ו-Reformer",
+        "השוואת עלויות חישוביות ואיכות המודל"
+      ]
+    },
+    {
+      "number": 5,
+      "hebrew_title": "BERT ופרדיגמת הלמידה המוקדמת",
+      "english_title": "BERT and Pre-training Paradigms",
+      "page_budget": 2,
+      "sections": [
+        "מודל שפה מוסווה ולמידה מוקדמת דו-כיוונית",
+        "כיוונון עדין ויישומי BERT",
+        "וריאנטים של BERT ומודלים נגזרים"
+      ]
+    },
+    {
+      "number": 6,
+      "hebrew_title": "עיבוד שפה עברית עם טרנספורמרים",
+      "english_title": "Hebrew NLP with Transformers",
+      "page_budget": 3,
+      "sections": [
+        "AlephBERT: מודל BERT לעברית",
+        "אתגרי עברית כשפה מורפולוגית עשירה",
+        "עץ התלות האוניברסלי לעברית ובנצ'מרקים",
+        "סיכום וכיוונים עתידיים במחקר עברית-NLP"
+      ]
+    }
+  ]
+}

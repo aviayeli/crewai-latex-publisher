@@ -2,9 +2,9 @@ import subprocess
 import uuid
 
 import pytest
-from src.tools.python_runner import ALLOWED_IMPORTS, python_runner_tool
 
 from src.config import settings
+from src.tools.python_runner import ALLOWED_IMPORTS, python_runner_tool
 
 
 def test_tool_name_attribute():

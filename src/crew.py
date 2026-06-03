@@ -1,3 +1,5 @@
+"""SDK entry-point: assembles agents, tasks, and the Crew for the publisher pipeline."""
+
 from pathlib import Path
 
 from crewai import Crew, Process
@@ -44,7 +46,7 @@ class PublisherCrew:
             self.outline_agent, self.research_task
         )
         self.content_tasks = build_content_tasks(
-            self.content_agent, self.outline_task
+            self.content_agent, self.outline_task, self.research_task
         )
         self.figure_task = build_figure_task(
             self.figure_agent, self.outline_task

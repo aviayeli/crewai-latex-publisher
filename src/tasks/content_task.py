@@ -1,3 +1,5 @@
+"""Factory for per-chapter content writing tasks (markdown-first workflow)."""
+
 from crewai import Agent, Task
 
 CHAPTER_SPECS: list[tuple[int, str, str, int]] = [
@@ -10,23 +12,48 @@ CHAPTER_SPECS: list[tuple[int, str, str, int]] = [
 ]
 assert sum(pages for _, _, _, pages in CHAPTER_SPECS) == 15
 
+_MD_PATH = "chapters/ch{n}.md"
+_TEX_PATH = "chapters/ch{n}.tex"
 
-def build_content_tasks(agent: Agent, outline_task: Task) -> list[Task]:
+
+def build_content_tasks(
+    agent: Agent, outline_task: Task, research_task: Task
+) -> list[Task]:
     tasks = []
     for ch_num, heb_title, eng_title, pages in CHAPTER_SPECS:
+        md = _MD_PATH.format(n=ch_num)
+        tex = _TEX_PATH.format(n=ch_num)
+        first_chunk = (
+            f"content='\\\\chapter{{{heb_title}}}\\n\\n"
+            f"\\\\section{{<first section>}}\\n<prose>'"
+        )
         desc = (
-            f"Write chapter {ch_num} ({eng_title}) in Hebrew."
-            f" Save to latex_output/chapters/ch{ch_num}.tex via latex_writer_tool."
-            f" Start with \\chapter{{{heb_title}}}. Do NOT include \\begin{{document}}."
-            " Use \\( \\) for inline math and \\begin{equation} for display math."
-            f" Target {pages} pages."
+            f"Write chapter {ch_num} ({eng_title}) in Hebrew"
+            " using markdown-first workflow.\n"
+            "Use wiki/sources.md from research context for citations"
+            " — do NOT re-fetch.\n\n"
+            f"STEP 1 — Write '{md}' section by section via latex_writer_tool:\n"
+            f"  First call: path='{md}', mode='write', {first_chunk}\n"
+            f"  Each additional section: path='{md}', mode='append',"
+            " content='\\n\\\\section{<heading>}\\n<prose>'\n"
+            "  Inline LaTeX commands (\\\\textenglish{}, \\\\cite{},"
+            " \\\\begin{equation}) must be embedded in the markdown.\n\n"
+            f"STEP 2 — Convert: markdown_converter_tool"
+            f"(md_path='{md}', tex_path='{tex}').\n\n"
+            "CHECKPOINT after step 1: report sections written and word count.\n"
+            f"CHECKPOINT after step 2: report whether '{tex}' was created.\n"
+            f"Target {pages} pages (~{pages * 375} words)."
+            " Do NOT include \\\\begin{document}."
         )
         tasks.append(
             Task(
                 description=desc,
-                expected_output=f"latex_output/chapters/ch{ch_num}.tex written.",
+                expected_output=(
+                    f"'{tex}' written. Estimated pages: {pages}."
+                    " Both checkpoints reported."
+                ),
                 agent=agent,
-                context=[outline_task],
+                context=[outline_task, research_task],
             )
         )
     return tasks

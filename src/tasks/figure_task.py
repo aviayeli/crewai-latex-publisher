@@ -1,3 +1,5 @@
+"""Factory for the scientific figure generation task."""
+
 from crewai import Agent, Task
 
 

@@ -115,6 +115,29 @@ The Research Agent must return a single Markdown block. Each source occupies one
 
 ---
 
+## Two-Folder Wiki Memory Pattern
+
+After collecting all sources, apply the wiki pattern to cut downstream token usage by ~95%:
+
+### Folder layout (inside `latex_output/`)
+
+| Path | Purpose |
+|---|---|
+| `raw/research_raw.md` | Verbatim Perplexity output — audit trail only, never passed to agents |
+| `wiki/sources.md` | Distilled: one paragraph per source (citation key + contribution) |
+| `wiki/index.md` | Index: one line per citation key with backlink to `wiki/sources.md` |
+
+### Required sequence
+
+1. **Save raw** — call `latex_writer_tool(path='raw/research_raw.md', content=<full Perplexity output>, mode='write')`.
+2. **Distill** — write a concise paragraph per source (≤ 60 words each) into `wiki/sources.md`.
+3. **Index** — write `wiki/index.md` with one line per citation key: `- [key](sources.md): <one-line description>`.
+4. **Return output** — the task output must be ONLY the `wiki/sources.md` content. Do NOT return the raw dump.
+
+Downstream agents (content writer) read only the distilled `wiki/` output via task context, never the raw files.
+
+---
+
 ## Mapping to `refs.bib`
 
 Every citation key in the research output must have a corresponding BibTeX entry written to `latex_output/refs.bib`. The Outline Agent will use these keys when populating the `refs` field of `book_outline.json`. The Content Agent will use them in `\cite{}` commands. Any key produced by the Researcher but missing from `refs.bib` will cause a Biber compilation error.

@@ -1,5 +1,6 @@
 import pytest
 from pydantic import ValidationError
+
 from src.tools.latex_writer import LatexWriterInput, latex_writer_tool
 
 

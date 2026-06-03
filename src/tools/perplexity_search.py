@@ -1,18 +1,22 @@
+"""CrewAI tool for querying the Perplexity AI sonar-pro API."""
+
 import requests
 from crewai.tools import BaseTool
 from pydantic import BaseModel
 
 from src.config import settings
 
-_URL = "https://api.perplexity.ai/chat/completions"
-
 
 class PerplexitySearchInput(BaseModel):
+    """Input schema for the Perplexity search tool."""
+
     query: str
     max_results: int = 5
 
 
 class PerplexitySearchTool(BaseTool):
+    """Wraps the Perplexity AI /chat/completions endpoint for academic search."""
+
     name: str = "perplexity_search"
     description: str = (
         "Queries Perplexity AI sonar-pro for academic research sources."
@@ -20,6 +24,7 @@ class PerplexitySearchTool(BaseTool):
     args_schema: type[BaseModel] = PerplexitySearchInput
 
     def _run(self, query: str, max_results: int = 5) -> str:
+        """Send a research query and return the model's text response."""
         if not query.strip():
             raise ValueError("query must not be empty")
         payload = {
@@ -30,7 +35,9 @@ class PerplexitySearchTool(BaseTool):
             "Authorization": f"Bearer {settings.PERPLEXITY_API_KEY}",
             "Content-Type": "application/json",
         }
-        response = requests.post(_URL, headers=headers, json=payload)
+        response = requests.post(
+            settings.PERPLEXITY_API_URL, headers=headers, json=payload
+        )
         if response.status_code == 429:
             response.raise_for_status()
         elif response.status_code >= 400:

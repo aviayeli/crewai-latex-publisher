@@ -2,12 +2,12 @@ import shutil
 from unittest.mock import patch
 
 import pytest
+
+from src.config import settings
 from src.tools.markdown_converter import (
     MarkdownConverterInput,
     markdown_converter_tool,
 )
-
-from src.config import settings
 
 
 def test_tool_name_attribute():
@@ -51,18 +51,20 @@ def test_pandoc_called_with_correct_flags(tmp_output_dir):
         )
     cmd = mock_run.call_args.args[0]
     assert "-f" in cmd
-    assert "markdown" in cmd
+    assert "markdown+raw_tex" in cmd
     assert "-t" in cmd
     assert "latex" in cmd
     assert "-o" in cmd
 
 
 def test_pandoc_not_found_raises(tmp_output_dir):
-    with patch.object(settings, "PANDOC_BIN", "nonexistent-binary-xyz"):
-        with pytest.raises((FileNotFoundError, OSError)):
-            markdown_converter_tool._run(
-                md_path="chapters/ch1.md", tex_path="chapters/ch1.tex"
-            )
+    with (
+        patch.object(settings, "PANDOC_BIN", "nonexistent-binary-xyz"),
+        pytest.raises((FileNotFoundError, OSError)),
+    ):
+        markdown_converter_tool._run(
+            md_path="chapters/ch1.md", tex_path="chapters/ch1.tex"
+        )
 
 
 @pytest.mark.skipif(shutil.which("pandoc") is None, reason="pandoc not installed")

@@ -423,3 +423,68 @@ terms, inline math with `\(` and `\)`, and a `\cite{}` call:
 - `\cite{}` keys sourced from `refs.bib`
 - Maqaf ־ used correctly in compound constructions
 - No translation of proper nouns
+
+---
+
+## Markdown-First Workflow
+
+Every chapter must be written using the **markdown-first** workflow:
+
+### Step 1 — Write `chapters/ch{n}.md` section by section
+
+Write the chapter in Markdown, embedding LaTeX commands inline (pandoc's `raw_tex` extension passes them through unchanged):
+
+```markdown
+\chapter{מבוא}
+
+\section{רקע}
+ארכיטקטורת ה-\textenglish{Transformer} \cite{vaswani2017attention} מבוססת על...
+
+\begin{equation}
+  \text{Attention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+\end{equation}
+```
+
+Use `latex_writer_tool` to write section by section (`mode="write"` for first, `mode="append"` for each subsequent section).
+
+### Step 2 — Convert with `markdown_converter_tool`
+
+```python
+markdown_converter_tool(md_path="chapters/ch{n}.md", tex_path="chapters/ch{n}.tex")
+```
+
+This runs `pandoc -f markdown+raw_tex -t latex` which passes all inline LaTeX commands through unchanged.
+
+### Checkpoints (mandatory)
+
+- After Step 1: report total sections written and estimated word count.
+- After Step 2: report whether `chapters/ch{n}.tex` was created.
+
+---
+
+## CRITICAL RULE: Chunked Writing Strategy
+
+**NEVER** send an entire chapter — or any large block of text — in a single `latex_writer` tool call. Long strings are truncated by the JSON serialiser (`Unterminated string` error), which silently drops `content` and `mode` and causes a Pydantic validation error.
+
+### Hard limit: ≤ 25-30 lines per tool call
+
+Break every chapter into small chunks and write them iteratively:
+
+1. **First call** — `\chapter{}` heading + first section body, `mode="write"` (≤ 30 lines).
+2. **Each subsequent call** — one section at a time, `mode="append"` (≤ 30 lines each).
+
+### Required arguments — all three, every call
+
+- **`path`** (string): file path, e.g. `chapters/ch1.md`
+- **`content`** (string): the chunk text — **never omit**
+- **`mode`** (`"write"` for the first call, `"append"` for all subsequent calls)
+
+### Example sequence for a 3-section chapter
+
+```
+Call 1: path='chapters/ch1.md', mode='write',  content='\chapter{...}\n\section{...}\n<~25 lines>'
+Call 2: path='chapters/ch1.md', mode='append', content='\section{...}\n<~25 lines>'
+Call 3: path='chapters/ch1.md', mode='append', content='\section{...}\n<~25 lines>'
+```
+
+**A call missing `content` or `mode` will raise a validation error and the task will fail.**

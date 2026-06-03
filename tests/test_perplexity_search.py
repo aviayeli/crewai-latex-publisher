@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
+
 from src.tools.perplexity_search import PerplexitySearchInput, perplexity_search_tool
 
 _SUCCESS_JSON = {"choices": [{"message": {"content": "some result"}}]}

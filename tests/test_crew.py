@@ -183,32 +183,54 @@ def test_all_agents_max_retry_matches_settings():
         assert agent.max_retry_limit == settings.MAX_AGENT_RETRIES
 
 
+def test_all_agents_max_iter_matches_settings():
+    with patch("src.crew._load_skill", return_value="dummy"):
+        crew = PublisherCrew()
+    all_agents = [
+        crew.manager_agent,
+        crew.researcher_agent,
+        crew.outline_agent,
+        crew.content_agent,
+        crew.bidi_agent,
+        crew.figure_agent,
+        crew.compiler_agent,
+    ]
+    for agent in all_agents:
+        assert agent.max_iter == settings.MAX_ITER
+
+
 def test_missing_skill_file_prevents_crew_init():
-    with patch(
-        "src.crew._load_skill",
-        side_effect=FileNotFoundError("skills/manager/SKILL.md"),
+    with (
+        patch(
+            "src.crew._load_skill",
+            side_effect=FileNotFoundError("skills/manager/SKILL.md"),
+        ),
+        pytest.raises(FileNotFoundError),
     ):
-        with pytest.raises(FileNotFoundError):
-            PublisherCrew()
+        PublisherCrew()
 
 
 # ── Kickoff / Process ─────────────────────────────────────────────────────────
 
 
 def test_kickoff_constructs_hierarchical_crew():
-    with patch("src.crew._load_skill", return_value="dummy"):
-        with patch("src.crew.Crew") as MockCrew:
-            MockCrew.return_value.kickoff.return_value = "result"
-            PublisherCrew().kickoff()
+    with (
+        patch("src.crew._load_skill", return_value="dummy"),
+        patch("src.crew.Crew") as MockCrew,
+    ):
+        MockCrew.return_value.kickoff.return_value = "result"
+        PublisherCrew().kickoff()
     assert MockCrew.call_args.kwargs["process"] == Process.hierarchical
 
 
 def test_manager_agent_passed_as_kwarg():
-    with patch("src.crew._load_skill", return_value="dummy"):
-        with patch("src.crew.Crew") as MockCrew:
-            MockCrew.return_value.kickoff.return_value = "result"
-            crew = PublisherCrew()
-            crew.kickoff()
+    with (
+        patch("src.crew._load_skill", return_value="dummy"),
+        patch("src.crew.Crew") as MockCrew,
+    ):
+        MockCrew.return_value.kickoff.return_value = "result"
+        crew = PublisherCrew()
+        crew.kickoff()
     kwargs = MockCrew.call_args.kwargs
     assert "manager_agent" in kwargs
     assert crew.manager_agent not in kwargs.get("agents", [])

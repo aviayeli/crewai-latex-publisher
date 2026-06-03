@@ -81,3 +81,34 @@ wc -l src/debate/**/*.py     # no file may exceed 150 lines
 ```
 
 These gates are also enforced by GitHub Actions CI on every push.
+
+---
+
+## Part III: Production Robustness Rules
+
+### 10. Chunked Writing Strategy — 25-30 Lines Maximum Per Call
+**NEVER attempt to write an entire chapter or large text block in a single tool call.** Long strings cause JSON truncation (`Unterminated string` error) which silently drops `content` and `mode`, producing a Pydantic validation error.
+
+**Hard limit: each `content` argument must be at most 25-30 lines.** Always build large files iteratively:
+- First chunk: `mode="write"` to create the file (≤ 30 lines).
+- Every subsequent chunk: `mode="append"` (≤ 30 lines each).
+- Each tool call must explicitly include all three arguments: `path`, `content`, `mode`.
+
+### 11. Hard Circuit Breaker — Three Strikes, Then Halt
+If any tool or compilation step fails **three consecutive times**, stop immediately and report the failure explicitly. Do not enter an infinite retry loop. The `MAX_AGENT_RETRIES` setting enforces this at the agent level; tasks must not manually retry beyond it.
+
+**Violation pattern to avoid:**
+```
+# FORBIDDEN — silent infinite loop
+while True:
+    try: tool_call()
+    except: continue
+```
+
+### 12. Mandatory Checkpoints in Multi-Step Tasks
+After completing each discrete step in a multi-step task, the agent must emit a one-line checkpoint: what was completed and what remains. This prevents silent partial completion being reported as success.
+
+Example format: `[CHECKPOINT] Step 1 done: ch3.md written (847 words). Remaining: convert to .tex.`
+
+### 13. Explicit Failure — Never Report Success for a Skipped Step
+If a tool call fails, a file was not written, or a compilation produced errors, the agent must report the exact failure. Reporting "task complete" when the output file does not exist is a contract violation. Expose uncertainty by default: if unsure whether a step succeeded, say so.

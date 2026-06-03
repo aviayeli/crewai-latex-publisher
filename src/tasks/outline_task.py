@@ -1,3 +1,5 @@
+"""Factory for the book outline task."""
+
 from crewai import Agent, Task
 
 

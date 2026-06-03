@@ -1,6 +1,10 @@
-def main():
-    print("Hello from crewai-latex-publisher!")
+import dotenv
 
+dotenv.load_dotenv()
+
+from src.crew import PublisherCrew  # noqa: E402
 
 if __name__ == "__main__":
-    main()
+    crew = PublisherCrew()
+    result = crew.kickoff()
+    print(result)

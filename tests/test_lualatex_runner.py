@@ -3,13 +3,13 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+from src.config import settings
 from src.tools.lualatex_runner import (
     CompilationError,
     LualatexRunnerInput,
     lualatex_runner_tool,
 )
-
-from src.config import settings
 
 
 def test_compilation_error_is_exception_subclass():

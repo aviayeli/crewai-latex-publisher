@@ -1,3 +1,5 @@
+"""Factory for the BiDi validation task."""
+
 from crewai import Agent, Task
 
 

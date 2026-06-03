@@ -1,3 +1,5 @@
+"""CrewAI tool for sandboxed Python execution with import allowlist enforcement."""
+
 import ast
 import subprocess
 import tempfile
@@ -13,10 +15,14 @@ ALLOWED_IMPORTS: frozenset = frozenset({"matplotlib", "numpy", "pathlib", "os"})
 
 
 class PythonRunnerInput(BaseModel):
+    """Input schema for the python_runner tool."""
+
     script: str
 
 
 class PythonRunnerTool(BaseTool):
+    """Executes a sandboxed Python script after scanning for disallowed imports."""
+
     name: str = "python_runner"
     description: str = (
         "Executes a sandboxed Python script and returns stdout or stderr."
@@ -24,6 +30,7 @@ class PythonRunnerTool(BaseTool):
     args_schema: type[BaseModel] = PythonRunnerInput
 
     def _scan_imports(self, script: str) -> list[str]:
+        """Return sorted list of top-level imports not in ALLOWED_IMPORTS."""
         try:
             tree = ast.parse(script)
         except SyntaxError:
@@ -35,14 +42,14 @@ class PythonRunnerTool(BaseTool):
                     top = alias.name.split(".")[0]
                     if top not in ALLOWED_IMPORTS:
                         disallowed.append(top)
-            elif isinstance(node, ast.ImportFrom):
-                if node.module:
-                    top = node.module.split(".")[0]
-                    if top not in ALLOWED_IMPORTS:
-                        disallowed.append(top)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                top = node.module.split(".")[0]
+                if top not in ALLOWED_IMPORTS:
+                    disallowed.append(top)
         return sorted(set(disallowed))
 
     def _run(self, script: str) -> str:
+        """Validate imports, write to a temp file, execute, and return output."""
         bad = self._scan_imports(script)
         if bad:
             raise ValueError(f"disallowed imports: {', '.join(bad)}")

@@ -1,3 +1,5 @@
+"""Factory for the LuaLaTeX compilation task."""
+
 from crewai import Agent, Task
 
 
