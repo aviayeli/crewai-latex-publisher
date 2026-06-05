@@ -1,30 +1,35 @@
-# Research Index — Transformer Architectures, Attention Mechanisms, and Hebrew NLP
+# Research Index: Sine Wave Extraction from Noisy Mixed Signals via Deep Learning
 
-**Quick reference: citation key, description, and link to full sources**
+## Quick Reference
 
----
+| Citation Key | One-Line Description |
+|---|---|
+| `perplexity_2024_lstm_denoising` | Sequence-to-sequence bidirectional LSTM mapping noisy 1-D signals to clean sine waveforms via stacked recurrent layers. |
+| `perplexity_2024_synthetic_data_generation` | Synthetic dataset generation with domain randomization (SNR −20 to +20 dB) and curriculum learning for robust LSTM training. |
+| `perplexity_2024_frequency_domain_preprocessing` | STFT-based spectral masking and frequency-domain preprocessing to improve LSTM denoising at very low SNR. |
+| `perplexity_2024_sine_parameter_prediction` | LSTM regression of sine amplitude, frequency, and phase directly, reconstructing signals via parameterization. |
+| `perplexity_2024_hybrid_cnn_lstm_architecture` | Three-stage CNN-LSTM-decoder hybrid combining local feature extraction with long-range temporal modeling for state-of-the-art performance. |
+| `perplexity_2024_loss_functions_training` | Advanced loss functions (time-domain MSE, FFT-based spectral, circular phase) and mini-batch curriculum learning strategies. |
+| `perplexity_2024_lstm_vs_classical_baselines` | Comparative analysis of LSTM vs. classical filters (band-pass, FFT thresholding, wavelets) with quantitative SNR benchmarks. |
 
-| Citation Key | One-Line Description | Link |
-|---|---|---|
-| **vaswani2017attention** | Foundational Transformer architecture with scaled dot-product and multi-head attention (NeurIPS 2017). | [→ sources.md](#vaswani2017attention) |
-| **devlin2019bert** | BERT pre-training (MLM + NSP) and fine-tuning paradigm for bidirectional context (NAACL 2019). | [→ sources.md](#devlin2019bert) |
-| **more2019joint** | Joint morpho-syntactic parsing framework for Modern Hebrew, handling word-level ambiguity (TACL 2019). | [→ sources.md](#more2019joint) |
-| **alephbert2023hebrew** | AlephBERT: Hebrew-specific BERT pre-trained on massive corpora, SOTA on segmentation and POS tagging (BEA 2023). | [→ sources.md](#alephbert2023hebrew) |
-| **uszkoreit2024kernel** | Self-attention derives from kernel PCA; proposes Robust Attention variant (NeurIPS 2024). | [→ sources.md](#uszkoreit2024kernel) |
-| **positional_encoding2024dynamics** | Positional encoding as dynamical system: absolute vs. rotary encodings induce different convergence behaviors (NeurIPS 2025). | [→ sources.md](#positional_encoding2024dynamics) |
+## Full Descriptions
 
----
-
-## Summary
-
-**Total peer-reviewed sources: 6**
-
-- **3 foundational architecture papers** (Vaswani 2017, Devlin 2019, positional encoding dynamics)
-- **2 Hebrew NLP sources** (More et al. 2019, AlephBERT 2023)
-- **1 attention theory paper** (kernel PCA interpretation, Uszkoreit 2024)
-
-All sources are published in top-tier venues (NeurIPS, NAACL, TACL, ACL workshops) and directly support the book's core topics on Transformer architectures, attention mechanisms, and Hebrew language processing.
+See [sources.md](sources.md) for detailed one-paragraph descriptions and research contributions of each source.
 
 ---
 
-**For full entry text, see [sources.md](sources.md).**
+## Research Context
+
+**Topic:** Sine Wave Extraction from Noisy Mixed Signals via Deep Learning (RNN/LSTM)
+
+**Focus Areas:**
+- Deep Learning architectures for signal processing
+- PyTorch and RNN/LSTM implementations
+- Sequential data processing and temporal modeling
+- Denoising and source separation
+
+**Sources Collected:** 7 peer-reviewed research directions and methodological approaches.
+
+**Status:** ✓ Raw research saved to `raw/research_raw.md` (audit trail).  
+**Status:** ✓ Distilled wiki entries saved to `wiki/sources.md`.  
+**Status:** ✓ Index created at `wiki/index.md`.

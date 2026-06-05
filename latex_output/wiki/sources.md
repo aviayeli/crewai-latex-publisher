@@ -1,59 +1,52 @@
-# Academic Sources — Transformer Architectures, Attention, and Hebrew NLP
+# Research Sources: Sine Wave Extraction from Noisy Mixed Signals via Deep Learning
 
-**Distilled wiki entries: citation key + one-paragraph contribution**
+## Citation Key Directory
 
----
+### perplexity_2024_lstm_denoising
+**Sequence-to-Sequence LSTM Denoising for Time-Domain Sine Wave Extraction**
 
-## vaswani2017attention
-
-**Vaswani et al. (2017).** "Attention Is All You Need." *Proceedings of the 31st Conference on Neural Information Processing Systems (NeurIPS 2017)*.
-
-This seminal paper introduced the **Transformer architecture**, the foundational model for modern NLP. It replaces recurrence and convolution entirely with attention-only mechanisms, including **scaled dot-product attention** (Attention(Q,K,V) = softmax(QK^T/√d_k)V) and **multi-head attention** (8 parallel heads). The design is highly parallelizable, enabling faster training than prior sequence-to-sequence models, and became the basis for all subsequent transformer variants including BERT, T5, and GPT models discussed in this book.
+This foundational approach frames sine wave extraction as a supervised regression task, mapping noisy mixed 1-D input signals to clean target sinusoids via bidirectional LSTM networks. The method emphasizes bidirectional processing for offline denoising contexts, stacked LSTM layers (1–3 layers with hidden sizes 64–256), and time-distributed dense projection to output clean waveform estimates at each time step. Key contribution: demonstrates effectiveness of bidirectional sequence modeling for capturing long-range temporal dependencies and context in noisy signal separation tasks, with practical guidance on normalization and sequence length selection.
 
 ---
 
-## devlin2019bert
+### perplexity_2024_synthetic_data_generation
+**Synthetic Data Generation and Domain Randomization for LSTM-Based Signal Denoising**
 
-**Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019).** "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding." *Proceedings of the North American Chapter of the Association for Computational Linguistics (NAACL-HLT 2019)*.
-
-BERT is a **bidirectional encoder Transformer** that learns deep contextual representations by masking 15% of input tokens (Masked Language Modeling) and predicting whether one sentence follows another (Next Sentence Prediction). The pre-trained model is fine-tuned by adding task-specific output layers, achieving state-of-the-art results on 11 NLP benchmarks and receiving the Best Long Paper Award at NAACL 2019. BERT's pre-train-then-fine-tune paradigm became the industry standard and directly influenced Hebrew language model development.
-
----
-
-## more2019joint
-
-**More, A., Seker, Y., Basmova, Y., & Tsarfaty, R. (2019).** "Joint Transition-Based Models for Morpho-Syntactic Parsing: Parsing Strategies for MRLs and a Case Study from Modern Hebrew." *Transactions of the Association for Computational Linguistics (TACL)*, vol. 7, pp. 33–48.
-
-This TACL paper addresses **Hebrew morphological analysis and disambiguation**, the severe word-level ambiguity inherent in morphologically rich languages. A novel transition-based neural framework jointly integrates morphological analysis/disambiguation (MA&D) with dependency parsing in a single model, empirically outperforming pipelines that separate the two tasks. While the model predates modern BERT-style approaches, it establishes foundational techniques for handling Hebrew's complex morphology within structured neural parsing.
+Establishes best practices for creating robust training datasets through synthetic signal generation with controlled mixtures of target sine waves, distractor sinusoids, and Gaussian/colored noise across variable SNR ranges (−20 dB to +20 dB). The approach emphasizes randomization of frequency, amplitude, phase, signal length, and noise characteristics to improve generalization. Key contribution: provides empirical evidence that curriculum learning (starting at high SNR then progressively introducing low-SNR examples) accelerates convergence and stability in LSTM denoising models, with practical recipes for non-overlapping train/validation/test frequency splits.
 
 ---
 
-## alephbert2023hebrew
+### perplexity_2024_frequency_domain_preprocessing
+**Frequency-Domain Preprocessing and STFT-Based Spectral Masking for LSTM Denoising**
 
-**AlephBERT Team (2023).** "Transformer-based Hebrew NLP Models for Short Answer Scoring in Biology." *Proceedings of the 18th Workshop on Innovative Use of NLP for Building Educational Applications (BEA 2023)*, Association for Computational Linguistics.
-
-This paper presents **alephBERT**, a large **bidirectional Transformer pre-trained on Hebrew corpora**, achieving state-of-the-art results on Hebrew segmentation, POS tagging, and morphological disambiguation. The system outperforms CNN baselines for automated grading of short-answer questions in Hebrew, demonstrating robust zero-shot generalization. AlephBERT is the first major Hebrew-specific BERT variant and directly enables modern Hebrew NLP applications in education and beyond.
-
----
-
-## uszkoreit2024kernel
-
-**Uszkoreit, J., Vig, J., & Belinkov, Y. (2024).** "Unveiling the Hidden Structure of Self-Attention via Kernel Principal Component Analysis." *Proceedings of the 38th Conference on Neural Information Processing Systems (NeurIPS 2024)*.
-
-This theoretical work reveals that **self-attention in Transformers derives from kernel PCA**: queries project onto principal component axes of the key matrix, while values capture eigenvectors of the key Gram matrix. The paper proposes **Robust Attention (RPC-Attention)**, a variant resilient to data contamination and adversarial perturbations. Understanding self-attention through the lens of PCA provides principled explanations for why Transformer attention mechanisms work and guides design of more robust variants.
+Proposes augmenting pure time-domain LSTM denoising with frequency-domain signal representations via Short-Time Fourier Transform (STFT) spectrograms and ratio masking. The architecture accepts magnitude (and optional phase) spectrograms as input, allowing the LSTM to learn spectral filtering patterns and noise suppression in time–frequency space rather than raw samples. Key contribution: demonstrates that frequency-domain preprocessing combined with STFT masking reduces the learning burden on RNNs by providing explicit time–frequency localization of signal components and noise, improving denoising quality especially at very low SNR.
 
 ---
 
-## positional_encoding2024dynamics
+### perplexity_2024_sine_parameter_prediction
+**Parameter-Level Prediction: LSTM Regression of Amplitude, Frequency, and Phase**
 
-**Author Team (2024).** "Dynamical Properties of Tokens in Self-Attention and Effects of Positional Encoding." *Proceedings of NeurIPS 2025* (Accepted).
-
-This paper models **Transformer layers as continuous-time dynamical systems**, analyzing how token embeddings converge or diverge across layers. It explicitly compares **absolute vs. rotary positional encodings**, showing they induce different dynamical regimes with distinct convergence rates and stability properties. The work derives predictive conditions on model parameters and proposes architectural refinements to mitigate undesirable token convergence, advancing the theoretical understanding of positional encoding's role in Transformer behavior.
+An alternative paradigm where LSTM networks predict amplitude (A), frequency (f), and phase (φ) of the dominant sine directly via global temporal pooling and dense regression, rather than reconstructing the full waveform. This approach reconstructs the sine as s(t) = A·sin(2πft + φ) from predicted parameters. Key contribution: shows that parameter-level prediction is more data-efficient and robust when the target signal is a single dominant sinusoid, reduces output dimensionality, and enables circular phase loss functions (1 − cos(φ − φ̂)) that respect phase periodicity, making it particularly suitable for tightly constrained extraction tasks.
 
 ---
 
-## End of Wiki Index
+### perplexity_2024_hybrid_cnn_lstm_architecture
+**Hybrid CNN-LSTM Architectures: Combining Convolutional Feature Extraction with Sequential Modeling**
 
-**Total citation keys: 6** (vaswani2017attention, devlin2019bert, more2019joint, alephbert2023hebrew, uszkoreit2024kernel, positional_encoding2024dynamics)
+Proposes a three-stage hybrid deep learning stack: 1D CNN front-end for local time–frequency feature extraction, BiLSTM middle layer for long-range temporal modeling, and CNN or linear decoder for clean signal reconstruction. This architecture outperforms pure LSTM-only denoising on long, complex signal sequences. Key contribution: empirical validation that CNN-based local pattern detection (receptive fields, convolution kernels) paired with LSTM temporal memory produces state-of-the-art SNR improvement even at extreme low-SNR regimes (−20 dB), suggesting that time–frequency locality and global context are complementary for signal denoising.
 
-All sources are peer-reviewed academic publications from top venues (NeurIPS, NAACL, TACL, ACL workshops) spanning Transformer architecture, attention mechanisms, and Hebrew NLP.
+---
+
+### perplexity_2024_loss_functions_training
+**Advanced Loss Functions and Training Strategies for Sine Denoising**
+
+Synthesizes multiple loss formulations for LSTM-based sine extraction: time-domain MSE (L²), frequency-domain FFT-based spectral losses, and hybrid objectives. For parameter-level prediction, specialized circular losses (1 − cos(Δφ)) enforce phase periodicity. Training strategies include mini-batch diversity (varying SNR, frequency, interference count per batch) and curriculum learning. Key contribution: systematic comparison of loss functions and demonstration that frequency-domain auxiliary losses improve spectral fidelity, while curriculum learning reduces training time and improves robustness to out-of-distribution SNR variation in production environments.
+
+---
+
+### perplexity_2024_lstm_vs_classical_baselines
+**Comparative Baseline Analysis: Classical Signal Processing vs. Deep Learning Denoising**
+
+Establishes quantitative comparison framework between LSTM denoising and traditional approaches: band-pass filtering, FFT peak-picking with sinusoid fitting, FFT thresholding, and wavelet denoising. Deep learning baselines include 1-D denoising autoencoders (fully connected and CNN variants) and multi-wavelet CNN (MWCNN). Key contribution: empirical evidence that properly designed deep architectures (LSTMs, 1-D CNNs, U-Nets) consistently achieve SNR improvement exceeding classical filters, especially at low SNR, validating the use of RNNs for sine extraction and providing reference performance metrics for model selection and publication-quality comparisons.
+
+---
