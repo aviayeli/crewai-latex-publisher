@@ -60,12 +60,12 @@ class LatexPublisherSDK:
         Creates a new :class:`PublisherCrew` on the first call; reuses it
         on subsequent calls within the same SDK instance.
         """
-        if self._crew is None:
-            self._crew = PublisherCrew()
         enriched = (
             f"{topic}. Research focus: {research_focus}."
             if research_focus
             else topic
         )
         self._build_expert_context()  # SkillSieve validation gate
-        return self._crew.kickoff(inputs={"topic": enriched})
+        if self._crew is None:
+            self._crew = PublisherCrew(topic=enriched)
+        return self._crew.kickoff()

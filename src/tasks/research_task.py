@@ -3,11 +3,11 @@
 from crewai import Agent, Task
 
 
-def build_research_task(agent: Agent) -> Task:
+def build_research_task(agent: Agent, topic: str = "") -> Task:
     return Task(
         description=(
-            "Use perplexity_search_tool to research at least 6 peer-reviewed sources"
-            " on the topic: {topic}."
+            f"Use perplexity_search_tool to research at least 6 peer-reviewed sources"
+            f" on the topic: {topic}."
             " Then apply the two-folder wiki pattern:\n"
             " Step 1 — Save the raw Perplexity output verbatim to"
             " 'raw/research_raw.md' via latex_writer_tool"

@@ -76,22 +76,20 @@ def test_sdk_crew_is_set_after_run():
 # ── topic passthrough ─────────────────────────────────────────────────────────
 
 
-def test_sdk_run_passes_topic_as_inputs_to_kickoff():
+def test_sdk_run_passes_topic_to_crew_constructor():
     with patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew:
         MockCrew.return_value.kickoff.return_value = "done"
         sdk = LatexPublisherSDK()
         sdk.run(topic="Quantum Computing")
-    inputs = MockCrew.return_value.kickoff.call_args.kwargs["inputs"]
-    assert inputs["topic"] == "Quantum Computing"
+    MockCrew.assert_called_once_with(topic="Quantum Computing")
 
 
-def test_sdk_run_with_no_topic_passes_empty_string():
+def test_sdk_run_with_no_topic_passes_empty_string_to_constructor():
     with patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew:
         MockCrew.return_value.kickoff.return_value = "done"
         sdk = LatexPublisherSDK()
         sdk.run()
-    inputs = MockCrew.return_value.kickoff.call_args.kwargs["inputs"]
-    assert inputs["topic"] == ""
+    MockCrew.assert_called_once_with(topic="")
 
 
 # ── progressive disclosure (research_focus enrichment) ────────────────────────
@@ -102,9 +100,9 @@ def test_sdk_run_enriches_topic_with_research_focus():
         MockCrew.return_value.kickoff.return_value = "done"
         sdk = LatexPublisherSDK()
         sdk.run(topic="Sine Wave", research_focus="Deep Learning and PyTorch")
-    inputs = MockCrew.return_value.kickoff.call_args.kwargs["inputs"]
-    assert "Sine Wave" in inputs["topic"]
-    assert "Deep Learning" in inputs["topic"]
+    topic_used = MockCrew.call_args.kwargs["topic"]
+    assert "Sine Wave" in topic_used
+    assert "Deep Learning" in topic_used
 
 
 def test_sdk_run_without_focus_passes_bare_topic():
@@ -112,8 +110,7 @@ def test_sdk_run_without_focus_passes_bare_topic():
         MockCrew.return_value.kickoff.return_value = "done"
         sdk = LatexPublisherSDK()
         sdk.run(topic="Pure Topic")
-    inputs = MockCrew.return_value.kickoff.call_args.kwargs["inputs"]
-    assert inputs["topic"] == "Pure Topic"
+    assert MockCrew.call_args.kwargs["topic"] == "Pure Topic"
 
 
 def test_sdk_run_calls_build_expert_context_for_skill_sieve_gate():

@@ -26,7 +26,7 @@ def _load_skill(name: str) -> str:
 
 
 class PublisherCrew:
-    def __init__(self) -> None:
+    def __init__(self, topic: str = "") -> None:
         mgr_skill = _load_skill("manager")
         res_skill = _load_skill("perplexity-research")
         out_skill = _load_skill("academic-outline")
@@ -44,9 +44,9 @@ class PublisherCrew:
         self.figure_agent = build_figure_agent(fig_skill)
         self.compiler_agent = build_compiler_agent(cmp_skill + "\n\n" + lat_skill)
 
-        self.research_task = build_research_task(self.researcher_agent)
+        self.research_task = build_research_task(self.researcher_agent, topic)
         self.outline_task = build_outline_task(
-            self.outline_agent, self.research_task
+            self.outline_agent, self.research_task, topic
         )
         self.content_tasks = build_content_tasks(
             self.content_agent, self.outline_task, self.research_task
@@ -59,7 +59,7 @@ class PublisherCrew:
             self.compiler_agent, self.bidi_task, self.figure_task
         )
 
-    def kickoff(self, inputs: dict | None = None) -> str:
+    def kickoff(self) -> str:
         tasks = [
             self.research_task,
             self.outline_task,
@@ -82,4 +82,4 @@ class PublisherCrew:
             process=Process.hierarchical,
             verbose=True,
         )
-        return crew.kickoff(inputs=inputs or {})
+        return crew.kickoff()
