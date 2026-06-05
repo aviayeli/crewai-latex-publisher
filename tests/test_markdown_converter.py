@@ -55,6 +55,27 @@ def test_pandoc_called_with_correct_flags(tmp_output_dir):
     assert "-t" in cmd
     assert "latex" in cmd
     assert "-o" in cmd
+    assert "--wrap=none" in cmd
+
+
+def test_post_process_strips_providecommand(tmp_output_dir):
+    tex = tmp_output_dir / "chapters" / "ch1.tex"
+    tex.write_text(
+        r"\providecommand{\tightlist}{}" + "\n"
+        r"\setlength{\parindent}{0pt}" + "\n"
+        r"\chapter{מבוא}" + "\n",
+        encoding="utf-8",
+    )
+    markdown_converter_tool._post_process(tex)
+    content = tex.read_text(encoding="utf-8")
+    assert r"\providecommand" not in content
+    assert r"\setlength" not in content
+    assert r"\chapter{מבוא}" in content
+
+
+def test_post_process_noop_on_missing_file(tmp_output_dir):
+    missing = tmp_output_dir / "chapters" / "nonexistent.tex"
+    markdown_converter_tool._post_process(missing)  # must not raise
 
 
 def test_pandoc_not_found_raises(tmp_output_dir):

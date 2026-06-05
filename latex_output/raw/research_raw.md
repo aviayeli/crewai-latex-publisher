@@ -1,159 +1,177 @@
-# Raw Perplexity Research Output — Transformer Architectures & Hebrew NLP
-## Audit File — Do Not Use Directly in Final Output
----
+# Raw Perplexity Search Output — Transformer Architectures, Attention Mechanisms, and Hebrew NLP
 
-## Query 1: Transformer architecture attention mechanism self-attention peer-reviewed survey
-
-The most widely cited peer-reviewed survey that specifically reviews **transformer/self-attention mechanisms** is *"Efficient Transformers: A Survey"* (Tay et al., 2020, ACM Computing Surveys), which systematically categorizes attention variants and efficiency techniques for Transformer architectures. In more domain-focused areas, key peer-reviewed surveys include *"Transformers in Vision: A Survey"* (Khan et al., ACM Computing Surveys, 2022) for computer vision and *"Transformer Architecture and Attention Mechanisms in Genome Analysis"* (Nguyen et al., 2023) for genomics.
-
-### 1. General / Methodological surveys on Transformers & self-attention
-
-1. **Efficient Transformers: A Survey** – Yi Tay, Mostafa Dehghani, et al., *ACM Computing Surveys*, 2020 (peer-reviewed journal)
-   - Covers the **standard scaled dot-product self-attention** introduced in *Attention Is All You Need* and systematically reviews efficient variants (sparse, low-rank, kernelized, memory-compressed, etc.).
-   - Widely used as the "go-to" reference when discussing **self-attention complexity** and architectural variants.
-
-2. **A Survey on Efficient Training of Transformers** – (various authors, 2023)
-   - Focuses on training-time issues (optimization, memory, parallelism).
-
-### 2. Domain-specific transformer/self-attention surveys (peer-reviewed)
-
-- **Vision:** **Transformers in Vision: A Survey** – Salman Khan et al., *ACM Computing Surveys*, 2022.
-  - Reviews self-attention and Transformer architectures in computer vision, including Vision Transformers (ViT).
-
-- **Genomics / Bioinformatics:** **Transformer Architecture and Attention Mechanisms in Genome Analysis** – Nguyen et al., 2023.
-  - Comprehensive review of transformers and attention mechanisms applied to genome and sequence analysis.
-
-### 3. Foundational transformer/self-attention references
-
-- **Attention Is All You Need** – Vaswani et al., NeurIPS 2017 (peer-reviewed conference).
-  - Introduces the **Transformer** and the **scaled dot-product self-attention** mechanism, along with **multi-head attention**.
-  - Defines queries, keys, values, and the core attention computation.
+This document contains the complete, unfiltered output from all six Perplexity AI queries executed for academic research on Transformer architectures, attention mechanisms, and Hebrew NLP.
 
 ---
 
-## Query 2: Hebrew NLP natural language processing deep learning transformer models
+## Query 1: Vaswani 2017 Attention Transformer Architecture
 
-Modern Hebrew NLP is built almost entirely on **Transformer-based deep learning models**, with several Hebrew-specific BERT/RoBERTa-style encoders.
+**Attention Is All You Need** is the 2017 paper by **Ashish Vaswani** and coauthors that introduced the **Transformer** architecture, published in the **NeurIPS/NIPS 2017** proceedings. The paper is best known for replacing recurrence and convolution with **attention-only** building blocks, including **scaled dot-product attention** and **multi-head attention**.
 
-### 1. Core Hebrew Transformer models
+Key points from the paper:
+- The Transformer is a **new simple network architecture** based solely on attention mechanisms, with recurrence and convolutions removed.
+- It uses **scaled dot-product attention**, defined in the paper as Attention(Q,K,V)=softmax(QK^T/sqrt(d_k))V.
+- It uses **multi-head attention**, with the paper stating that it employs **8 parallel attention heads**.
+- The model was designed to be **more parallelizable** and to train faster than prior sequence-to-sequence models.
 
-- **AlephBERT-base** (onlplab, BIU)
-  - Architecture: same as English BERT-base (12 layers, 768 hidden, 12 heads, ~110M params).
-  - Trained on large Hebrew corpora (~95M sentences from Twitter, Hebrew Wikipedia, OSCAR Hebrew).
-  - Achieves **state-of-the-art** on morphological tagging, POS tagging, NER.
-
-- **heBERT** (avichr)
-  - Hebrew BERT, widely used in early Hebrew transformer work.
-  - Variants: **Legal-heBERT** – Hebrew legal domain.
-
-- **Dicta models (DictaBERT family):**
-  - **DictaBERT**, **DictaBERT-large**, **NeoDictaBERT**, **NeoDictaBERT-bilingual (he-en)**
-
-- **HeRo / LongHeRo** (HeNLP)
-  - **HeRo** – Hebrew RoBERTa
-  - **LongHeRo** – extended context length
-
-### 2. Typical tasks handled with Hebrew Transformers
-
-- Morphological analysis & POS tagging
-- Named Entity Recognition (NER)
-- Short answer grading / text classification
-- Sentiment / topic classification
-- Machine Translation (seq2seq)
-
-### 3. Machine Translation and sequence-to-sequence for Hebrew
-
-- A Harvard thesis implemented **Google's Transformer architecture** for Hebrew MT, beating Google Translate on in-genre Hebrew translation (METEOR scores).
-- Deep learning work on **morphological parsing of Biblical Hebrew** uses both **LSTM** and **Transformer** models.
+On peer review: the venue was the **31st Conference on Neural Information Processing Systems (NeurIPS/NIPS 2017)**, which is a peer-reviewed conference proceedings venue. The version on arXiv is the preprint, while the NeurIPS proceedings PDF is the peer-reviewed publication record.
 
 ---
 
-## Query 3: Vaswani "Attention is All You Need" Transformer NeurIPS 2017
+## Query 2: BERT Bidirectional Transformers
 
-The original *"Attention Is All You Need"* Transformer paper is by **Vaswani et al., 2017**, published at **NeurIPS 2017**.
+The work you are referring to is the **peer‑reviewed ACL/NAACL 2019 paper** titled **"BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"** by **Jacob Devlin, Ming‑Wei Chang, Kenton Lee, and Kristina Toutanova**.
 
-- **Title:** Attention Is All You Need
-- **Authors:** Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, Illia Polosukhin
-- **Conference:** 31st Conference on Neural Information Processing Systems (**NeurIPS 2017**), Long Beach, CA, USA
-- **arXiv ID:** arXiv:1706.03762 (cs.CL)
-- **Original submission date:** 12 June 2017
+**Essential Points:**
 
-Core contribution:
-- Introduces the **Transformer** architecture, a sequence transduction model **based solely on attention mechanisms**, dispensing with recurrence (RNNs) and convolutions (CNNs).
-- Shows state-of-the-art results on WMT 2014 **English–German** and **English–French** machine translation.
+**Venue and Year**  
+- Published in the proceedings of **NAACL-HLT 2019 (ACL's North American Chapter)** as a long paper.
+- Frequently cited as: @inproceedings{Devlin2019BERTPO, title={BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}, booktitle={North American Chapter of the Association for Computational Linguistics}, year={2019}}.
 
----
+**Model Type**  
+- Introduces **BERT (Bidirectional Encoder Representations from Transformers)**, an **encoder-only Transformer** designed to learn **deep bidirectional representations** by conditioning on both left and right context in all layers.
 
-## Query 4: BERT pre-training deep bidirectional transformers language understanding Devlin 2019
+**Pre-training Objectives**  
+- Uses **Masked Language Modeling (MLM)**: randomly masks 15% of input tokens and trains to predict original tokens using both left and right context.
+- Uses **Next Sentence Prediction (NSP)**: binary classification to predict whether sentence B follows sentence A.
 
-- **Title:** BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
-- **Authors:** Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova
-- **Venue:** Proceedings of NAACL-HLT 2019 (Volume 1: Long Papers)
-- **Year:** 2019
-- **Pages:** 4171–4186
-- **DOI:** 10.18653/v1/N19-1423
-- **arXiv ID:** arXiv:1810.04805
+**Language Understanding + Fine-tuning Paradigm**  
+- Pre-trained BERT is **fine-tuned** by adding a single task-specific output layer, achieving strong performance on GLUE, MultiNLI, SQuAD without major architecture changes.
+
+**Impact and Recognition**  
+- Sets **state-of-the-art** results on 11 NLP benchmarks at publication.
+- Received the **Best Long Paper Award at NAACL 2019**.
 
 ---
 
-## Query 5: AlephBERT Hebrew BERT morphological analysis Ben-David 2022
+## Query 3: Hebrew NLP Transformer Models
 
-**AlephBERT** is a Hebrew BERT-style model introduced by **Seker, Greenfeld & Shwartz (ACL 2022)**.
+**Peer-reviewed conference papers on Hebrew NLP using Transformer models (2020–2024)**
 
-- **Model type:** BERT-base style Hebrew PLM: 12 layers, 768 hidden size, 12 heads, ~110M params.
-- **Vocabulary & data:** ~52K wordpiece vocab, trained on ~95M sentences from Hebrew OSCAR, Hebrew Wikipedia, and Twitter.
-- **Novel morphological extraction architecture** on top of AlephBERT's contextual embeddings.
-- **Results:** AlephBERT-base achieves new state-of-the-art for Hebrew on morphological segmentation, POS tagging, full morphological tagging, dependency parsing, NER, and sentiment analysis.
-- **Model & code:** GitHub `OnlpLab/AlephBERT`; HuggingFace `onlplab/alephbert-base`.
+The strongest result is a **2023 ACL/BEA workshop paper** on alephBERT for short-answer scoring in Hebrew.
 
----
+**Relevant papers from results:**
 
-## Query 6: FlashAttention efficient exact attention IO-complexity Dao 2022
-
-**FlashAttention** (Dao et al., 2022) is an **exact attention** algorithm designed to be **IO-aware**.
-
-Key IO-complexity result:
-- FlashAttention needs **O(N^2 d^2 / M)** HBM accesses (N = sequence length, d = head dimension, M = SRAM size).
-- Standard attention requires **Ω(Nd + N^2)** HBM accesses.
-- Does not materialize the full N×N attention matrix in HBM.
-- Stores only small softmax statistics and recomputes intermediates during backward pass.
-- Reported practical impact: up to **7.6× speedup** on GPT-2 attention, up to **9× fewer HBM accesses**.
+- **Transformer-based Hebrew NLP models for Short Answer Scoring in Biology** — published in the **Proceedings of the 18th Workshop on Innovative Use of NLP for Building Educational Applications (BEA 2023)**, a peer-reviewed ACL workshop venue.
+  - Uses the Hebrew pretrained language model **alephBERT** for automated grading
+  - **AlephBERT-based system outperforms strong CNN baseline** and generalizes well in zero-shot setting
 
 ---
 
-## Query 7: Tay efficient transformers survey ACM Computing Surveys 2022
+## Query 4: Transformer Low-Resource Languages Multilingual NLP
 
-- **Title:** Efficient Transformers: A Survey
-- **Authors:** Yi Tay, Mostafa Dehghani, Dara Bahri, Donald Metzler
-- **Venue:** ACM Computing Surveys (CSUR), 2022
-- **arXiv v2:** "2022 edition"
+**Most relevant peer‑reviewed work on transformer architectures for low‑resource languages (2021–2024, EMNLP/ACL venues)** clusters around: (i) multilingual transformer backbones (mBERT, XLM‑R, mT5), (ii) architecture variants and scaling tricks (Mixture‑of‑Experts, sparsity, compression), and (iii) task‑specific designs for MT, GEC, and cross‑lingual transfer.
 
-Main categories of efficient attention variants:
-- **Low-rank / projection-based:** Linformer – projects K/V from N×d to k×d, reducing to O(Nk).
-- **Kernel / random feature–based:** Performer – approximates softmax with kernel random features, O(Ld^2).
-- **Clustered / routing-style:** Clustered attention – cluster queries, attend via centroids.
-- **Local / sparse / block-sparse:** Longformer, BigBird – combine global, sliding-window, random attention patterns.
-- **LSH-based:** Reformer – locality-sensitive hashing attention, O(N log N) memory.
+**Core Multilingual Transformer Backbones (2021–2024)**
+
+- **mBERT / XLM‑R**: Widely used as multilingual encoder for classification, NER, POS; base for cross‑lingual transfer to low‑resource languages
+
+- **mT5 / mBART / MADLAD‑T5 family**: For generative tasks (MT, GEC, QA), low‑resource work converges on multilingual T5‑style encoder–decoder transformers
+
+- **MADLAD‑400**: Recent multilingual MT model using T5 architecture trained on 400 languages with explicit low‑resource language focus. Reports ~44% BLEU relative improvement over previous SOTA
+
+- **LLMs for Low‑Resource Languages (EACL 2024 tutorial)**: Tutorial "LLMs for Low Resource Languages in Multilingual, Multimodal and Dialectal Settings" discusses:
+  - Multilingual LLM backbones (transformer‑based)
+  - Enormous datasets curated for 167–200+ languages
+  - **Sparsely‑gated Mixture‑of‑Experts (MoE)** architectures for scaling to many languages while keeping per‑token cost manageable
+
+**Architectures Explicitly Targeting Low‑Resource Languages**
+
+**Hybrid LETCNN‑P Transformer for Low‑Resource MT (IAENG IJCS 2025)**: Proposes combination of **Lightweight Encoder Transformer (LET)** with **CNN‑based positional encoding and pre‑processing** for neural MT of low‑resource languages
+
+**Mixture‑of‑Experts and Sparsity for Multilingual LRLs**: **Sparsely Gated Mixture of Experts** models with:
+- Activation of only subset of experts per token (sparse gating)
+- Allows capacity scaling with many languages without linearly increasing per‑token compute
+
+**Task‑Specific Transformer Architectures for Low‑Resource Multilingual NLP**
+
+**IndiGEC: Multilingual Grammar Error Correction for Low‑Resource Indian Languages (EMNLP 2025)**: EMNLP main‑track paper proposing GEC system for low‑resource Indian languages, typically using sequence‑to‑sequence transformers (mT5 or similar multilingual encoder–decoder)
+
+**Linguistic Neuron Overlap Patterns (EMNLP 2025)**: Studies how neurons in multilingual transformers align across languages and effect on cross‑lingual transfer for low‑resource languages, using standard multilingual transformers (XLM‑R or mBERT)
+
+**Scaling and Compression of Multilingual Transformers for LRLs**
+
+**Assessing Compressed Multilingual Transformers across Diverse Languages (2025 arXiv)**: Benchmarks compressed multilingual transformers vs. monolingual LLMs across languages including Arabic and low‑resource settings, exploring pruning, quantization, distillation
+
+**Scaling Low‑Resource MT via Synthetic Data Generation with LLMs (EMNLP 2025)**: EMNLP paper on data generation using strong LLMs to generate synthetic parallel data for training low‑resource language MT systems
 
 ---
 
-## Query 8: Rotary Position Encoding RoPE Su 2021
+## Query 5: Self-Attention and Positional Encoding
 
-**Rotary Position Embedding (RoPE)** introduced by **Su et al. 2021** in the *RoFormer* paper.
+**Core Concept**
 
-Core idea:
-- Encodes positions by applying position-dependent 2D rotations to query and key vectors.
-- Attention depends on **relative** positions; parameter-free.
-- For positions p and q: Q̃_p^T K̃_q = Q_p^T R_{q-p} K_q — attention logit depends on (q−p).
+**Self-attention** lets each token compute a content‑based weighted average over all other tokens, while **positional encoding** injects information about sequence order that self-attention alone lacks.
 
-Properties:
-- **Parameter-free:** No additional learned parameters.
-- **Relative position explicit** in the dot product via angle differences.
-- **Flexible sequence length:** Can generalize beyond training length.
-- **Kernel-friendly:** Works well with FlashAttention.
-- Widely adopted in modern LLMs (LLaMA family).
+**Self‑Attention Mechanism**
 
-- **Paper:** RoFormer: Enhanced Transformer with Rotary Position Embedding – Jianlin Su et al., 2021.
+For sequence of token embeddings X ∈ R^(n × d):
+
+- Compute **queries**, **keys**, **values**: Q = XW_Q, K = XW_K, V = XW_V
+- Compute attention weights: Attn(Q,K,V) = softmax(QK^T/sqrt(d_k))V
+- In **self‑attention**, Q, K, V all come from same sequence, so each token attends to all others in parallel
+
+**Core Properties:**
+- Parallel over tokens (constant sequential depth) but **O(n^2 d)** cost in sequence length
+- Multi‑head attention uses several projected Q,K,V sets, enabling focus on different relationships simultaneously
+
+**Why Positional Encoding is Needed**
+
+Self‑attention is permutation‑invariant over tokens; it does not encode order by itself.
+
+**Positional Encoding Methods:**
+
+**Absolute positional encoding**: Sine–cosine functions with p_(i,2j) = sin(i / 10000^(2j/d)), p_(i,2j+1) = cos(i / 10000^(2j/d)). Can be fixed or learned embeddings
+
+**Relative positional encoding**: Encodes offsets i-j instead of absolute indices, typically by modifying attention score computation; yields better generalization to longer sequences and translation tasks
+
+The original sinusoidal scheme has useful property: encodings for position i+δ are linear transform of those for i, allowing models to reason about relative positions.
+
+**2021–2024: Theory‑Driven Perspectives on Self‑Attention**
+
+**Unveiling the Hidden Structure of Self‑Attention via Kernel Principal Component Analysis (NeurIPS 2024)**: Self‑attention derives from kernel PCA, projecting query vectors onto principal component axes of key matrix. Value matrix captures eigenvectors of Gram matrix of keys. Proposes **Robust Attention (RPC‑Attention)** resilient to data contamination with improved empirical robustness.
+
+**Dynamical Properties of Tokens in Self‑Attention and Effects of Positional Encoding (NeurIPS 2025)**: Analyzes transformer layers as continuous‑time dynamical system. Studies how tokens move across layers, analyzing convergence/divergence behaviors. Derives conditions on model parameters predicting these behaviors. Explicitly compares **absolute vs rotary positional encodings** showing different dynamical regimes. Proposes architectural refinements to mitigate undesirable convergence.
+
+**Generalizing Neural Attention Mechanics to Multi‑Scale Problems (NeurIPS 2025)**: Derives attention from first principles for hierarchical/multi‑modal data. Proposes **hierarchical attention** via entropy minimization: provably closest to standard softmax attention encoding hierarchical/geometric inductive biases, computable efficiently via dynamic programming. When integrated into Transformers: works for training from scratch in hierarchical/multi‑modal settings, can approximate standard self‑attention, reducing FLOPs while improving efficiency.
+
+**Graph Transformers and Generalization**: **What Improves the Generalization of Graph Transformers? A theoretical dive into the self-attention and positional encoding** (IBM study). Graph Transformers augment self‑attention with **relative positional encodings** encoding graph structure (distances, roles). Analysis shows: self‑attention plus positional encoding makes attention map sparse, emphasizing node's core neighborhood. This sparsity and locality improve generalization.
+
+**Toward Relative Positional Encoding in Spiking Transformers (NeurIPS 2025)**: Focuses on spiking neural networks with self‑attention. Introduces **Gray-PE**: encode relative distances with Gray code, guaranteeing constant Hamming distance for indices differing by power of two. Proposes **Log-PE**: logarithmic form of relative distance matrix injected into spiking attention map. Allows **relative positional encoding** in binary spike-constrained domain.
+
+**Educational Review: "Attention Mechanisms and Their Applications to Complex Systems" (2021)**: Broad overview of attention and self‑attention. Defines self‑attention relating input vectors "in more direct and symmetric way". Describes **multi‑head self‑attention** with different projection matrices W_i^Q, W_i^K, W_i^V per head. Reviews applications combining self‑attention with positional encoding and dense interpolation (e.g., clinical time series).
+
+**Textbook Treatment: D2L "Self‑Attention and Positional Encoding"**: Derives computational complexity O(n^2 d) and emphasizes constant maximum path length. Motivates positional encodings as order-preserving inputs. Explains **sinusoidal absolute encoding** formula used in early Transformers. Shows sinusoidal encoding allows learning **relative positions** via linear transformations.
 
 ---
-*End of raw Perplexity dump. For audit purposes only.*
+
+## Query 6: Hebrew Language Models and Morphological Analysis
+
+**Peer-Reviewed TACL Work on Hebrew Morphology**
+
+**More, Seker, Basmova & Tsarfaty (2019)** — "Joint Transition‑Based Models for Morpho‑Syntactic Parsing: Parsing Strategies for MRLs and a Case Study from Modern Hebrew" in **Transactions of the ACL** (TACL), vol. 7, pp. 33–48.
+
+**Essential Points:**
+
+- **2019 TACL paper**, fully peer-reviewed
+- Focuses on **Modern Hebrew** as morphologically rich language with severe word‑level ambiguity
+- Proposes **joint transition‑based framework** integrating:
+  - **Morphological analysis & disambiguation (MA&D)**
+  - **Dependency parsing**
+  - Into single model with joint training and inference
+- Empirical results: **Joint morpho‑syntactic modeling improves morphological disambiguation and end‑to‑end parsing accuracy** over pipelines separating morphology and syntax
+- Uses **transition‑based neural models** rather than BiDi Transformers; predates wide adoption of BERT‑style Hebrew LMs
+
+**Bidirectional Transformer‑Based Hebrew Morphological Models (2019–2024)**
+
+- **AlephBERT**: Large **bidirectional transformer** trained on massive Hebrew corpora achieving **state‑of‑the‑art results on segmentation and POS tagging**, used for morphological disambiguation
+
+- **Hebrew BERT Variants**: OtoBERT, DictaBERT‑morph documented in Hebrew NLP resource lists and technical reports, used for **morphological tagging / disambiguation**. (These are not TACL papers but resources/tools)
+
+- **Recent Study**: Examines how **transformer tokenization and representations handle complex verb paradigms in Turkish and Modern Hebrew**, focusing on BERT‑like models and subword segmentation (arXiv case study, not TACL)
+
+---
+
+## End of Raw Output
+
+All six Perplexity queries have been executed and their complete output is captured above.

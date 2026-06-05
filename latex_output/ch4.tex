@@ -1,0 +1,89 @@
+\chapter{ארכיטקטורת \textenglish{Transformer}}
+
+\section{סקירה כללית}
+
+ארכיטקטורת \textenglish{Transformer} מורכבת מחלקים עיקריים:
+מקודד (\textenglish{encoder}), מפענח (\textenglish{decoder}), וחלק ליניארי לחיזוי תוצאה.
+כל רכיב תורם לתפקיד משלו בקשת העיבוד.
+
+\section{המקודד}
+
+המקודד משנה את הקלט למטריצה של ייצוגים מזוקנים.
+כל שכבת מקודד מורכבת משתי תת־שכבות:
+
+\begin{enumerate}
+\item תת־שכבת תשומת הלב מרובת ראשים (\textenglish{Multi-Head Attention})
+\item רשת עצביות בעלת הנחיה קדימה (\textenglish{Feed-Forward Network})
+\end{enumerate}
+
+שתיהן מוקפות בתוך \textenglish{LayerNorm} ובחיבור בדלג (\textenglish{residual connection}).
+
+\section{המפענח}
+
+המפענח פועל בדומה למקודד, אך עם הבדל חשוב:
+הוא מפעיל תשומת הלב "מוסכת" כדי שכל אסימון יכול רק להתייחס לאסימונים קודמים.
+
+\section{תשומת הלב מרובת ראשים}
+
+חישוב תשומת הלב מרובת ראשים מתבצע בנוסחה הבאה:
+
+\begin{equation}
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h) W^O
+\end{equation}
+
+כאשר כל ראש מחושב כך:
+
+\begin{LTR}
+\begin{verbatim}
+head_i = Attention(Q W_i^Q, K W_i^K, V W_i^V)
+\end{verbatim}
+\end{LTR}
+
+\section{הרשת העצביות בעלת ההנחיה הקדימה}
+
+כל משכבה יש רשת עצביות זעירה בעלת שתי שכבות ליניאריות:
+
+\begin{equation}
+\text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
+\end{equation}
+
+זה נקרא גם בשם "תוספת בעלת שתי שכבות" ואו \textenglish{position-wise feed-forward network}.
+
+\section{קידוד מיקום}
+
+מכיוון ש־\textenglish{Transformer} עובד על כל הקלט בו־זמנית (בניגוד ל־\textenglish{RNN}),
+המודל צריך כיצד לדעת את הסדר של האסימונים.
+זה נעשה באמצעות קידוד מיקום המתווסף לייצוג הקלט:
+
+\begin{equation}
+PE_{(pos, 2i)} = \sin(pos / 10000^{2i/d_{model}})
+\end{equation}
+
+\begin{equation}
+PE_{(pos, 2i+1)} = \cos(pos / 10000^{2i/d_{model}})
+\end{equation}
+
+\section{יישום \textenglish{PyTorch}}
+
+דוגמה של יישום בסיסי בעזרת \textenglish{PyTorch}:
+
+\begin{LTR}
+\begin{verbatim}
+import torch.nn as nn
+
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff):
+        super().__init__()
+        self.attn = MultiHeadAttention(d_model, num_heads)
+        self.ffn = FeedForward(d_model, d_ff)
+        self.ln1 = nn.LayerNorm(d_model)
+        self.ln2 = nn.LayerNorm(d_model)
+    
+    def forward(self, x):
+        x = x + self.attn(self.ln1(x))
+        x = x + self.ffn(self.ln2(x))
+        return x
+\end{verbatim}
+\end{LTR}
+
+קוד זה מראה את המבנה הבסיסי של בלוק \textenglish{Transformer} יחיד.

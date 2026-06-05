@@ -32,6 +32,7 @@ class PublisherCrew:
         bdi_skill = _load_skill("lualatex-bidi")
         fig_skill = _load_skill("matplotlib-tikz")
         cmp_skill = _load_skill("lualatex-build")
+        lat_skill = _load_skill("latex_expert")
 
         self.manager_agent = build_manager_agent(mgr_skill)
         self.researcher_agent = build_researcher_agent(res_skill)
@@ -39,7 +40,7 @@ class PublisherCrew:
         self.content_agent = build_content_agent(con_skill)
         self.bidi_agent = build_bidi_agent(bdi_skill)
         self.figure_agent = build_figure_agent(fig_skill)
-        self.compiler_agent = build_compiler_agent(cmp_skill)
+        self.compiler_agent = build_compiler_agent(cmp_skill + "\n\n" + lat_skill)
 
         self.research_task = build_research_task(self.researcher_agent)
         self.outline_task = build_outline_task(

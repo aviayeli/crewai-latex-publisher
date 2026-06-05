@@ -1,0 +1,64 @@
+\chapter{מודלים מאומנים מראש}
+
+\section{הרעיון של הדרכה עצמית}
+
+מודלים מאומנים מראש (\textenglish{pre-trained models}) הם מודלים שכבר נלמדו על כמות ענקית של טקסט.
+ההדרכה הזו נעשית בדרך כלל על משימה "עצמית", כמו חיזוי האסימון הבא במשפט או השלמה של מילים חסרות.
+
+\section{\textenglish{BERT} וההדרכה הדו־כיוונית}
+
+\textenglish{BERT} (Bidirectional Encoder Representations from \textenglish{Transformers})
+הוא מודל מאומן מראש שמצביע לעבר דו־כיווני, כלומר הוא רואה את כל ההקשר.
+זה הוא בעלת יתרון על מודלים חד־כיווניים בעבור משימות כמו סיווג טקסט וחילוץ מידע.
+
+\section{\textenglish{GPT} וההדרכה החד־כיוונית}
+
+\textenglish{GPT} (\textenglish{Generative Pre-trained Transformer})
+מאומנת בדרך אחת בלבד: חיזוי האסימון הבא.
+למרות זה, היא מסוגלת ליצור טקסט קוהרנטי בעל אורך רב.
+
+\section{ההדרכה בתנאי תרמוספרה}
+
+כאשר משתמשים במודל מאומן מראש ליישום ספציפי חדש, אנו משתמשים בתהליך בשם \textenglish{fine-tuning}.
+
+\begin{equation}
+\text{Loss}_{fine-tune} = \lambda \cdot \text{Loss}_{task} + (1 - \lambda) \cdot \text{Loss}_{pretrain}
+\end{equation}
+
+כאן \(\lambda\) הוא היפרפרמטר המסדיר את האיזון בין השניים.
+
+\section{גדולים יותר טוב?}
+
+מחקרים רבים הראו שמודלים גדולים יותר מציגים "פריצות" בביצועים,
+שבהן הם פתאום מצליחים בתרגילים שהם כשלו בהם קודם.
+זה נקרא \textenglish{emergent abilities} של דוגמנות שפה גדולה.
+
+\section{דוגמאות למודלים מאומנים מראש}
+
+כמה מודלים מאומנים מראש פופולריים כוללים:
+
+\begin{enumerate}
+\item \textenglish{BERT} – דו־כיווני, טוב לסיווג
+\item \textenglish{GPT} – חד־כיווני, טוב ליצירה
+\item \textenglish{RoBERTa} – שיפור של \textenglish{BERT}
+\item \textenglish{LLaMA} – מודל אחרי של \textenglish{Meta}
+\item \textenglish{T5} – מודל סימטרי יחסית
+\end{enumerate}
+
+\section{יישום של מודל קיים}
+
+אתה יכול להשתמש בספריה \textenglish{Hugging Face} להטעין מודל קיים:
+
+\begin{LTR}
+\begin{verbatim}
+from transformers import AutoTokenizer, AutoModel
+
+tokenizer = AutoTokenizer.from_pretrained("bert-base-hebrew")
+model = AutoModel.from_pretrained("bert-base-hebrew")
+
+inputs = tokenizer("שלום עולם", return_tensors="pt")
+outputs = model(**inputs)
+\end{verbatim}
+\end{LTR}
+
+קוד זה מטעין את \textenglish{BERT} לעברית ומעבד טקסט עברי כלשהו.

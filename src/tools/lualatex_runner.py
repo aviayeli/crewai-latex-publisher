@@ -17,7 +17,7 @@ class LualatexRunnerInput(BaseModel):
     """Input schema for the lualatex_runner tool."""
 
     tex_file: str
-    passes: int = 2
+    passes: int = 3
     run_biber: bool = True
 
 
@@ -52,9 +52,19 @@ class LualatexRunnerTool(BaseTool):
         return [line for line in text.splitlines() if line.startswith("! ")]
 
     def _run(
-        self, tex_file: str, passes: int = 2, run_biber: bool = True
+        self, tex_file: str, passes: int = 3, run_biber: bool = True
     ) -> dict:
         """Compile *tex_file*, run biber if requested, and repeat for *passes*."""
+        if settings.HITL_ENABLED:
+            answer = input(
+                f"\n[HITL] Press Y to execute the {passes}-step PDF compilation"
+                f" for '{tex_file}' [Y/n]: "
+            ).strip().upper()
+            if answer != "Y":
+                raise RuntimeError(
+                    "HITL gate: compilation cancelled by operator."
+                )
+
         log_path = Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")
 
         def _latex(path: str) -> None:

@@ -68,9 +68,9 @@ def test_tool_name_attribute():
     assert lualatex_runner_tool.name == "lualatex_runner"
 
 
-def test_default_passes_is_two():
+def test_default_passes_is_three():
     inp = LualatexRunnerInput(tex_file="main.tex")
-    assert inp.passes == 2
+    assert inp.passes == 3
 
 
 def test_default_run_biber_is_true():
@@ -110,6 +110,40 @@ def test_biber_skipped_when_run_biber_false(tmp_path, monkeypatch):
         c for c in mock_run.call_args_list if c.args[0][0] == settings.BIBER_BIN
     ]
     assert len(biber_calls) == 0
+
+
+def test_hitl_gate_prompts_when_enabled(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", True)
+    (tmp_path / "main.log").write_text("This is LuaTeX\n")
+    with patch("src.tools.lualatex_runner.subprocess.run") as mock_run:
+        mock_run.return_value = MagicMock(returncode=0)
+        with patch("builtins.input", return_value="Y") as mock_input:
+            lualatex_runner_tool._run(tex_file="main.tex", passes=1, run_biber=False)
+            mock_input.assert_called_once()
+
+
+def test_hitl_gate_aborts_when_user_declines(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", True)
+    (tmp_path / "main.log").write_text("This is LuaTeX\n")
+    with (
+        patch("src.tools.lualatex_runner.subprocess.run"),
+        patch("builtins.input", return_value="n"),
+        pytest.raises(RuntimeError, match="HITL gate"),
+    ):
+        lualatex_runner_tool._run(tex_file="main.tex", passes=1, run_biber=False)
+
+
+def test_hitl_gate_skipped_when_disabled(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", False)
+    (tmp_path / "main.log").write_text("This is LuaTeX\n")
+    with patch("src.tools.lualatex_runner.subprocess.run") as mock_run:
+        mock_run.return_value = MagicMock(returncode=0)
+        with patch("builtins.input") as mock_input:
+            lualatex_runner_tool._run(tex_file="main.tex", passes=1, run_biber=False)
+            mock_input.assert_not_called()
 
 
 @pytest.mark.skipif(shutil.which("lualatex") is None, reason="lualatex not installed")

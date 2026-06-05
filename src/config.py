@@ -35,6 +35,8 @@ class Settings(BaseSettings):
     OUTPUT_DIR: str = "latex_output"
     ASSETS_DIR: str = "latex_output/assets"
     MIN_PAGES: int = 15
+    # Set to True to pause before lualatex_runner executes and prompt operator
+    HITL_ENABLED: bool = False
 
 
 settings = Settings(_env_file=".env")

@@ -80,7 +80,7 @@ def test_perplexity_api_url_override(monkeypatch):
 
 
 def test_max_iter_default():
-    assert Settings(**_K).MAX_ITER == 15
+    assert Settings(**_K).MAX_ITER == 80
 
 
 def test_max_tokens_default():

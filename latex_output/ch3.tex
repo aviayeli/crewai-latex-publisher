@@ -1,0 +1,76 @@
+\chapter{דו־כיווניות בפרסום אקדמי}
+
+\section{מהי דו־כיווניות ושפות \textenglish{RTL}}
+
+דו־כיווניות, או \textenglish{BiDi}, היא יכולת של מערכות צפייה וניתוח לטפל בשפות
+הנכתבות משמאל לימין (כמו עברית וערבית) וגם בשפות הנכתבות מימין לשמאל (כמו אנגלית וצרפתית)
+באותו מסמך. זו בעיה מורכבת מפני שסדר הקריאה של הטקסט שונה משדר הטקסט הלוגי.
+
+\section{אתגרי דו־כיווניות בטיפוגרפיה}
+
+כאשר משלבים עברית עם אנגלית בנוסח אקדמי, יש צורך להתמודד עם כמה אתגרים:
+
+\begin{equation}
+\text{BiDi Level} = f(\text{language}, \text{script}, \text{punctuation})
+\end{equation}
+
+דוגמה פשוטה: כאשר כותבים את שם הדגם \textenglish{BERT} באמצע משפט עברית,
+פרקים כמו סוגריים ומקפים עלולים להתהפך במידה לא נכונה.
+
+\section{פתרון באמצעות \textenglish{polyglossia} ו־\textenglish{bidi}}
+
+בעת שימוש ב־\textenglish{LuaLaTeX} עם \textenglish{polyglossia}, 
+המערכת אוטומטית טוענת את חבילת ה־\textenglish{bidi}.
+אנו מגדירים את העברית כשפה ראשית ואת האנגלית כשפה משנית בפרמבולה:
+
+\begin{LTR}
+\begin{verbatim}
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+\end{verbatim}
+\end{LTR}
+
+זה אומר ללוח הרינדור להתקן את הטקסט מימין לשמאל כברירת מחדל,
+וכן לעדכן את כיוון הקריאה במקומות מסוימים בהם מופיע טקסט אנגלית.
+
+\section{השימוש ב־\textenglish{\textbackslash textenglish\{\}}}
+
+עבור מילים או ביטויים אנגליים בודדים בתוך טקסט עברי, אנו משתמשים בפקודה \textenglish{\textbackslash textenglish\{\}}.
+זה מדגיש שהטקסט בתוך הסוגריים הוא אנגלית ולא עברית, ולפיכך לא צריך להיות בכיוון \textenglish{RTL}:
+
+\begin{equation}
+\text{עברית} \rightarrow \textenglish{English} \rightarrow \text{עברית}
+\end{equation}
+
+לדוגמה, כאשר אנו מתייחסים למודלים כמו \textenglish{Transformer}, \textenglish{GPT}, ו־\textenglish{BERT},
+כל שם מודל חייב להיות מעטופף ב־\textenglish{\textbackslash textenglish\{\}}.
+
+\section{בלוקים של קוד וסימון מתמטי}
+
+עבור בלוקים מרובי־שורות של קוד או נוסחאות מתמטיות שחייבות להיות משמאל לימין,
+אנו משתמשים בסביבת \textenglish{\textbackslash begin\{LTR\}...\textbackslash end\{LTR\}}:
+
+\begin{LTR}
+\begin{verbatim}
+def attention(Q, K, V):
+    scores = (Q @ K.T) / sqrt(d_k)
+    weights = softmax(scores)
+    return weights @ V
+\end{verbatim}
+\end{LTR}
+
+הסביבה \textenglish{LTR} מוודא שסימן פיתוח כמו \textenglish{(} או \textenglish{[}
+לא מתהפך לסימן סגור כמו \textenglish{)} או \textenglish{]}.
+
+\section{בדיקת המערכת}
+
+כדי לבדוק שכל זה עובד כראוי, יש להריץ:
+
+\begin{LTR}
+\begin{verbatim}
+lualatex -interaction=nonstopmode main.tex
+\end{verbatim}
+\end{LTR}
+
+אם אין שגיאות ותהליך הקומפילציה מסתיים בהצלחה,
+אז כל בדיקות דו־כיווניות עברו בהצלחה.

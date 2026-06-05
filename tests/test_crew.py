@@ -15,6 +15,7 @@ _SKILL_NAMES = [
     "lualatex-bidi",
     "matplotlib-tikz",
     "lualatex-build",
+    "latex_expert",
 ]
 
 _AGENT_FILES = [
@@ -63,10 +64,10 @@ def test_load_skill_reads_from_skills_subdir(tmp_path, monkeypatch):
 # ── PublisherCrew construction ────────────────────────────────────────────────
 
 
-def test_publisher_crew_init_loads_seven_skills():
+def test_publisher_crew_init_loads_eight_skills():
     with patch("src.crew._load_skill", return_value="dummy") as mock_load:
         PublisherCrew()
-    assert mock_load.call_count == 7
+    assert mock_load.call_count == 8
 
 
 def test_all_agent_backstories_equal_skill_content():
@@ -79,7 +80,9 @@ def test_all_agent_backstories_equal_skill_content():
     assert crew.content_agent.backstory == skill_map["hebrew-academic-writing"]
     assert crew.bidi_agent.backstory == skill_map["lualatex-bidi"]
     assert crew.figure_agent.backstory == skill_map["matplotlib-tikz"]
-    assert crew.compiler_agent.backstory == skill_map["lualatex-build"]
+    assert crew.compiler_agent.backstory == (
+        skill_map["lualatex-build"] + "\n\n" + skill_map["latex_expert"]
+    )
 
 
 def test_no_agent_backstory_is_hardcoded_python_string():

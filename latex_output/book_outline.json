@@ -1,144 +1,121 @@
 {
-  "title": "Transformer Architectures: From Attention to Hebrew NLP",
-  "subtitle": "A Hebrew-Language Academic Overview of Transformer Models and Their Applications",
+  "title": "Transformer Architectures: From Attention Mechanisms to Hebrew Language Processing",
+  "subtitle": "A Comprehensive Study of Neural Sequence Models and Their Application to Morphologically Rich Languages",
   "language": "hebrew",
   "refs": [
     "vaswani2017attention",
     "devlin2019bert",
-    "brown2020language",
-    "radford2019language",
-    "touvron2023llama",
-    "clark2020electra",
-    "vaswani_2017_transformer",
-    "devlin_2019_bert",
-    "tay_2022_efficient_transformers",
-    "seker_2022_alephbert",
-    "dao_2022_flashattention",
-    "su_2021_rope",
-    "tsarfaty_2020_hebrew_ud"
+    "more2019joint",
+    "alephbert2023hebrew",
+    "uszkoreit2024kernel",
+    "positional_encoding2024dynamics"
   ],
   "chapters": [
     {
       "number": 1,
-      "hebrew_title": "מבוא ורקע",
-      "english_title": "Introduction and Background",
+      "hebrew_title": "מבוא: מוטיבציה וזעירתן של מודלים סדרתיים",
+      "english_title": "Introduction: Motivation and Evolution of Sequence Models",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "רקע היסטורי: ממודלי רצף לטרנספורמרים",
-          "summary": "Historical context of sequence modelling, covering RNNs, LSTMs, and the limitations that motivated the Transformer architecture."
+          "heading": "רקע היסטורי: מהרשתות נוירוניות חוזרות לתשומת קשב",
+          "summary": "Historical overview of sequence modelling architectures: RNNs, LSTMs, and GRUs, and their limitations in capturing long-range dependencies."
         },
         {
-          "heading": "מוטיבציה ומטרות הספר",
-          "summary": "Motivation for studying Transformers in the context of Hebrew NLP, and an overview of the book's structure and research questions."
-        },
-        {
-          "heading": "סקירת המקורות המחקריים",
-          "summary": "Brief survey of the seven key peer-reviewed sources that the book is grounded in, from Vaswani et al. (2017) through Tsarfaty et al. (2020)."
+          "heading": "המהפכה של מנגנון הקשב",
+          "summary": "Introduction of the attention mechanism as a solution to parallelization bottlenecks and long-range dependency modelling problems."
         }
       ]
     },
     {
       "number": 2,
-      "hebrew_title": "יסודות ארכיטקטורת הטרנספורמר",
-      "english_title": "Foundations of the Transformer Architecture",
+      "hebrew_title": "מנגנוני קשב: ממנגנון הקשב הסקלרי לקשב רב-ראשי",
+      "english_title": "Attention Mechanisms: From Scaled Dot-Product to Multi-Head Attention",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "מנגנון הקשב: שאילתות, מפתחות וערכים",
-          "summary": "Detailed explanation of scaled dot-product attention using queries, keys, and values as introduced in Vaswani et al. (2017)."
+          "heading": "קשב מנורמל בקנה מידה: הנוסחה הבסיסית",
+          "summary": "Formal definition and derivation of scaled dot-product attention, including query, key, and value projections."
         },
         {
-          "heading": "קשב רב-ראשי ושכבות הטרנספורמר",
-          "summary": "How multi-head attention, feed-forward sublayers, residual connections, and layer normalisation compose the full Transformer block."
+          "heading": "קשב רב-ראשי ותפוקתו",
+          "summary": "Multi-head attention architecture: parallel attention heads, concatenation, and linear output transformation."
         },
         {
-          "heading": "קידוד מיקומי: שיטות קלאסיות",
-          "summary": "Sinusoidal and learned absolute positional encodings, and the role of positional information in a sequence-order-agnostic architecture."
-        },
-        {
-          "heading": "ארכיטקטורת קודד-מפענח",
-          "summary": "The encoder-decoder structure of the original Transformer for sequence-to-sequence tasks including machine translation."
+          "heading": "קשב עצמי מנקודת מבט של PCA הקרנלי",
+          "summary": "Theoretical perspective on self-attention through kernel PCA lens, providing mathematical foundations and convergence properties."
         }
       ]
     },
     {
       "number": 3,
-      "hebrew_title": "מנגנוני קשב מתקדמים",
-      "english_title": "Advanced Attention Mechanisms",
-      "page_budget": 3,
+      "hebrew_title": "קידוד מיקומי: שימור סדר בהקשרים חסרי חזרות",
+      "english_title": "Positional Encodings: Preserving Sequence Order in Recurrence-Free Architectures",
+      "page_budget": 2,
       "sections": [
         {
-          "heading": "קידוד מיקומי רוטציוני (RoPE)",
-          "summary": "RoFormer's Rotary Position Embedding encoding relative positions via 2D rotations, parameter-free and adopted in LLaMA and Mistral."
+          "heading": "קידודים מיקומיים סינוסואידיים",
+          "summary": "Classical sinusoidal positional encoding schemes and their frequency-based design for capturing relative position information."
         },
         {
-          "heading": "FlashAttention: קשב יעיל לזיכרון",
-          "summary": "IO-aware exact attention from Dao et al. (2022) achieving up to 7.6× speedup by minimising HBM accesses, enabling long-context document processing."
-        },
-        {
-          "heading": "מגבלות הקשב הריבועי ואתגרי הרצפים הארוכים",
-          "summary": "Analysis of the O(N²) time and memory complexity of standard self-attention and why it bottlenecks long Hebrew document understanding."
+          "heading": "דינמיקה וביצועים של קידוד המיקום",
+          "summary": "Analysis of positional encoding dynamics, including stability properties, generalization to longer sequences, and empirical performance on benchmark tasks."
         }
       ]
     },
     {
       "number": 4,
-      "hebrew_title": "טרנספורמרים יעילים",
-      "english_title": "Efficient Transformers",
-      "page_budget": 2,
+      "hebrew_title": "BERT והתכנות מקדימה: פריצה לשני כיווני",
+      "english_title": "BERT and Pre-training: The Bidirectional Paradigm",
+      "page_budget": 3,
       "sections": [
         {
-          "heading": "סקירת X-formers: Linformer, Performer, Longformer ו-Reformer",
-          "summary": "Survey of efficient Transformer variants from Tay et al. (2022) that reduce attention complexity from O(N²) to O(Nk), O(N), or O(N log N)."
+          "heading": "מודל BERT ותכנות מסוכות",
+          "summary": "Bidirectional Encoder Representations from Transformers (BERT): masked language model objective, next sentence prediction, and architectural innovations."
         },
         {
-          "heading": "השוואת עלויות חישוביות ואיכות המודל",
-          "summary": "Empirical and theoretical trade-offs between computational efficiency and model quality across the major efficient Transformer families."
+          "heading": "התכנות מקדימה וההעברה למטלות",
+          "summary": "Pre-training strategies, transfer learning paradigm, and fine-tuning approaches for downstream NLP tasks."
+        },
+        {
+          "heading": "ביצועים והשוואה לארכיטקטורות אחרות",
+          "summary": "Empirical evaluation of BERT across major benchmarks (GLUE, SuperGLUE) and comparison with contemporary language models."
         }
       ]
     },
     {
       "number": 5,
-      "hebrew_title": "BERT ופרדיגמת הלמידה המוקדמת",
-      "english_title": "BERT and Pre-training Paradigms",
+      "hebrew_title": "עברית וטיפול בשפות מורפולוגיות עשירות",
+      "english_title": "Hebrew and Morphologically Rich Languages in NLP",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "מודל שפה מוסווה ולמידה מוקדמת דו-כיוונית",
-          "summary": "Masked language modelling (MLM) and the bidirectional Transformer encoder of BERT, enabling deep contextual representations."
+          "heading": "אתגרים של עברית: מורפולוגיה, ניתוח ודו-משמעות",
+          "summary": "Morphological complexity of Hebrew: agglutination, inflection, disambiguation challenges, and their impact on tokenization and representation."
         },
         {
-          "heading": "כיוונון עדין ויישומי BERT",
-          "summary": "The pre-train-then-fine-tune paradigm and how BERT-style models are adapted for downstream tasks including classification, NER, and QA."
-        },
-        {
-          "heading": "וריאנטים של BERT ומודלים נגזרים",
-          "summary": "Key BERT variants (RoBERTa, ALBERT, ELECTRA) and how each refines the pre-training objective or architecture for improved efficiency and accuracy."
+          "heading": "AlephBERT: BERT מכוונת לעברית",
+          "summary": "AlephBERT model design for Hebrew: vocabulary optimization, pre-training corpus curation, and performance on Hebrew-specific NLP benchmarks."
         }
       ]
     },
     {
       "number": 6,
-      "hebrew_title": "עיבוד שפה עברית עם טרנספורמרים",
-      "english_title": "Hebrew NLP with Transformers",
+      "hebrew_title": "יישומים ועתיד המחקר",
+      "english_title": "Applications and Future Research Directions",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "AlephBERT: מודל BERT לעברית",
-          "summary": "AlephBERT's architecture (12 layers, 768 dims, ~110M parameters), pre-training on ~95M Hebrew sentences, and state-of-the-art results on Hebrew NLP benchmarks."
+          "heading": "יישומים בתעשייה וממשקים המשתמש",
+          "summary": "Real-world deployment of Transformer models: machine translation, question-answering, sentiment analysis, and industrial NLP systems."
         },
         {
-          "heading": "אתגרי עברית כשפה מורפולוגית עשירה",
-          "summary": "Morphosyntactic challenges of Hebrew including clitics, prefixes, and ambiguous segmentation, and how they stress standard subword tokenisation schemes."
+          "heading": "יישומים לעברית: תרגום, ניתוח סנטימנט, וחילוץ מידע",
+          "summary": "Language-specific applications leveraging Hebrew pre-trained models for machine translation, sentiment analysis, and information extraction tasks."
         },
         {
-          "heading": "עץ התלות האוניברסלי לעברית ובנצ'מרקים",
-          "summary": "The Hebrew Universal Dependencies Treebank of Tsarfaty et al. (2020) as the standard evaluation benchmark for segmentation, POS, NER, and parsing."
-        },
-        {
-          "heading": "סיכום וכיוונים עתידיים במחקר עברית-NLP",
-          "summary": "Open research problems in Hebrew NLP, including low-resource scenarios, multimodal Hebrew models, and the ethical deployment of large Hebrew language models."
+          "heading": "בעיות פתוחות וכיווני מחקר עתידיים",
+          "summary": "Open research challenges: efficient attention mechanisms, interpretability of Transformers, multilingual and cross-lingual models, and ethical considerations."
         }
       ]
     }
