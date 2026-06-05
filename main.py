@@ -2,9 +2,9 @@ import dotenv
 
 dotenv.load_dotenv()
 
-from src.crew import PublisherCrew  # noqa: E402
+from src.sdk.latex_publisher_sdk import LatexPublisherSDK  # noqa: E402
 
 if __name__ == "__main__":
-    crew = PublisherCrew()
-    result = crew.kickoff()
+    sdk = LatexPublisherSDK()
+    result = sdk.run()
     print(result)

@@ -37,13 +37,25 @@ class Settings(BaseSettings):
     MIN_PAGES: int = 15
     # Set to True to pause before lualatex_runner executes and prompt operator
     HITL_ENABLED: bool = False
+    # Passes anthropic-beta prompt-caching header via LiteLLM additional_params
+    PROMPT_CACHING_ENABLED: bool = True
 
 
 settings = Settings(_env_file=".env")
 
 
 def build_llm():
-    """Return a crewai.LLM bound to the current settings (model + token cap)."""
+    """Return a crewai.LLM bound to the current settings (model + token cap).
+
+    When ``PROMPT_CACHING_ENABLED`` is true, the Anthropic prompt-caching beta
+    header is injected via LiteLLM ``additional_params`` so system prompts and
+    repeated LaTeX preambles are served from Anthropic's cache tier.
+    """
     from crewai import LLM  # local import — avoids crewai dep at module load time
 
-    return LLM(model=settings.LLM_MODEL, max_tokens=settings.MAX_TOKENS)
+    kwargs: dict = {"model": settings.LLM_MODEL, "max_tokens": settings.MAX_TOKENS}
+    if settings.PROMPT_CACHING_ENABLED:
+        kwargs["additional_params"] = {
+            "extra_headers": {"anthropic-beta": "prompt-caching-2024-07-31"}
+        }
+    return LLM(**kwargs)
