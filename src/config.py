@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     LLM_MODEL: str = "anthropic/claude-haiku-4-5-20251001"
     MAX_AGENT_RETRIES: int = 3
     # Max tool-call iterations per agent turn; prevents runaway loops
-    MAX_ITER: int = 15
+    MAX_ITER: int = 80
     # Hard output cap per LLM call; keeps per-call cost bounded
     MAX_TOKENS: int = 4096
     PYTHON_RUNNER_TIMEOUT_S: int = 60
