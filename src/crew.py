@@ -11,6 +11,7 @@ from src.agents.figure_agent import build_figure_agent
 from src.agents.manager_agent import build_manager_agent
 from src.agents.outline_agent import build_outline_agent
 from src.agents.researcher_agent import build_researcher_agent
+from src.security.skill_sieve import skill_sieve
 from src.tasks.bidi_task import build_bidi_task
 from src.tasks.compile_task import build_compile_task
 from src.tasks.content_task import build_content_tasks
@@ -20,7 +21,8 @@ from src.tasks.research_task import build_research_task
 
 
 def _load_skill(name: str) -> str:
-    return (Path("skills") / name / "SKILL.md").read_text(encoding="utf-8")
+    content = (Path("skills") / name / "SKILL.md").read_text(encoding="utf-8")
+    return skill_sieve.validate_and_return(name, content)
 
 
 class PublisherCrew:

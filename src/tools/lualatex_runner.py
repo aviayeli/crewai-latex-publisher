@@ -51,6 +51,33 @@ class LualatexRunnerTool(BaseTool):
             return []
         return [line for line in text.splitlines() if line.startswith("! ")]
 
+    def _suggest_fix(self, errors: list[str]) -> str:
+        """Return a bounded SkillOpt add/delete/replace suggestion for *errors*.
+
+        Implements the SkillOpt evolution loop: on compilation failure the
+        agent receives a targeted directive so it can propose a minimal edit
+        to the offending LaTeX or SKILL.md content.
+        """
+        for error in errors:
+            if "Undefined control sequence" in error:
+                return (
+                    "SkillOpt REPLACE: add \\usepackage{<pkg>} to preamble"
+                    " or fix the undefined command."
+                )
+            if "not found" in error and "File" in error:
+                return (
+                    "SkillOpt REPLACE: verify file path in"
+                    " \\includegraphics or \\input{}."
+                )
+            if "Missing $" in error:
+                return "SkillOpt ADD: wrap expression in $ math delimiters."
+            if "begin{document}" in error.lower():
+                return (
+                    "SkillOpt DELETE: remove stray \\begin{document}"
+                    " from chapter fragment file."
+                )
+        return "SkillOpt REVIEW: apply targeted fix to the error lines above."
+
     def _run(
         self, tex_file: str, passes: int = 3, run_biber: bool = True
     ) -> dict:
@@ -72,9 +99,10 @@ class LualatexRunnerTool(BaseTool):
                 subprocess.run(self._build_cmd(path), check=True)
             except subprocess.CalledProcessError as exc:
                 errors = self._parse_log(log_path)
-                raise CompilationError(
-                    "\n".join(errors) if errors else "lualatex exited non-zero"
-                ) from exc
+                msg = "\n".join(errors) if errors else "lualatex exited non-zero"
+                if errors:
+                    msg += f"\n{self._suggest_fix(errors)}"
+                raise CompilationError(msg) from exc
 
         _latex(tex_file)
 

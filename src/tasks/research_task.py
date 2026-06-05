@@ -21,6 +21,7 @@ def build_research_task(agent: Agent) -> Task:
             " (path='wiki/index.md', mode='write').\n"
             " Return ONLY the distilled wiki/sources.md content as task output."
             " Do NOT return the raw Perplexity dump — that is for audit only."
+            "\n{expert_context}"
         ),
         expected_output=(
             "Distilled wiki summary: at least 6 citation keys, each with"
