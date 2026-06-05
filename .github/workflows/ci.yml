@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Fake API keys satisfy pydantic-settings required fields; no real API is called in tests.
+env:
+  ANTHROPIC_API_KEY: test-key-ci-placeholder
+  PERPLEXITY_API_KEY: test-pplx-ci-placeholder
+
+jobs:
+  qa:
+    name: Lint · Test · Line-budget
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv + Python 3.12
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Lint — ruff (zero violations)
+        run: uv run ruff check .
+
+      - name: Test — pytest (coverage ≥ 85 %)
+        run: uv run pytest --cov=src --cov-fail-under=85 -q
+
+      - name: Line-budget gate — no src/ file may exceed 150 lines
+        run: |
+          over=$(find src -name "*.py" | xargs wc -l 2>/dev/null \
+            | awk '$1 > 150 && $2 != "total" {print $0}')
+          if [ -n "$over" ]; then
+            echo "Files exceeding 150-line limit:"
+            echo "$over"
+            exit 1
+          fi
+          echo "Line-budget check passed."

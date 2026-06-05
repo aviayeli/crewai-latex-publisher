@@ -124,15 +124,112 @@ All tuneable values are set in `.env` (see `.env.example`). Key fields:
 
 ---
 
+## Enterprise Grade & Security
+
+### Red-Team Attack Coverage
+
+`tests/red_team_attack.py` simulates two adversarial attack classes against
+the tool layer and asserts each is safely blocked:
+
+| Attack class | Attack vector | Defence layer | Result |
+|---|---|---|---|
+| **Prompt Injection** | Path traversal (`../../etc/passwd`) | `MarkdownConverterTool._validate_path()` | `ValueError: escapes` |
+| **Prompt Injection** | Absolute path injection (`/etc/shadow`) | `_validate_path()` | `ValueError: escapes` |
+| **Prompt Injection** | Null-byte injection (`file\x00.md`) | Python `Path` constructor | `ValueError` |
+| **Tool Misuse** | `import subprocess` in script | `PythonRunnerTool._scan_imports()` AST scan | Flagged + blocked |
+| **Tool Misuse** | `import sys; sys.exit()` | AST scan | Flagged + blocked |
+| **Tool Misuse** | `from subprocess import run` | AST scan (from-import form) | Flagged + blocked |
+| **Tool Misuse** | Chained `import socket, subprocess, ctypes` | AST scan | All 3 flagged |
+
+```bash
+uv run pytest tests/red_team_attack.py -v   # 18 tests, all pass
+```
+
+**Known limitation** (documented, not fixed): `exec("import subprocess")` bypasses
+the static AST scan. A full sandbox (seccomp, gVisor) is required to block
+dynamic eval attacks at the OS level.
+
+---
+
+### CI/CD Pipeline
+
+Every push and pull request triggers `.github/workflows/ci.yml`, which enforces:
+
+| Gate | Command | Requirement |
+|---|---|---|
+| Zero lint violations | `ruff check .` | exit 0 |
+| Coverage threshold | `pytest --cov=src --cov-fail-under=85` | ≥ 85% |
+| 150-line budget | `find src -name "*.py" \| xargs wc -l` | no file > 150 lines |
+
+---
+
+### MCP (Model Context Protocol) Server
+
+`src/tools/mcp_latex_server.py` exposes the Markdown→LaTeX converter as a
+JSON-RPC 2.0 MCP endpoint, enabling horizontal agent interoperability with any
+MCP-compatible orchestrator (Claude Desktop, OpenAI Agents SDK, LangGraph, etc.).
+
+**Supported methods:**
+
+| JSON-RPC method | Description |
+|---|---|
+| `tools/list` | Returns the tool manifest (name, description, input schema) |
+| `tools/call` | Dispatches to `markdown_converter_tool` with path-safety validation |
+
+**Usage example:**
+
+```python
+from src.tools.mcp_latex_server import mcp_latex_server
+
+# Discover available tools
+resp = mcp_latex_server.handle({"jsonrpc": "2.0", "method": "tools/list", "id": 1})
+# → {"jsonrpc": "2.0", "result": {"tools": [{"name": "markdown_to_latex", ...}]}, "id": 1}
+
+# Call the converter
+resp = mcp_latex_server.handle({
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {"name": "markdown_to_latex",
+               "arguments": {"md_path": "chapters/ch1.md", "tex_path": "chapters/ch1.tex"}},
+    "id": 2,
+})
+```
+
+Path-traversal attacks routed through the MCP endpoint are still blocked by
+`_validate_path()` and returned as JSON-RPC `-32602` errors.
+
+---
+
+### OAT Parameter Analysis Notebook
+
+`notebooks/parameter_analysis.ipynb` performs a One-at-a-Time (OAT) sensitivity
+analysis on two key pipeline knobs:
+
+- **`MAX_TOKENS`** (512 → 8 192): cost scales linearly; completion rate saturates
+  at 4 096 — the current default is at the knee of the curve.
+- **`chunk_size`** (300 → 3 000 chars): write operations drop with larger chunks
+  but JSON truncation risk follows a logistic curve that inflects at ~900 chars —
+  exactly the CLAUDE.md §10 hard limit.
+
+The combined heatmap (cost × risk) confirms the current defaults occupy the
+optimal low-cost / low-risk quadrant.
+
+```bash
+jupyter lab notebooks/parameter_analysis.ipynb
+```
+
+---
+
 ## Testing
 
 ```bash
-uv run ruff check .          # lint — must exit 0
-uv run pytest --cov=src      # tests + coverage — must not decrease
-wc -l src/**/*.py            # no src/ file may exceed 150 lines
+uv run ruff check .                          # lint — must exit 0
+uv run pytest --cov=src --cov-fail-under=85  # ≥ 85% coverage
+uv run pytest tests/red_team_attack.py -v    # security gate
+wc -l src/**/*.py                            # no src/ file may exceed 150 lines
 ```
 
-Coverage is enforced by GitHub Actions CI on every push.
+CI enforces all three gates on every push via `.github/workflows/ci.yml`.
 
 ---
 
