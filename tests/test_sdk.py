@@ -116,13 +116,15 @@ def test_sdk_run_without_focus_passes_bare_topic():
     assert inputs["topic"] == "Pure Topic"
 
 
-def test_sdk_run_includes_expert_context_key_in_inputs():
-    with patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew:
+def test_sdk_run_calls_build_expert_context_for_skill_sieve_gate():
+    with (
+        patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew,
+        patch.object(LatexPublisherSDK, "_build_expert_context") as mock_ctx,
+    ):
         MockCrew.return_value.kickoff.return_value = "done"
         sdk = LatexPublisherSDK()
         sdk.run(topic="test")
-    inputs = MockCrew.return_value.kickoff.call_args.kwargs["inputs"]
-    assert "expert_context" in inputs
+    mock_ctx.assert_called_once()
 
 
 def test_sdk_build_expert_context_passes_through_skill_sieve(tmp_path, monkeypatch):

@@ -67,7 +67,5 @@ class LatexPublisherSDK:
             if research_focus
             else topic
         )
-        return self._crew.kickoff(inputs={
-            "topic": enriched,
-            "expert_context": self._build_expert_context(),
-        })
+        self._build_expert_context()  # SkillSieve validation gate
+        return self._crew.kickoff(inputs={"topic": enriched})
