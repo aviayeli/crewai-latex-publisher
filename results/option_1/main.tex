@@ -1,0 +1,179 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage[backend=biber,style=numeric,language=english]{biblatex}
+\DeclareLanguageMapping{hebrew}{english}
+\DefineBibliographyStrings{hebrew}{bibliography={ביבליוגרפיה}}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\setlength{\emergencystretch}{3em}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+
+% Fix: multi-digit page numbers in an RTL paragraph render reversed (13→31).
+% \makeatletter must precede \AtBeginDocument{} so @ in \hb@xt@ / \@pnumwidth
+% tokenises as catcode-11 (letter) when the argument is read in the preamble.
+% Fix: multi-digit TOC page numbers reversed in RTL paragraphs (e.g. 10→01).
+% Complete redefinitions (not patchcmd) because the actual report.cls definitions
+% contain \kern -\p@ \kern \p@ after the page-number token, which foiled the
+% simple \patchcmd pattern match. \textenglish{} forces LTR for the number.
+\makeatletter
+% Fix: page numbers in footers reversed for multi-digit values (10→01, 17→71).
+% Redefine plain page style to wrap \thepage in \textenglish{}.
+\def\ps@plain{%
+  \let\@mkboth\@gobbletwo
+  \let\@oddhead\@empty
+  \def\@oddfoot{\reset@font\hfil{\textdir TLT \thepage}\hfil}%
+  \let\@evenhead\@empty
+  \let\@evenfoot\@oddfoot}
+\AtBeginDocument{%
+  \pagestyle{plain}%
+  \renewcommand*\l@chapter[2]{%
+    \ifnum \c@tocdepth >\m@ne
+      \addpenalty{-\@highpenalty}%
+      \vskip 1.0em \@plus\p@
+      \setlength\@tempdima{1.5em}%
+      \begingroup
+        \parindent \z@ \rightskip \@pnumwidth
+        \parfillskip -\@pnumwidth
+        \leavevmode \bfseries
+        \advance\leftskip\@tempdima
+        \hskip -\leftskip
+        #1\nobreak\hfil\nobreak
+        \hb@xt@\@pnumwidth{\hss \textenglish{#2}\kern -\p@ \kern \p@ }\par
+        \penalty\@highpenalty
+      \endgroup
+    \fi}%
+  \def\@dottedtocline#1#2#3#4#5{%
+    \ifnum #1>\c@tocdepth \else
+      \vskip \z@ \@plus .2\p@
+      {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+       \parindent #2\relax \@afterindenttrue
+       \interlinepenalty\@M
+       \leavevmode
+       \@tempdima #3\relax
+       \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+       {#4}\nobreak
+       \leaders\hbox{$\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill
+       \nobreak
+       \hb@xt@\@pnumwidth{\hfil\normalfont\normalcolor
+         \textenglish{#5}\kern -\p@ \kern \p@ }%
+       \par}%
+    \fi}%
+}
+\makeatother
+
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+
+% All three font families must be defined with Hebrew script support so that
+% polyglossia does not fall back to Latin Modern (which has no Hebrew glyphs).
+% Fonts are loaded by absolute path — no fontconfig registration required.
+
+\setmainfont[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=arial,
+  BoldFont=arialbd,
+  ItalicFont=ariali,
+  BoldItalicFont=arialbi,
+  Script=Hebrew,
+  Ligatures=TeX
+]{Arial}
+
+\setsansfont[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=arial,
+  BoldFont=arialbd,
+  ItalicFont=ariali,
+  BoldItalicFont=arialbi,
+  Script=Hebrew,
+  Ligatures=TeX
+]{Arial}
+
+\setmonofont[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=cour,
+  BoldFont=courbd,
+  ItalicFont=couri,
+  BoldItalicFont=courbi,
+  Script=Hebrew
+]{CourierNew}
+
+\newfontfamily\hebrewfont[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=arial,
+  BoldFont=arialbd,
+  ItalicFont=ariali,
+  BoldItalicFont=arialbi,
+  Script=Hebrew,
+  Ligatures=TeX
+]{Arial}
+
+\newfontfamily\hebrewfontsf[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=arial,
+  BoldFont=arialbd,
+  ItalicFont=ariali,
+  BoldItalicFont=arialbi,
+  Script=Hebrew,
+  Ligatures=TeX
+]{Arial}
+
+\newfontfamily\hebrewfonttt[
+  Path=/mnt/c/Windows/Fonts/,
+  Extension=.ttf,
+  UprightFont=cour,
+  BoldFont=courbd,
+  ItalicFont=couri,
+  BoldItalicFont=courbi,
+  Script=Hebrew
+]{CourierNew}
+
+% Force citation numbers LTR so [14] does not render as [41] in RTL paragraphs
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{\textenglish{#1}}}
+\DeclareFieldFormat{labelnumber}{\textenglish{#1}}
+
+% Fix compound counter numbers (e.g. 2.1) reversed in RTL section headings
+\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}
+\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}
+\renewcommand{\theequation}{\textenglish{\arabic{chapter}.\arabic{equation}}}
+\renewcommand{\thefigure}{\textenglish{\arabic{chapter}.\arabic{figure}}}
+\renewcommand{\thetable}{\textenglish{\arabic{chapter}.\arabic{table}}}
+
+\addbibresource{refs.bib}
+
+\title{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}
+\author{Avi Ayeli --- 300228160}
+\date{5 ביוני \textenglish{2026}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\input{chapters/ch1}
+\input{chapters/ch2}
+\input{chapters/ch3}
+\input{chapters/ch4}
+\input{chapters/ch5}
+\input{chapters/ch6}
+
+\newpage
+\chapter*{ביבליוגרפיה}
+\begin{english}
+\sloppy
+\printbibliography[heading=none]
+\end{english}
+
+\end{document}

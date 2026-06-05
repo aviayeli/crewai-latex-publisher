@@ -1,0 +1,68 @@
+\chapter{ארכיטקטורות מתקדמות}
+
+\section{עיבוד בתחום התדר: \textenglish{STFT} וסיכוך ספקטרלי}
+
+בפרקים הקודמים, התמקדנו בעיבוד אותות בתחום הזמן בשיטה ישירה, כאשר רשתות \textenglish{LSTM} מנסות ללמוד מיפוי מאותות רועשים לאותות נקיים. אולם, גישה זו מטילה על הרשת את הנטל של ממידול מורכב של קשרים זמניים ארוכים בעת בחינת כל דגימה בזמן. חלופה עוצמתית היא עיבוד בתחום התדר, המשתמש בתמרת פורייה לזמן קצר \textenglish{(Short-Time Fourier Transform, STFT)} ככלי קדם-עיבוד.
+
+תמרת \textenglish{STFT} מחלקת את האות לחלונות זמן חופפים ומחשבת את הייצוג התדר עבור כל חלון. התוצאה היא ספקטרוגרמה של מקדמים מרוכבים (או גודלים ופאזות) בדו-מימד של זמן ותדר. רישום מתמטי:
+\begin{equation}
+\mathrm{STFT}(t, f) = \int_{-\infty}^{\infty} x(\tau) \cdot w(\tau - t) \cdot e^{-j 2\pi f \tau} \, d\tau
+\end{equation}
+
+כאשר \(w(\tau)\) הוא חלון (לדוגמה, חלון \textenglish{Hann}) המדכא עיצוב של קצוות וחפיפה.
+
+סיכוך ספקטרלי \textenglish{(spectral masking)} הוא טכניקה שבה מודל למידה עמוקה יוצר מסכה בין 0 ל-1 עבור כל תא זמן-תדר בספקטרוגרמה. מסכה זו מכפלת את הספקטרוגרמה המקורית כדי לעכל רעש ולהשאיר את גל הסינוס הרצוי. המטרה בהדרכה היא:
+\begin{equation}
+\hat{Y}(t, f) = M(t, f) \cdot X(t, f)
+\end{equation}
+
+כאשר \(M(t, f)\) היא המסכה (פלט הרשת), \(X(t, f)\) היא הספקטרוגרמה הרועשה, ו-\(\hat{Y}(t, f)\) היא הספקטרוגרמה המפוקחת. מטרת אימון משופרת היא להשוות את הגודל הספקטרלי הצפוי (המחושב מגל הסינוס הנקי) לתוצאת הסיכוך.
+
+יתרונות הגישה הספקטרלית כוללים:
+
+\begin{enumerate}
+\item \textenglish{Sparsity}: רעש לעתים קרובות פרוש על פני תדרים רבים, בעוד שגל הסינוס תופס כמה תדרים בלבד. זה הופך את בעיית הסיכוך לקלה יותר ללמידה עמוקה \cite{williamson2016complex}.
+\item \textenglish{Interpretability}: ניתן לראות ישירות אילו רגיונות תדר-זמן הרשת דיכתה, מה שעוזר בהבנת ההחלטה.
+\item \textenglish{Generalization}: מודל הסיכוך הספקטרלי מתוודע כללית יותר על פני טווחי תדר שונים מאשר רשת זמן-מימדית טהורה.
+\end{enumerate}
+
+אחרי סיכוך וחזרה לתחום הזמן דרך תמרת \textenglish{STFT} הפוכה \textenglish{(inverse STFT, iSTFT)}, אנו מממשים בעיית הפרדת אותות בדיוק גבוה וביעילות חישובית.
+
+\section{ארכיטקטורות היברידיות \textenglish{CNN-LSTM}}
+
+ארכיטקטורות היברידיות המשלבות קונבולוציה עם רשתות רקורנטיות קדמו על פני שנים בעיבוד תמונה וקולות \cite{park2024hybrid}. בהקשר של הפרדת אותות סינוס, שילוב זה חזק במיוחד מכיוון שהוא משלב עיבוד מקומי (\textenglish{CNN}) עם בחינה גלובלית (\textenglish{LSTM}).
+
+\subsection{ניסוח הארכיטקטורה}
+
+ארכיטקטורה טיפוסית של \textenglish{CNN-LSTM} מחולקת לשלושה שלבים:
+
+\begin{enumerate}
+\item \textenglish{\textbf{CNN Feature Extraction}}: כניסת האות (או ספקטרוגרמה) עוברת דרך שכבות קונבולוציה \textenglish{1-D}. כל אחת מכלות תקבול מקומי בעלות גודל קריא וריפוד סימטרי, ובעלות \textenglish{ReLU} כפונקציית הפעלה. במקום הפולינג, נשתמש לפעמים בסגירה אדפטיבית \textenglish{(adaptive pooling)} כדי להפחית מימדיות לאורך הזמן. בחירת מספר סנני 64--256 בתוך כל שכבה נמצא בעיתוי פרקטי.
+
+\item \textenglish{\textbf{BiLSTM Temporal Modeling}}: תמונות המאפיינים (\textenglish{features}) מוחזקות לתוך \textenglish{LSTM} דו-כיווני עם 128--256 יחידות סמויות. זה מאפשר לרשת ללמוד תלות זמנית ארוכות טווח, ולהשתמש בהקשר מעבר ומאחור. ברור, סדר הזמן משמר בתחום זה.
+
+\item \textenglish{\textbf{Decoder (CNN or Linear)}}: לאחר מכן, הפלט של ה-\textenglish{LSTM} (סדרת וקטורים) מועבר דרך שכבת דקידוד כדי לשחזר את האותות בתחום הזמן או בתחום התדר. אפשרויות: (א) שכבות קונבולוציה חוזרות עם היפוך עמוד (\textenglish{transposed convolution}), או (ב) שכבה צפופה עם צורת חזרה לממד המקורי.
+\end{enumerate}
+
+\subsection{הצדקה וביצועים}
+
+הגיונו של שילוב זה הוא כי \textenglish{CNN} לוכד תבניות מקומיות קצרות טווח (כמו רעש בצורת דופק או שינויים מהירים), בעוד \textenglish{LSTM} מתמקד בתלויות ארוכות טווח (כמו התנועה הדורגת של גל סינוס).
+
+בחקירות אמפיריות, ארכיטקטורות \textenglish{CNN-LSTM} השיגו שיפור במידת הרעש (\textenglish{SNR}) עדיפות בהשוואה לרשתות \textenglish{LSTM} בלבד, במיוחד בטווח תחתון של \textenglish{SNR} ($-20$ \textenglish{dB}), שם ההשפעה הגרועה של רעש היא לוהטת. הדיווח האופייני הוא שיפור של $2$--$4$ \textenglish{dB} בפלט \textenglish{SNR} על פני בדיקה לא נראית \cite{park2024hybrid}.
+
+\subsection{שיקולים מעשיים}
+
+היתרונות:
+
+\begin{itemize}
+\item \textenglish{Reduced model size}: \textenglish{CNN} משמשים כטוחן מיוחד, מה שמפחית את מספר הפרמטרים בשלב \textenglish{LSTM}.
+\item \textenglish{Robustness to shifting}: קונבולוציה היא שוויון-בלתי משתנים, כך שדפוסים מקומיים מזוהים בכל הסדר הזמן.
+\item \textenglish{Easier training}: שילוב זה מתכנס מהר יותר מ-\textenglish{LSTM} טהור בהרבה מקרים בגלל ההנקה של \textenglish{CNN}.
+\end{itemize}
+
+החסרונות:
+
+\begin{itemize}
+\item \textenglish{Hyperparameter tuning}: בחירת גודל קריא, מספר שכבות, ומספר סנני דורשת כיול זהיר.
+\item \textenglish{Computational overhead}: בעוד \textenglish{CNN} מצמצם מימדיות, קונבולוציה עצמה יש עלויות זמן-הרצה.
+\end{itemize}
