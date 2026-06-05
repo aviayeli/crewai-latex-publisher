@@ -69,3 +69,24 @@ def test_sdk_crew_is_set_after_run():
         sdk = LatexPublisherSDK()
         sdk.run()
     assert sdk._crew is not None
+
+
+# ── topic passthrough ─────────────────────────────────────────────────────────
+
+
+def test_sdk_run_passes_topic_as_inputs_to_kickoff():
+    with patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew:
+        MockCrew.return_value.kickoff.return_value = "done"
+        sdk = LatexPublisherSDK()
+        sdk.run(topic="Quantum Computing")
+    MockCrew.return_value.kickoff.assert_called_once_with(
+        inputs={"topic": "Quantum Computing"}
+    )
+
+
+def test_sdk_run_with_no_topic_passes_empty_string():
+    with patch("src.sdk.latex_publisher_sdk.PublisherCrew") as MockCrew:
+        MockCrew.return_value.kickoff.return_value = "done"
+        sdk = LatexPublisherSDK()
+        sdk.run()
+    MockCrew.return_value.kickoff.assert_called_once_with(inputs={"topic": ""})

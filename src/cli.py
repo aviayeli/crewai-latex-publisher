@@ -26,7 +26,10 @@ def main() -> None:
     args = sys.argv[1:]
 
     if not args or args[0] == "run":
-        result = sdk.run()
+        topic = input(
+            "Enter the topic for the agents to research and write about: "
+        ).strip()
+        result = sdk.run(topic=topic)
         print(result)
     elif args[0] in ("--version", "-v"):
         print(f"latex-publisher {sdk.version}")

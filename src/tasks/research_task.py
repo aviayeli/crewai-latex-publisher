@@ -7,7 +7,7 @@ def build_research_task(agent: Agent) -> Task:
     return Task(
         description=(
             "Use perplexity_search_tool to research at least 6 peer-reviewed sources"
-            " on Transformer architectures, attention mechanisms, and Hebrew NLP."
+            " on the topic: {topic}."
             " Then apply the two-folder wiki pattern:\n"
             " Step 1 — Save the raw Perplexity output verbatim to"
             " 'raw/research_raw.md' via latex_writer_tool"

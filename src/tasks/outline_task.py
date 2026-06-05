@@ -6,7 +6,7 @@ from crewai import Agent, Task
 def build_outline_task(agent: Agent, research_task: Task) -> Task:
     return Task(
         description=(
-            "Using the research notes, write a valid JSON file to"
+            "Using the research notes on {topic}, write a valid JSON file to"
             " latex_output/book_outline.json via latex_writer_tool."
             " The JSON must include fields: title, subtitle, and a chapters"
             " array with number, hebrew_title, english_title, page_budget,"

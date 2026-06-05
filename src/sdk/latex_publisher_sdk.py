@@ -26,12 +26,16 @@ class LatexPublisherSDK:
         """Package version, sourced from ``src.__version__``."""
         return __version__
 
-    def run(self) -> str:
+    def run(self, topic: str = "") -> str:
         """Execute the full Markdown → PDF pipeline and return the crew output.
+
+        Args:
+            topic: The subject the agents will research and write about.
+                   Injected into tasks via ``crew.kickoff(inputs={"topic": topic})``.
 
         Creates a new :class:`PublisherCrew` on the first call; reuses it
         on subsequent calls within the same SDK instance.
         """
         if self._crew is None:
             self._crew = PublisherCrew()
-        return self._crew.kickoff()
+        return self._crew.kickoff(inputs={"topic": topic})

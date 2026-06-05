@@ -57,7 +57,7 @@ class PublisherCrew:
             self.compiler_agent, self.bidi_task, self.figure_task
         )
 
-    def kickoff(self) -> str:
+    def kickoff(self, inputs: dict | None = None) -> str:
         tasks = [
             self.research_task,
             self.outline_task,
@@ -80,4 +80,4 @@ class PublisherCrew:
             process=Process.hierarchical,
             verbose=True,
         )
-        return crew.kickoff()
+        return crew.kickoff(inputs=inputs or {})
