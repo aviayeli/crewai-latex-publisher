@@ -32,9 +32,9 @@ jobs:
       - name: Test — pytest (coverage ≥ 85 %)
         run: uv run pytest --cov=src --cov-fail-under=85 -q
 
-      - name: Line-budget gate — no src/ file may exceed 150 lines
+      - name: Line-budget gate — no src/ or tests/ file may exceed 150 lines
         run: |
-          over=$(find src -name "*.py" | xargs wc -l 2>/dev/null \
+          over=$(find src tests -name "*.py" | xargs wc -l 2>/dev/null \
             | awk '$1 > 150 && $2 != "total" {print $0}')
           if [ -n "$over" ]; then
             echo "Files exceeding 150-line limit:"

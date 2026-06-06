@@ -1,9 +1,10 @@
 from pathlib import Path
 from unittest import mock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.config import Settings
+from src.config import Settings, settings
 
 
 @pytest.fixture(scope="function")
@@ -27,3 +28,11 @@ def mock_settings() -> Settings:
         MAX_AGENT_RETRIES=1,
         PYTHON_RUNNER_TIMEOUT_S=10,
     )
+
+
+@pytest.fixture
+def mock_llm_creation():
+    mock = MagicMock()
+    mock.model = settings.LLM_MODEL
+    with patch("crewai.agent.core.create_llm", return_value=mock):
+        yield
