@@ -3,11 +3,14 @@
 from pathlib import Path
 
 TEMPLATES = Path("templates")
+_CH9  = [f"ch{i}" for i in range(1, 10)]
+_CH10 = [f"ch{i}" for i in range(1, 11)]
+
 ARTICLES = [
-    ("1_sine_wave",     "refs.bib", ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"]),
-    ("2_security",      "refs.bib", ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"]),
-    ("3_xlstm",         "refs.bib", ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"]),
-    ("4_orchestration", "refs.bib", ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6"]),
+    ("1_sine_wave",     "refs.bib", _CH9),
+    ("2_security",      "refs.bib", _CH10),
+    ("3_xlstm",         "refs.bib", _CH10),
+    ("4_orchestration", "refs.bib", _CH10),
 ]
 
 

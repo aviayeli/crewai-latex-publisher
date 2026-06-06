@@ -8,7 +8,7 @@
 ניסחנו את הדיבייט כמשחק אפס-סכום חלקי:
 
 \begin{equation}
-\text{Consensus}(r_1, r_2) = \begin{cases} r_1 & \text{אם } \text{sim}(r_1, r_2) > \theta_c \\ \text{Arbiter}(r_1, r_2) & \text{אחרת} \end{cases}
+\text{Consensus}(r_1, r_2) = \begin{cases} r_1 & \text{if } \text{sim}(r_1, r_2) > \theta_c \\ \text{Arbiter}(r_1, r_2) & \text{otherwise} \end{cases}
 \end{equation}
 
 כאשר \(\theta_c = 0.82\) (קוסינוס \textenglish{embedding similarity}) וה-\textenglish{Arbiter} הוא מודל \textenglish{LLM} נפרד שמסכם את שתי הדעות.
