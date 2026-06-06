@@ -37,6 +37,6 @@ line-length = 88
 select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=src"
+addopts = "--cov=src -m 'not slow'"
 pythonpath = ["."]
 markers = ["slow: end-to-end tests requiring API key and lualatex binary"]
