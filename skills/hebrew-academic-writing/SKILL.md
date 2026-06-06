@@ -342,6 +342,62 @@ Before submitting a chapter file, grep for bare `$` characters that are not
 inside a `\verb` or `\texttt` span. Every such occurrence is a violation that
 must be replaced with `\(` / `\)` (inline) or `\begin{equation}` (display).
 
+## Mandatory Advanced Mathematical Typesetting
+
+Every chapter **must** include at least one display equation that qualifies as
+"advanced" — meaning it uses **at least two** of the following constructs:
+
+| Construct | LaTeX command | Example |
+|---|---|---|
+| Integral | `\int` | `\int_{-\infty}^{\infty}` |
+| Summation | `\sum` | `\sum_{i=1}^{n}` |
+| Fraction | `\frac` | `\frac{\partial L}{\partial \theta}` |
+| Product | `\prod` | `\prod_{k=1}^{K}` |
+| Limit | `\lim` | `\lim_{n \to \infty}` |
+
+A plain equation like `\(y = Wx + b\)` is **not** advanced. An advanced
+equation combines at least two constructs above in a single `\begin{equation}`
+environment.
+
+### Compliant example — gradient descent update rule
+
+```latex
+\begin{equation}
+  \theta_{t+1} = \theta_t - \eta \cdot \frac{1}{N} \sum_{i=1}^{N}
+  \nabla_{\theta} \mathcal{L}(x_i, y_i; \theta_t)
+\end{equation}
+```
+
+This uses `\frac`, `\sum`, and `\nabla` — qualifies as advanced.
+
+### Compliant example — attention score normalisation
+
+```latex
+\begin{equation}
+  \alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T} \exp(e_{ik})},
+  \quad e_{ij} = \mathbf{q}_i^\top \mathbf{k}_j \big/ \sqrt{d_k}
+\end{equation}
+```
+
+Uses `\frac`, `\sum`, and `\exp` — qualifies as advanced.
+
+### Non-compliant example — too simple
+
+```latex
+\begin{equation}
+  h_t = \sigma(W x_t + U h_{t-1})   % FAIL — no \int, \sum, or \frac
+\end{equation}
+```
+
+Expand this with a summation over inputs or a fraction for the gate to comply.
+
+### Enforcement
+
+The BiDi Validator checks each chapter for the presence of at least one
+advanced equation before marking the chapter as BiDi-clean. A chapter that
+contains only simple linear equations will be returned to the Writer with a
+mandatory enhancement request.
+
 ## Page Budget Enforcement
 
 Every chapter has a `page_budget` field in `book_outline.json`. The ContentAgent

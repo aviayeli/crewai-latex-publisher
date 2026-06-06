@@ -17,7 +17,7 @@ class LualatexRunnerInput(BaseModel):
     """Input schema for the lualatex_runner tool."""
 
     tex_file: str
-    passes: int = 3
+    passes: int = 4
     run_biber: bool = True
 
 
@@ -97,7 +97,7 @@ class LualatexRunnerTool(BaseTool):
         return "SkillOpt REVIEW: apply targeted fix to the error lines above."
 
     def _run(
-        self, tex_file: str, passes: int = 3, run_biber: bool = True
+        self, tex_file: str, passes: int = 4, run_biber: bool = True
     ) -> dict:
         """Compile *tex_file*, run biber if requested, and repeat for *passes*."""
         if settings.HITL_ENABLED:

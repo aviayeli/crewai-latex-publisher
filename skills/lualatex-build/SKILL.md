@@ -181,9 +181,9 @@ The assembled `main.tex` must be written to `latex_output/main.tex` via `latex_w
 
 ---
 
-## Three-Step Biber Compilation Pipeline
+## Four-Pass LuaLaTeX Compilation Pipeline
 
-Run these three commands in strict sequence:
+Run these five commands in strict sequence (4 lualatex passes total):
 
 ### Step 1 — First LuaLaTeX Pass
 
@@ -213,7 +213,26 @@ lualatex --interaction=nonstopmode --output-directory=latex_output latex_output/
 
 - Reads `latex_output/main.bbl` and incorporates resolved bibliography entries.
 - Resolves cross-references (`\ref{}`, `\pageref{}`) that could not be resolved in the first pass.
+
+### Step 4 — Third LuaLaTeX Pass
+
+```
+lualatex --interaction=nonstopmode --output-directory=latex_output latex_output/main.tex
+```
+
+- Stabilises the Table of Contents page numbers and all `\pageref{}` targets.
+- Ensures hyperref clickable links point to the correct final page offsets.
+
+### Step 5 — Fourth LuaLaTeX Pass
+
+```
+lualatex --interaction=nonstopmode --output-directory=latex_output latex_output/main.tex
+```
+
+- Final convergence pass. Confirms all labels, TOC entries, and bibliography back-references are fully resolved.
 - Produces the final `latex_output/main.pdf`.
+
+**Why 4 passes?** Hebrew RTL documents with a Table of Contents and biblatex bibliography require more passes to converge than typical LTR documents: the TOC page numbers shift when the bibliography is inserted, and the bibliography itself can shift section page numbers. Four passes guarantee convergence for documents of 15+ pages.
 
 ---
 

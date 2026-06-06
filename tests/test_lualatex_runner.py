@@ -66,9 +66,9 @@ def test_tool_name_attribute():
     assert lualatex_runner_tool.name == "lualatex_runner"
 
 
-def test_default_passes_is_three():
+def test_default_passes_is_four():
     inp = LualatexRunnerInput(tex_file="main.tex")
-    assert inp.passes == 3
+    assert inp.passes == 4
 
 
 def test_default_run_biber_is_true():
