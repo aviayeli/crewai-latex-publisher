@@ -1,0 +1,115 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage[backend=biber,style=numeric,language=english]{biblatex}
+\DeclareLanguageMapping{hebrew}{english}
+\DefineBibliographyStrings{hebrew}{bibliography={ביבליוגרפיה}}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\setlength{\emergencystretch}{3em}
+\usepackage{xcolor}
+\usepackage{etoolbox}
+\makeatletter
+\def\ps@plain{%
+  \let\@mkboth\@gobbletwo
+  \let\@oddhead\@empty
+  \def\@oddfoot{\reset@font\hfil{\textdir TLT \thepage}\hfil}%
+  \let\@evenhead\@empty
+  \let\@evenfoot\@oddfoot}
+\AtBeginDocument{%
+  \pagestyle{plain}%
+  \renewcommand*\l@chapter[2]{%
+    \ifnum \c@tocdepth >\m@ne
+      \addpenalty{-\@highpenalty}%
+      \vskip 1.0em \@plus\p@
+      \setlength\@tempdima{1.5em}%
+      \begingroup
+        \parindent \z@ \rightskip \@pnumwidth
+        \parfillskip -\@pnumwidth
+        \leavevmode \bfseries
+        \advance\leftskip\@tempdima
+        \hskip -\leftskip
+        #1\nobreak\hfil\nobreak
+        \hb@xt@\@pnumwidth{\hss \textenglish{#2}\kern -\p@ \kern \p@ }\par
+        \penalty\@highpenalty
+      \endgroup
+    \fi}%
+  \def\@dottedtocline#1#2#3#4#5{%
+    \ifnum #1>\c@tocdepth \else
+      \vskip \z@ \@plus .2\p@
+      {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip
+       \parindent #2\relax \@afterindenttrue
+       \interlinepenalty\@M
+       \leavevmode
+       \@tempdima #3\relax
+       \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+       {#4}\nobreak
+       \leaders\hbox{$\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill
+       \nobreak
+       \hb@xt@\@pnumwidth{\hfil\normalfont\normalcolor
+         \textenglish{#5}\kern -\p@ \kern \p@ }%
+       \par}%
+    \fi}%
+}
+\makeatother
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+\setmainfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,
+  Script=Hebrew,Ligatures=TeX]{Arial}
+\setsansfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,
+  Script=Hebrew,Ligatures=TeX]{Arial}
+\setmonofont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=cour,BoldFont=courbd,ItalicFont=couri,BoldItalicFont=courbi,
+  Script=Hebrew]{CourierNew}
+\newfontfamily\hebrewfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,
+  Script=Hebrew,Ligatures=TeX]{Arial}
+\newfontfamily\hebrewfontsf[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,
+  Script=Hebrew,Ligatures=TeX]{Arial}
+\newfontfamily\hebrewfonttt[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=cour,BoldFont=courbd,ItalicFont=couri,BoldItalicFont=courbi,
+  Script=Hebrew]{CourierNew}
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{\textenglish{#1}}}
+\DeclareFieldFormat{labelnumber}{\textenglish{#1}}
+\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}
+\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}
+\renewcommand{\theequation}{\textenglish{\arabic{chapter}.\arabic{equation}}}
+\renewcommand{\thefigure}{\textenglish{\arabic{chapter}.\arabic{figure}}}
+\renewcommand{\thetable}{\textenglish{\arabic{chapter}.\arabic{table}}}
+\addbibresource{refs.bib}
+\title{השוואת ביצועים: \textenglish{Transformer} מול \textenglish{xLSTM} לחיזוי טורי זמן}
+\author{Avi Ayeli --- \textenglish{300228160}}
+\date{5 ביוני \textenglish{2026}}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\input{chapters/ch1}
+\input{chapters/ch2}
+\input{chapters/ch3}
+\input{chapters/ch4}
+\input{chapters/ch5}
+\input{chapters/ch6}
+
+\input{chapters/ch7}
+\input{chapters/ch8}
+
+\input{chapters/ch9}
+
+\input{chapters/ch10}
+
+\newpage
+\chapter*{ביבליוגרפיה}
+\begin{english}
+\sloppy
+\printbibliography[heading=none]
+\end{english}
+\end{document}

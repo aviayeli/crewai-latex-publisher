@@ -1,0 +1,33 @@
+
+\chapter{ארכיטקטורת \textenglish{xLSTM}}
+
+\section{מוטיבציה ורקע}
+
+\textenglish{xLSTM} \cite{beck2024xlstm} נולד מתוך השאלה: האם ניתן לשפר \textenglish{LSTM} קלאסי \cite{hochreiter1997lstm} עד כדי תחרות עם \textenglish{Transformer} מבלי להוסיף מורכבות ריבועית? שני חידושים עיקריים מאפשרים זאת:
+
+\subsection{\textenglish{sLSTM}: שערי אקספוננציאל}
+
+במקום שער סיגמואיד קלאסי, \textenglish{sLSTM} משתמש בפונקציית שכחה אקספוננציאלית:
+
+\begin{equation}
+f_t = \exp(-\exp(w_f h_{t-1} + r_f x_t + b_f))
+\end{equation}
+
+גישה זו מאפשרת "שכחה מהירה" אדפטיבית ופותרת בעיות כמו \textenglish{over-counting} בזיכרון ארוך-טווח.
+
+\subsection{\textenglish{mLSTM}: זיכרון מטריצה}
+
+\textenglish{mLSTM} מרחיב את תא ה-\textenglish{LSTM} לייצוג מטריצה:
+
+\begin{equation}
+C_t = f_t \odot C_{t-1} + i_t \cdot v_t k_t^T \in \mathbb{R}^{d \times d}
+\end{equation}
+
+כאשר \(v_t\), \(k_t\) הם וקטורי ערך ומפתח. מטריצה זו מאפשרת אחסון מגוון רב יותר של מידע בהשוואה לוקטור הסמוי הקלאסי.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{assets/architecture.png}
+\caption{\textenglish{Architecture Comparison: PatchTST vs xLSTM (Python-generated)}}
+\label{fig:arch}
+\end{figure}

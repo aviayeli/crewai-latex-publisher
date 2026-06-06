@@ -1,0 +1,23 @@
+
+\chapter{מודל האיום: \textenglish{ClawHavoc}}
+
+\section{וקטורי התקפה בצינורות סוכנים}
+
+ניתחנו ארבעה וקטורי תקיפה עיקריים בצינורות סוכנים \cite{greshake2023indirect}:
+
+\begin{enumerate}
+\item \textbf{הרעלת מטה-נתונים (\textenglish{Metadata Poisoning})}: שינוי שדות \textenglish{description} ו-\textenglish{tags} של כישור כך שה-\textenglish{LLM} יבחר בו על פני כישורים בטוחים יותר.
+\item \textbf{הזרקת פרומפט עקיפה (\textenglish{Indirect Prompt Injection})}: הכנסת הוראות בגוף הפלט המוחזר, שמופעלות על ידי הסוכן כחלק מהזרימה.
+\item \textbf{סייפון סודות (\textenglish{Secret Siphoning})}: כישור זדוני עם גישה למשתני סביבה שולח אותם לשרת חיצוני.
+\item \textbf{עקיפת מסנן (\textenglish{Filter Bypass})}: שימוש בקידודים אלטרנטיביים (\textenglish{base64}, \textenglish{Unicode escapes}) להסתרת פקודות זדוניות.
+\end{enumerate}
+
+\section{פרמטריזציה של \textenglish{ClawHavoc}}
+
+מודל \textenglish{ClawHavoc} מיישם את ארבעת הוקטורים בפלטפורמת בדיקה מבוקרת. כל התקפה מוגדרת על ידי:
+
+\begin{equation}
+\text{Attack Score} = w_1 \cdot C_{\text{stealth}} + w_2 \cdot C_{\text{reach}} + w_3 \cdot C_{\text{impact}}
+\end{equation}
+
+כאשר \(C_{\text{stealth}}\) הוא מדד ההסתרה, \(C_{\text{reach}}\) הוא היקף ההפצה ו-\(C_{\text{impact}}\) הוא חומרת ההשפעה \cite{liu2023prompt}. ניסויי הדמייה הראו שכישורים עם ציון \(\text{Attack Score} > 0.7\) מצליחים לעקוף מסנני \textenglish{regex} נאיביים ב-\textenglish{94\%} מהמקרים.

@@ -1,0 +1,12 @@
+
+\chapter{מבוא לחיזוי טורי זמן}
+
+\section{חיזוי טורי זמן ואתגריו}
+
+חיזוי טורי זמן (\textenglish{time series forecasting}) הוא אחד הבעיות הקלאסיות בלמידת מכונה עם יישומים נרחבים: ניבוי צריכת חשמל, תחזיות מזג אוויר, מסחר בשוק ההון וניטור מערכות תעשייתיות. האתגר המרכזי הוא לומד תלויות זמניות ארוכות טווח מתוך רצפים נויזיים ולא-סטציונריים.
+
+ארכיטקטורות \textenglish{LSTM} \cite{hochreiter1997lstm} שלטו בתחום זה עד לעלייתו של \textenglish{Transformer} \cite{vaswani2017attention} שסחף מהפכה בביצועים. אולם לאחרונה, ארכיטקטורת \textenglish{xLSTM} \cite{beck2024xlstm} הציגה מבנה חדש המאתגר את עליונות \textenglish{Transformer} בחיזוי לטווח ארוך, תוך שמירה על מורכבות זמן לינארית.
+
+\section{שאלת המחקר}
+
+האם \textenglish{xLSTM} מציג יתרון מובהק על ארכיטקטורות \textenglish{Transformer} מתקדמות (\textenglish{PatchTST} \cite{nie2022patchtst}, \textenglish{Autoformer} \cite{wu2021autoformer}) בחיזוי טורי זמן רב-צעדי? ניסויים על מערכי הנתונים הסטנדרטיים \textenglish{ETT} (\textenglish{Electricity Transformer Temperature}) ו-\textenglish{Weather} נועדו לענות על שאלה זו.

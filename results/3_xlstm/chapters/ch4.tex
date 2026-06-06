@@ -1,0 +1,24 @@
+
+\chapter{מתודולוגיית ה\textenglish{Benchmark}}
+
+\section{מערכי הנתונים}
+
+השתמשנו בארבעה מערכי נתונים סטנדרטיים:
+\begin{itemize}
+\item \textbf{\textenglish{ETTh1}}: נתוני טמפרטורת שנאי חשמל שעתיים, \textenglish{17,420} נקודות.
+\item \textbf{\textenglish{ETTm2}}: נתוני טמפרטורת שנאי ברזולוציית 15 דקות, \textenglish{69,680} נקודות.
+\item \textbf{\textenglish{Weather}}: נתוני מזג אוויר מ-\textenglish{21} מדדים, \textenglish{52,696} נקודות.
+\item \textbf{\textenglish{Exchange}}: שערי חליפין יומיים של \textenglish{8} מטבעות, \textenglish{7,588} נקודות.
+\end{itemize}
+
+\section{פרוטוקול הניסוי}
+
+בכל מערך נתונים בדקנו אופקי חיזוי (\textenglish{forecast horizons}): \textenglish{96, 192, 336, 720} צעדים. הפיצול: \textenglish{70\% / 10\% / 20\%} לאימון, אימות ובדיקה. המדדים: \textenglish{MSE} (\textenglish{Mean Squared Error}) ו-\textenglish{MAE} (\textenglish{Mean Absolute Error}).
+
+\section{הגדרות היפר-פרמטרים}
+
+\begin{equation}
+\mathcal{L}_{\text{MSE}} = \frac{1}{H} \sum_{t=1}^H \|\hat{y}_t - y_t\|^2
+\end{equation}
+
+כל מודל אומן עם \textenglish{Adam} (\textenglish{lr=$10^{-4}$}), \textenglish{batch size 32}, עד \textenglish{100} אפוקות עם \textenglish{early stopping} בסבלנות \textenglish{10}.

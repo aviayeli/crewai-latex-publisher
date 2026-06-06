@@ -1,0 +1,32 @@
+
+\chapter{מודל מתמטי של אותות מעורבבים}
+
+\section{הגדרת הבעיה}
+
+נגדיר אות מעורבב המורכב מ-\textenglish{K} מרכיבים סינוסואידליים ורעש:
+
+\begin{equation}
+x(t) = \sum_{k=1}^{K} A_k \sin(2\pi f_k t + \phi_k) + n(t)
+\end{equation}
+
+כאשר \(A_k\), \(f_k\), \(\phi_k\) הם המשרעת, התדר והפאזה של המרכיב ה-\textenglish{k}-י, ו-\(n(t)\) הוא רעש גאוסי לבן בעל שונות \(\sigma^2\). מטרת החילוץ היא לאמוד בדיוק את הפרמטרים \(\{A_k, f_k, \phi_k\}_{k=1}^K\) מרצף הדגימות \(\{x(t_i)\}_{i=1}^N\).
+
+\section{מדד \textenglish{SI-SNR}}
+
+מדד ה-\textenglish{SI-SNR} (\textenglish{Scale-Invariant Signal-to-Noise Ratio}) מוגדר כ:
+
+\begin{equation}
+\text{SI-SNR}(s, \hat{s}) = 10 \log_{10} \frac{\|\alpha s\|^2}{\|\hat{s} - \alpha s\|^2}, \quad \alpha = \frac{\hat{s}^T s}{\|s\|^2}
+\end{equation}
+
+כאשר \(s\) הוא האות הנקי האמיתי ו-\(\hat{s}\) הוא האות המשוחזר על ידי המודל \cite{tzinis2020universal}. מדד זה אינווריאנטי לגורם סקלרי, מה שהופך אותו לרובוסטי יותר מ-\textenglish{MSE} בתנאי שונות משרעת.
+
+\section{ייצוג ספקטרוגרמה}
+
+לצורך עיבוד תדר, נשתמש בתמרת פורייה לזמן קצר (\textenglish{STFT}):
+
+\begin{equation}
+X(t, f) = \sum_{\tau} x(\tau) \cdot w(\tau - t) \cdot e^{-j2\pi f \tau / N}
+\end{equation}
+
+כאשר \(w(\tau)\) הוא חלון \textenglish{Hann} המפחית דליפת ספקטרום. הספקטרוגרמה המורכבת \(X(t,f)\) משמשת כייצוג קלט דו-ממדי לרשת הנוירונים, ומאפשרת ניצול מבנים תדר-זמן שקשה לזהות בתחום הזמן הגולמי \cite{williamson2016complex}.
