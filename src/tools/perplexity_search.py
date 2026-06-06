@@ -19,7 +19,10 @@ class PerplexitySearchTool(BaseTool):
 
     name: str = "perplexity_search"
     description: str = (
-        "Queries Perplexity AI sonar-pro for academic research sources."
+        "PURPOSE: Query Perplexity sonar-pro for peer-reviewed academic sources.\n"
+        "WHEN: Researcher agent needs citations or factual grounding for a topic.\n"
+        "ERR: HTTP 429 → raise_for_status for caller backoff; HTTP 4xx → ValueError.\n"
+        "TAGS: research, citations, academic, perplexity, sonar-pro"
     )
     args_schema: type[BaseModel] = PerplexitySearchInput
 

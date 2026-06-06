@@ -55,6 +55,45 @@ def test_build_llm_omits_cache_params_when_disabled(monkeypatch):
     assert "additional_params" not in MockLLM.call_args.kwargs
 
 
+# ── Cache boundary: all three LLM tiers must propagate the header ────────────
+
+
+def test_build_llm_fast_passes_cache_header_when_enabled(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", True)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_fast()
+    extra = MockLLM.call_args.kwargs.get("additional_params", {})
+    header = extra.get("extra_headers", {}).get("anthropic-beta", "")
+    assert "prompt-caching" in header
+
+
+def test_build_llm_smart_passes_cache_header_when_enabled(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", True)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_smart()
+    extra = MockLLM.call_args.kwargs.get("additional_params", {})
+    header = extra.get("extra_headers", {}).get("anthropic-beta", "")
+    assert "prompt-caching" in header
+
+
+def test_build_llm_fast_omits_cache_params_when_disabled(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_fast()
+    assert "additional_params" not in MockLLM.call_args.kwargs
+
+
+def test_build_llm_smart_omits_cache_params_when_disabled(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_smart()
+    assert "additional_params" not in MockLLM.call_args.kwargs
+
+
 # ── __version__ ───────────────────────────────────────────────────────────────
 
 

@@ -26,7 +26,10 @@ class LualatexRunnerTool(BaseTool):
 
     name: str = "lualatex_runner"
     description: str = (
-        "Runs lualatex (and optionally biber) to compile a .tex file to PDF."
+        "PURPOSE: Compile a .tex source file to PDF via lualatex, biber, and HITL gate.\n"
+        "WHEN: Compiler agent has assembled main.tex and all chapter inputs are validated.\n"
+        "ERR: LaTeX errors → CompilationError with SkillOpt hint; HITL decline → RuntimeError.\n"
+        "TAGS: compile, lualatex, biber, PDF, HITL, typeset"
     )
     args_schema: type[BaseModel] = LualatexRunnerInput
 

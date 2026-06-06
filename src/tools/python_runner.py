@@ -25,7 +25,10 @@ class PythonRunnerTool(BaseTool):
 
     name: str = "python_runner"
     description: str = (
-        "Executes a sandboxed Python script and returns stdout or stderr."
+        "PURPOSE: Execute a sandboxed matplotlib/numpy script and capture stdout.\n"
+        "WHEN: Figure agent must generate a PNG chart from a Python script.\n"
+        "ERR: Disallowed imports → ValueError; timeout → TimeoutExpired; non-zero → stderr.\n"
+        "TAGS: figures, matplotlib, numpy, chart, PNG, sandbox, execute"
     )
     args_schema: type[BaseModel] = PythonRunnerInput
 

@@ -7,7 +7,10 @@ from src.tools.markdown_converter import markdown_converter_tool
 
 _TOOL_NAME = "markdown_to_latex"
 _TOOL_DESCRIPTION = (
-    "Convert a Markdown file to LaTeX via Pandoc with BiDi-safe post-processing."
+    "PURPOSE: Convert a Markdown chapter file to a LaTeX fragment via pandoc.\n"
+    "WHEN: Content agent has finished a .md chapter and must produce the .tex input.\n"
+    "ERR: Pandoc non-zero exit → CalledProcessError; path traversal → ValueError.\n"
+    "TAGS: pandoc, markdown, latex, convert, BiDi, RTL, chapter"
 )
 _TOOL_SCHEMA: dict = {
     "type": "object",

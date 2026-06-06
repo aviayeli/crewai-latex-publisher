@@ -21,7 +21,12 @@ class MarkdownConverterTool(BaseTool):
     """Converts a Markdown file to LaTeX using pandoc with raw_tex passthrough."""
 
     name: str = "markdown_converter"
-    description: str = "Converts a Markdown file to LaTeX using pandoc."
+    description: str = (
+        "PURPOSE: Convert a Markdown chapter file to a LaTeX fragment via pandoc.\n"
+        "WHEN: Content agent has finished a .md chapter and must produce the .tex input.\n"
+        "ERR: Pandoc non-zero exit → CalledProcessError; path traversal → ValueError.\n"
+        "TAGS: pandoc, markdown, latex, convert, BiDi, RTL, chapter"
+    )
     args_schema: type[BaseModel] = MarkdownConverterInput
 
     def _validate_path(self, path: str) -> Path:

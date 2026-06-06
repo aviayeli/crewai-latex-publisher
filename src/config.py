@@ -49,7 +49,16 @@ settings = Settings(_env_file=".env")
 
 
 def _make_llm(model: str):
-    """Shared LLM factory; injects prompt-caching header when enabled."""
+    """Shared LLM factory; injects prompt-caching header when enabled.
+
+    Cache boundary: the Anthropic system message (static cacheable prefix)
+    contains agent role + goal + backstory (SKILL.md content) + TTC tool
+    descriptions.  Dynamic content — tool call results, search responses,
+    and compilation logs — lands exclusively in conversation turns and is
+    therefore outside the cached prefix.  This boundary is preserved
+    automatically by CrewAI's hierarchical process; no further action is
+    required in individual agents.
+    """
     from crewai import LLM  # local import — avoids crewai dep at module load time
 
     kwargs: dict = {"model": model, "max_tokens": settings.MAX_TOKENS}
