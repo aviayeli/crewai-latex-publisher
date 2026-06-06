@@ -91,6 +91,54 @@ The BidiAgent must insert any missing construct without removing surrounding Heb
 
 ---
 
+## Two Mandatory Structural Elements Across All Chapters
+
+In addition to the chapter-3 BiDi constructs, the following elements must exist somewhere across the six chapters:
+
+### 1. Complexity Plot (`\includegraphics`)
+
+At least one chapter must embed the pre-generated PNG via a `figure` environment:
+
+```latex
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{latex_output/assets/attention_complexity.png}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n²)},
+             תשומת לב לינארית \textenglish{O(n \log n)}, ורקורנטי \textenglish{O(n)}.}
+    \label{fig:attention_complexity}
+\end{figure}
+```
+
+If missing from all chapters, insert it into `ch2.tex` immediately after its first `\section{}` heading.
+
+### 2. Model Comparison Table (`\begin{table}`)
+
+At least one chapter must contain a `table` environment with a model comparison. Minimum required columns: **Model**, **Parameters**, **BLEU/Accuracy**, **Notes**.
+
+```latex
+\begin{table}[htbp]
+    \centering
+    \caption{השוואת מודלי שפה מרכזיים}
+    \label{tab:model_comparison}
+    \begin{LTR}
+    \begin{tabular}{llll}
+        \toprule
+        Model & Parameters & Score & Notes \\
+        \midrule
+        \textenglish{BERT-base}  & 110M & 88.5 GLUE & Encoder-only \\
+        \textenglish{GPT-3}      & 175B & 64.3 BIG-G & Decoder-only \\
+        \textenglish{T5-large}   & 770M & 89.7 GLUE  & Encoder–Decoder \\
+        \textenglish{LLaMA-2-7B} & 7B   & 63.2 MMLU  & Decoder-only \\
+        \bottomrule
+    \end{tabular}
+    \end{LTR}
+\end{table}
+```
+
+If missing from all chapters, insert it into `ch4.tex` immediately after its first `\section{}` heading.
+
+---
+
 ## Common RTL/LTR Pitfall: Punctuation Mirroring Artifacts
 
 In BiDi mode, LuaLaTeX mirrors certain characters: `(` becomes `)`, `[` becomes `]`, and `<` becomes `>` when they appear in RTL context.
@@ -112,7 +160,7 @@ Or use `\begin{LTR}` for any expression containing paired delimiters:
 
 ---
 
-## Validation Checklist (10 Items — All 6 Chapters)
+## Validation Checklist (12 Items — All 6 Chapters)
 
 The BidiAgent must verify each of the following before marking a chapter as BiDi-clean:
 
@@ -126,6 +174,8 @@ The BidiAgent must verify each of the following before marking a chapter as BiDi
 8. **Chapter begins with `\chapter{...}`** — no other sectioning command is the first non-blank content.
 9. **`\begin{LTR}` has matching `\end{LTR}`** — no unclosed LTR environments (causes all subsequent text to render LTR).
 10. **`\begin{english}` has matching `\end{english}`** — same unclosed-environment risk as above.
+11. **`\includegraphics` for attention_complexity.png present in at least one chapter** — grep all six chapters for `attention_complexity.png`; if absent, insert the `figure` block into `ch2.tex` (see § Two Mandatory Structural Elements above).
+12. **`\begin{table}` model comparison present in at least one chapter** — grep all six chapters for `\begin{table}`; if absent, insert the comparison table into `ch4.tex` (see § Two Mandatory Structural Elements above).
 
 ---
 

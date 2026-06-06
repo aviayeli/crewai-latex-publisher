@@ -135,9 +135,17 @@ If `David CLM` is not installed, LuaLaTeX will fall back to `Frank Ruehl CLM`, t
 \usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{xcolor}
+\usepackage{float}
 
 \newfontfamily\hebrewfont[Script=Hebrew]{David CLM}
+
+% MANDATORY cover page metadata — all three lines required
+\title{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}
+\author{Avi Ayeli -- 300228160}
+\date{\textenglish{June 2026}}
 ```
+
+These three declaration lines (`\title`, `\author`, `\date`) **must appear in the preamble** before `\begin{document}`. Omitting any one of them will produce a blank or incorrect cover page.
 
 ---
 
@@ -147,6 +155,10 @@ The assembled `main.tex` must be written to `latex_output/main.tex` via `latex_w
 
 ```latex
 \begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
 
 \input{chapters/ch1}
 \input{chapters/ch2}
@@ -160,6 +172,9 @@ The assembled `main.tex` must be written to `latex_output/main.tex` via `latex_w
 \end{document}
 ```
 
+- **`\maketitle`** — renders the cover page using the `\title`, `\author`, and `\date` declared in the preamble. **This line is mandatory and must be the first command after `\begin{document}`.**
+- **`\tableofcontents`** — generates the table of contents. Must appear immediately after `\maketitle`.
+- **`\newpage`** — separates the table of contents from chapter 1. Must appear immediately after `\tableofcontents`.
 - `\input{}` paths are relative to `main.tex` location (`latex_output/`).
 - `\printbibliography` must appear after the last `\input{}` and before `\end{document}`.
 - Do not use `\include{}` — it forces a page break before each file. Use `\input{}` instead.
