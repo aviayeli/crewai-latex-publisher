@@ -426,6 +426,49 @@ terms, inline math with `\(` and `\)`, and a `\cite{}` call:
 
 ---
 
+## Citation & Bibliography Guardrail
+
+### NEVER cite search tools or AI assistants
+
+The following citation sources are **academically fraudulent** and must never appear in chapter `.tex` files or in `refs.bib`:
+
+| Forbidden | Why |
+|---|---|
+| `\cite{perplexity_2024_*}` or any `perplexity_*` key | Perplexity is a search engine, not an academic author. Citing it is equivalent to citing Google Search. |
+| `\cite{openai_*}` as a generic source | Only valid if the referenced entry is a named, peer-reviewed paper (e.g., a specific GPT-3 paper with real authors at a real venue). |
+| Keys not matching `author_year_keyword` | Patterns like `search_2024_nlp`, `tool_result_3`, or `perplexity_2024_transformers` are synthetic keys with no real paper behind them. |
+
+### Required citation key pattern: `author_year_keyword`
+
+Every `\cite{key}` call in a chapter file must reference a key that:
+
+1. Was supplied by the ResearcherAgent from a real, peer-reviewed paper.
+2. Follows the `author_year_keyword` pattern — e.g., `vaswani2017attention`, `devlin2019bert`, `touvron2023llama`.
+3. Has a complete BibTeX entry in `refs.bib` with real `author`, `title`, `year`, and `journal`/`booktitle` fields.
+
+### Verification checklist before writing each chapter
+
+Before calling `latex_writer_tool`, confirm every `\cite{key}` in your draft passes all three checks:
+
+1. **Key exists in `refs.bib`** — if it does not, do not use it; substitute the correct key.
+2. **The `refs.bib` entry lists real human authors** — not "Perplexity AI", "OpenAI Search", or the name of any search engine.
+3. **The key matches `author_year_keyword`** — reject any key matching `perplexity_*`, `search_*`, or `tool_*`.
+
+### Substitution rule for bad keys from ResearcherAgent
+
+If the ResearcherAgent supplies a fake or malformed key, substitute the correct canonical key from `refs.bib`:
+
+| Fake key (reject) | Canonical substitution |
+|---|---|
+| `perplexity_2024_attention` | `vaswani2017attention` |
+| `perplexity_2024_bert` | `devlin2019bert` |
+| `perplexity_2024_gpt` | `brown2020language` |
+| `perplexity_2024_llama` | `touvron2023llama` |
+
+Do not write a chapter file that contains any `\cite{}` key not present in `refs.bib`. A missing key causes a Biber compilation error and a blank `[?]` in the PDF.
+
+---
+
 ## Markdown-First Workflow
 
 Every chapter must be written using the **markdown-first** workflow:

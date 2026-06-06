@@ -91,6 +91,61 @@ If Perplexity returns a result without a venue or DOI, classify it as secondary 
 
 ---
 
+## Citation & Bibliography Guardrail
+
+### NEVER cite the search tool or AI assistants as academic sources
+
+The following are **forbidden citation sources** that must never appear in `refs.bib` or any `\cite{}` command:
+
+| Forbidden entity | Why forbidden |
+|---|---|
+| Perplexity, Perplexity AI, sonar-pro | Perplexity is the **search tool**, not an academic author. Citing it is equivalent to citing Google Search. |
+| OpenAI, Anthropic, Claude, ChatGPT (as a source, not a paper author) | AI assistants and their providers are not peer-reviewed academic sources unless you are citing a specific, named research paper with real authors and a real venue. |
+| Any key matching `perplexity_YYYY_*` | This pattern is synthetic. Keys of this form are never valid BibTeX keys — they have no corresponding real paper. Reject every one. |
+
+### Citation keys MUST follow `author_year_keyword` — derived from the real paper
+
+Keys must be constructed from **the actual paper's metadata**, not from the tool used to find the paper:
+
+```
+CORRECT:   vaswani2017attention   devlin2019bert   touvron2023llama
+FORBIDDEN: perplexity_2024_transformer   openai_2023_search   sonar_2024_nlp
+```
+
+The strict pattern is:
+- **`author`** — first author's last name, lowercase, no spaces (e.g., `vaswani`, `devlin`, `touvron`)
+- **`year`** — four-digit publication year from the paper itself (e.g., `2017`, `2019`)
+- **`keyword`** — one lowercase word from the paper title (e.g., `attention`, `bert`, `llama`)
+
+### Extraction workflow — cite the source, not the search engine
+
+When Perplexity returns a result, extract citation metadata from the **source paper**, not from Perplexity's response envelope:
+
+1. Locate the paper's DOI, arXiv ID, or conference proceedings URL in the Perplexity response.
+2. Extract: full author list, full paper title, four-digit publication year, venue name.
+3. Construct the BibTeX entry and citation key from those fields only.
+4. Verify the venue is a recognised conference (NeurIPS, ACL, EMNLP, ICML, ICLR) or journal (JMLR, TACL).
+
+### Minimum valid BibTeX entry
+
+Every entry written to `refs.bib` must include all mandatory fields:
+
+```bibtex
+@article{vaswani2017attention,
+  author  = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and
+             Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and
+             Kaiser, Łukasz and Polosukhin, Illia},
+  title   = {Attention Is All You Need},
+  journal = {Advances in Neural Information Processing Systems},
+  year    = {2017},
+  volume  = {30}
+}
+```
+
+A BibTeX entry missing `author`, `title`, `year`, or `journal`/`booktitle` is invalid — do not write it to `refs.bib` until all mandatory fields are present and sourced from the real paper.
+
+---
+
 ## Required Output Format
 
 The Research Agent must return a single Markdown block. Each source occupies one entry with these fields:
