@@ -15,6 +15,7 @@
 \usepackage{xcolor}
 \usepackage{etoolbox}
 \usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
 
 % Fix: multi-digit page numbers in an RTL paragraph render reversed (13→31).
 % \makeatletter must precede \AtBeginDocument{} so @ in \hb@xt@ / \@pnumwidth
@@ -24,21 +25,20 @@
 % contain \kern -\p@ \kern \p@ after the page-number token, which foiled the
 % simple \patchcmd pattern match. \textenglish{} forces LTR for the number.
 \makeatletter
-% Fix: page numbers in footers reversed for multi-digit values (10→01, 17→71).
-% Redefine plain page style to wrap \thepage in \textenglish{}.
-\def\ps@plain{%
-  \let\@mkboth\@gobbletwo
-  \let\@oddhead\@empty
-  \def\@oddfoot{\reset@font\hfil{\textdir TLT \thepage}\hfil}%
-  \let\@evenhead\@empty
-  \let\@evenfoot\@oddfoot}
 \AtBeginDocument{%
   \pagestyle{fancy}%
   \fancyhf{}%
-  \fancyhead[R]{\small ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}%
+  \fancyhead[R]{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}%
   \fancyfoot[C]{\textdir TLT \thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
   \renewcommand{\footrulewidth}{0pt}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[R]{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}%
+    \fancyfoot[C]{\textdir TLT \thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+  }%
   \renewcommand*\l@chapter[2]{%
     \ifnum \c@tocdepth >\m@ne
       \addpenalty{-\@highpenalty}%
