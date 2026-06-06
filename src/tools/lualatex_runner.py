@@ -26,9 +26,12 @@ class LualatexRunnerTool(BaseTool):
 
     name: str = "lualatex_runner"
     description: str = (
-        "PURPOSE: Compile a .tex source file to PDF via lualatex, biber, and HITL gate.\n"
-        "WHEN: Compiler agent has assembled main.tex and all chapter inputs are validated.\n"
-        "ERR: LaTeX errors → CompilationError with SkillOpt hint; HITL decline → RuntimeError.\n"
+        "PURPOSE: Compile a .tex source file to PDF"
+        " via lualatex, biber, and HITL gate.\n"
+        "WHEN: Compiler agent has assembled main.tex"
+        " and all chapter inputs are validated.\n"
+        "ERR: LaTeX errors → CompilationError with SkillOpt hint;"
+        " HITL decline → RuntimeError.\n"
         "TAGS: compile, lualatex, biber, PDF, HITL, typeset"
     )
     args_schema: type[BaseModel] = LualatexRunnerInput
@@ -47,12 +50,24 @@ class LualatexRunnerTool(BaseTool):
         return [settings.BIBER_BIN, stem]
 
     def _parse_log(self, log_path: Path) -> list[str]:
-        """Return lines starting with '!' from the lualatex log file."""
+        """Return error and warning lines from the lualatex log file.
+
+        Context purification: never return the full raw log.  Only extract
+        lines that are actionable — fatal errors (! prefix) and named warnings
+        (LaTeX/Package/Class Warning:).  Fatal errors block the pipeline;
+        warnings are surfaced for agent context but do not abort a run alone.
+        """
         try:
             text = log_path.read_text(encoding="utf-8", errors="replace")
         except FileNotFoundError:
             return []
-        return [line for line in text.splitlines() if line.startswith("! ")]
+        return [
+            line for line in text.splitlines()
+            if line.startswith("! ") or (
+                "Warning:" in line
+                and line.startswith(("LaTeX ", "Package ", "Class "))
+            )
+        ]
 
     def _suggest_fix(self, errors: list[str]) -> str:
         """Return a bounded SkillOpt add/delete/replace suggestion for *errors*.
@@ -87,8 +102,8 @@ class LualatexRunnerTool(BaseTool):
         """Compile *tex_file*, run biber if requested, and repeat for *passes*."""
         if settings.HITL_ENABLED:
             answer = input(
-                f"\n[HITL] The .tex templates are ready."
-                f" Proceed with LuaLaTeX compilation? (Y/N): "
+                "\n[HITL] The .tex templates are ready."
+                " Proceed with LuaLaTeX compilation? (Y/N): "
             ).strip().upper()
             if answer != "Y":
                 raise RuntimeError(
@@ -101,10 +116,11 @@ class LualatexRunnerTool(BaseTool):
             try:
                 subprocess.run(self._build_cmd(path), check=True)
             except subprocess.CalledProcessError as exc:
-                errors = self._parse_log(log_path)
-                msg = "\n".join(errors) if errors else "lualatex exited non-zero"
-                if errors:
-                    msg += f"\n{self._suggest_fix(errors)}"
+                lines = self._parse_log(log_path)
+                fatal = [ln for ln in lines if ln.startswith("! ")]
+                msg = "\n".join(lines) if lines else "lualatex exited non-zero"
+                if fatal:
+                    msg += f"\n{self._suggest_fix(fatal)}"
                 raise CompilationError(msg) from exc
 
         _latex(tex_file)
@@ -116,9 +132,10 @@ class LualatexRunnerTool(BaseTool):
         for _ in range(passes - 1):
             _latex(tex_file)
 
-        errors = self._parse_log(log_path)
-        if errors:
-            raise CompilationError("\n".join(errors))
+        lines = self._parse_log(log_path)
+        fatal = [ln for ln in lines if ln.startswith("! ")]
+        if fatal:
+            raise CompilationError("\n".join(lines))
 
         return {"success": True}
 

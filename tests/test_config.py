@@ -20,7 +20,7 @@ def test_llm_model_default(monkeypatch):
 
 
 def test_max_agent_retries_default():
-    assert Settings(**_K).MAX_AGENT_RETRIES == 3
+    assert Settings(**_K).MAX_AGENT_RETRIES == 2
 
 
 def test_python_runner_timeout_default():

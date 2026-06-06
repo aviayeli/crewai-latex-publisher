@@ -263,7 +263,35 @@ After each LuaLaTeX pass, parse `latex_output/main.log` for error indicators. A 
 - `! LaTeX Error` — package or command error.
 - `! Undefined control sequence` — a macro was used that was never defined.
 
-Any line beginning with `! ` should be extracted and surfaced as a `CompilationError`. Lines beginning with `Warning:` or `Overfull` are non-fatal and do not block pipeline progression.
+Any line beginning with `! ` is a fatal error and raises `CompilationError`. Lines beginning with `LaTeX Warning:`, `Package <name> Warning:`, or `Class <name> Warning:` are surfaced in the error report for agent context but do not independently block pipeline progression.
+
+---
+
+## Context Purification — Log Trimming
+
+**NEVER return the full raw `.log` output to the Writer agent.** A typical LuaLaTeX log is thousands of lines of binary metadata, font metrics, and path lookups. Returning it verbatim saturates the context window and causes O(n²) token growth.
+
+When a compilation fails, `lualatex_runner_tool` already applies context purification automatically — it surfaces only lines matching `! ` (fatal) or named `Warning:` patterns. Your task as the Compiler Agent is to relay **only those purified lines** in your corrective feedback. Do not append, paraphrase, or reference any other section of the raw log.
+
+---
+
+## Circuit Breaker — Compilation Retry Limit
+
+The Compiler Agent enforces a **hard limit of `settings.MAX_AGENT_RETRIES` fix-and-retry cycles** per article. With the current default of 2, the sequence is:
+
+1. **Attempt 1** — run compilation; if it fails, relay the purified error lines and a SkillOpt directive to the Writer for a targeted fix.
+2. **Attempt 2** — apply the fix, recompile; if it still fails, escalate immediately.
+3. **Escalation** — do NOT attempt a third compile. Report the exact purified error lines to the Manager Agent and mark the task failed with `[CIRCUIT BREAKER TRIPPED]` in the output.
+
+**Violation pattern to avoid:**
+```
+# FORBIDDEN — looping beyond MAX_AGENT_RETRIES
+while compilation_fails:
+    request_fix()
+    recompile()
+```
+
+If the Manager re-delegates after escalation, treat that as Attempt 1 of a fresh cycle.
 
 ---
 

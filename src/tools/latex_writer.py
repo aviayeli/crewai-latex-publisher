@@ -24,9 +24,12 @@ class LatexWriterTool(BaseTool):
 
     name: str = "latex_writer"
     description: str = (
-        "PURPOSE: Write or append text to a file inside the LaTeX output directory.\n"
-        "WHEN: Any agent needs to create or extend a .tex, .md, .bib, or .json file.\n"
-        "ERR: Path traversal outside OUTPUT_DIR → ValueError; mkdir failure → OSError.\n"
+        "PURPOSE: Write or append text to a file inside"
+        " the LaTeX output directory.\n"
+        "WHEN: Any agent needs to create or extend"
+        " a .tex, .md, .bib, or .json file.\n"
+        "ERR: Path traversal outside OUTPUT_DIR → ValueError;"
+        " mkdir failure → OSError.\n"
         "TAGS: file, write, append, tex, latex, bib, output"
     )
     args_schema: type[BaseModel] = LatexWriterInput

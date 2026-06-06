@@ -85,14 +85,24 @@ Before accepting a task output and proceeding to the next stage, the Manager Age
 If a sub-agent's task output fails a quality gate:
 
 1. **Re-delegate** the same task to the same agent, appending a corrective instruction that describes exactly what was wrong and what the correct output must look like.
-2. Repeat up to **`MAX_AGENT_RETRIES`** total attempts (read from `settings.MAX_AGENT_RETRIES` — never hardcode this value).
+2. Repeat up to **`MAX_AGENT_RETRIES`** total attempts (read from `settings.MAX_AGENT_RETRIES` — never hardcode this value; the current default is 2).
 3. On each retry, increase specificity: if the first retry said "the JSON is invalid", the second retry must quote the exact field that is malformed and show the expected structure.
 
-## Escalation
+## Circuit Breaker — Escalation
 
-If a task fails after exhausting all `MAX_AGENT_RETRIES` attempts:
+If a task fails after exhausting all `MAX_AGENT_RETRIES` attempts, the **circuit breaker trips**:
 
-- **Do not raise an exception or halt the pipeline.**
-- Log the failure reason in the task's output string so downstream agents and the final report can reference it.
-- Proceed to the next task in the pipeline sequence.
-- At the end of `kickoff()`, report all escalated failures so the operator can identify which steps require manual intervention.
+- **Do not re-delegate.** Do not raise an exception or halt the entire pipeline.
+- Log the failure reason — including the `[CIRCUIT BREAKER TRIPPED]` tag and the exact error lines — in the task's output string.
+- Proceed to the next task in the pipeline sequence using the most recent partial output.
+- At the end of `kickoff()`, report all tripped circuit breakers so the operator can identify which steps require manual intervention.
+
+If a Compiler Agent or BiDi Validator reports `[CIRCUIT BREAKER TRIPPED]`, accept it as the final outcome for that task without re-trying.
+
+## Cache Boundary Awareness
+
+The Manager Agent's system prompt (backstory + delegation strategy) is a **static, cacheable prefix**. To preserve the Anthropic prompt-cache hit rate:
+
+- **Do not inject dynamic content** (timestamps, run IDs, article counts, compilation log snippets) into static delegation instructions or quality-gate descriptions.
+- When forwarding error context from a sub-agent to the next downstream agent, append it **at the END of the message chain** as a separate turn — not by modifying the standing delegation template.
+- Agent task descriptions and expected-output strings may reference dynamic values (file paths, chapter numbers) — those are delivered as conversation turns, outside the cached system prefix, so they do not pollute the cache.

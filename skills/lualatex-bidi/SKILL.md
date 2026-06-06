@@ -271,3 +271,15 @@ Problem: bare `$...$` is forbidden in LuaLaTeX BiDi mode and causes undefined be
 ```latex
 הנוסחה היא \(Q K^T / \sqrt{d_k}\) ומחושבת עבור כל ראש.
 ```
+
+---
+
+## Cache Boundary Awareness
+
+The BiDi Validator's system prompt (role, validation checklist, SDA protocol) is a **static, cacheable prefix** injected once per session. Dynamic content must stay **outside** that prefix:
+
+1. **Do not embed dynamic variables** (chapter file hashes, word counts, timestamps, or per-run validation scores) in your static backstory or skill description. These change every run and destroy prompt-cache reuse.
+2. **Append validation reports at the END of the message chain.** When reporting which chapters passed or failed the 12-item checklist, append the results as the final turn in the conversation — never by prepending them to a standing instruction block.
+3. **Error reports sent to the Writer must be self-contained.** Include only the purified error lines (as supplied by `lualatex_runner_tool`) and the specific checklist item that failed. Do not copy raw log snippets or file contents into the message body beyond what is needed to describe the fix.
+
+This ensures that the 7,000-token SKILL.md backstory remains cache-eligible across all validation rounds, reducing per-round cost by ≥ 80 % compared to a cold read.

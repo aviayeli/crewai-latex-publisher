@@ -22,9 +22,12 @@ class MarkdownConverterTool(BaseTool):
 
     name: str = "markdown_converter"
     description: str = (
-        "PURPOSE: Convert a Markdown chapter file to a LaTeX fragment via pandoc.\n"
-        "WHEN: Content agent has finished a .md chapter and must produce the .tex input.\n"
-        "ERR: Pandoc non-zero exit → CalledProcessError; path traversal → ValueError.\n"
+        "PURPOSE: Convert a Markdown chapter file to a LaTeX fragment"
+        " via pandoc.\n"
+        "WHEN: Content agent has finished a .md chapter and must produce"
+        " the .tex input.\n"
+        "ERR: Pandoc non-zero exit → CalledProcessError;"
+        " path traversal → ValueError.\n"
         "TAGS: pandoc, markdown, latex, convert, BiDi, RTL, chapter"
     )
     args_schema: type[BaseModel] = MarkdownConverterInput

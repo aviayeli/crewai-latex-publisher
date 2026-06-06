@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     LLM_MODEL_FAST: str = "anthropic/claude-haiku-4-5-20251001"
     # Tier-2 (reasoning): content writer and BiDi validator.
     LLM_MODEL_SMART: str = "anthropic/claude-sonnet-4-6"
-    MAX_AGENT_RETRIES: int = 3
+    MAX_AGENT_RETRIES: int = 2
     # Max tool-call iterations per agent turn; prevents runaway loops
     MAX_ITER: int = 80
     # Hard output cap per LLM call; keeps per-call cost bounded
