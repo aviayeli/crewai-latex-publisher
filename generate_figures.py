@@ -2,12 +2,13 @@
 """Generate all matplotlib assets for 4 research articles."""
 
 import matplotlib
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.patches import FancyArrowPatch
-import numpy as np
 from pathlib import Path
+
+import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
+import numpy as np
 
 rng = np.random.default_rng(42)
 
@@ -31,7 +32,7 @@ for x, y, w, h, col, lbl in boxes:
 for x0, x1 in [(0.23, 0.28), (0.48, 0.53), (0.73, 0.78)]:
     ax.annotate("", xy=(x1, 0.5), xytext=(x0, 0.5),
                 xycoords="axes fraction", textcoords="axes fraction",
-                arrowprops=dict(arrowstyle="->", lw=2, color="#333"))
+                arrowprops={"arrowstyle": "->", "lw": 2, "color": "#333"})
 ax.set_title("LSTM Encoder-Decoder Architecture for Sine Wave Extraction", fontsize=13)
 fig.tight_layout()
 fig.savefig(out / "architecture.png", dpi=150, bbox_inches="tight")
@@ -49,7 +50,8 @@ ax.plot(ep, attn,     "g-.", lw=2, label="Transformer")
 ax.set_xlabel("Training Epoch", fontsize=12)
 ax.set_ylabel("SI-SNR Improvement (dB)", fontsize=12)
 ax.set_title("SI-SNR Improvement vs Epochs  (Python-generated via matplotlib)", fontsize=12)
-ax.legend(fontsize=11); ax.grid(alpha=0.3)
+ax.legend(fontsize=11)
+ax.grid(alpha=0.3)
 fig.tight_layout()
 fig.savefig(out / "results_graph.png", dpi=150, bbox_inches="tight")
 plt.close()
@@ -76,7 +78,7 @@ arrows = [(0.21,0.50,"#e44","Inject"),(0.43,0.50,"#e44","Exploit"),
 for x0, y0, col, lbl in arrows:
     ax.annotate("", xy=(x0+0.06, y0), xytext=(x0, y0),
                 xycoords="axes fraction", textcoords="axes fraction",
-                arrowprops=dict(arrowstyle="->", lw=2.5, color=col))
+                arrowprops={"arrowstyle": "->", "lw": 2.5, "color": col})
     ax.text(x0+0.03, y0+0.08, lbl, ha="center", fontsize=9,
             color=col, transform=ax.transAxes)
 ax.set_title("Supply Chain Attack Surface in Agentic Ecosystems", fontsize=13)
@@ -94,7 +96,8 @@ ax.plot(complexity, np.clip(sieve, 0, 1),  "g-",  lw=2, label="SkillSieve (Propo
 ax.set_xlabel("Attack Complexity Score", fontsize=12)
 ax.set_ylabel("Detection Rate", fontsize=12)
 ax.set_title("SkillSieve Detection Rate vs Attack Complexity  (Python-generated)", fontsize=12)
-ax.legend(fontsize=11); ax.grid(alpha=0.3)
+ax.legend(fontsize=11)
+ax.grid(alpha=0.3)
 fig.tight_layout()
 fig.savefig(out / "results_graph.png", dpi=150, bbox_inches="tight")
 plt.close()
@@ -108,9 +111,9 @@ for ax, title, layers, colors in zip(axes,
     ["Transformer (PatchTST)", "xLSTM"],
     [["Patch Embed","Multi-Head\nAttention","Feed-Forward","Layer Norm","Output"],
      ["Input Proj","sLSTM Block","mLSTM Block","Layer Norm","Output"]],
-    [["#C1E1FF"]*5, ["#C1FFC1","#FFE0B3","#FFDDC1","#E0C1FF","#C1E1FF"]]):
+    [["#C1E1FF"]*5, ["#C1FFC1","#FFE0B3","#FFDDC1","#E0C1FF","#C1E1FF"]], strict=False):
     ax.axis("off")
-    for i, (lyr, col) in enumerate(zip(layers, colors)):
+    for i, (lyr, col) in enumerate(zip(layers, colors, strict=False)):
         y = 0.85 - i * 0.18
         ax.add_patch(mpatches.FancyBboxPatch((0.15, y-0.06), 0.70, 0.12,
             boxstyle="round,pad=0.01", fc=col, ec="#555", lw=1.3, transform=ax.transAxes))
@@ -119,7 +122,7 @@ for ax, title, layers, colors in zip(axes,
         if i < len(layers)-1:
             ax.annotate("", xy=(0.50, y-0.06), xytext=(0.50, y-0.12),
                         xycoords="axes fraction", textcoords="axes fraction",
-                        arrowprops=dict(arrowstyle="->", lw=1.5))
+                        arrowprops={"arrowstyle": "->", "lw": 1.5})
     ax.set_title(title, fontsize=12, fontweight="bold")
 fig.suptitle("Architecture Comparison: Transformer vs xLSTM", fontsize=13)
 fig.tight_layout()
@@ -132,15 +135,18 @@ horizons = [96, 192, 336, 720]
 patch_mse   = [0.370, 0.413, 0.422, 0.447]
 xlstm_mse   = [0.355, 0.398, 0.411, 0.438]
 autoformer  = [0.449, 0.500, 0.521, 0.564]
-x = np.arange(len(horizons)); w = 0.25
+x = np.arange(len(horizons))
+w = 0.25
 ax.bar(x-w, patch_mse,  w, label="PatchTST",   color="#4472C4")
 ax.bar(x,   xlstm_mse,  w, label="xLSTM",      color="#ED7D31")
 ax.bar(x+w, autoformer, w, label="Autoformer", color="#A9D18E")
-ax.set_xticks(x); ax.set_xticklabels([f"H={h}" for h in horizons])
+ax.set_xticks(x)
+ax.set_xticklabels([f"H={h}" for h in horizons])
 ax.set_xlabel("Forecast Horizon", fontsize=12)
 ax.set_ylabel("MSE", fontsize=12)
 ax.set_title("MSE on ETTh1 Dataset Across Forecast Horizons  (Python-generated)", fontsize=12)
-ax.legend(fontsize=11); ax.grid(axis="y", alpha=0.3)
+ax.legend(fontsize=11)
+ax.grid(axis="y", alpha=0.3)
 fig.tight_layout()
 fig.savefig(out / "results_graph.png", dpi=150, bbox_inches="tight")
 plt.close()
@@ -180,7 +186,8 @@ ax.plot(agents, parallel_time, "g-s", lw=2, ms=7, label="Parallel Orchestration"
 ax.set_xlabel("Number of Agents", fontsize=12)
 ax.set_ylabel("Total Latency (s)", fontsize=12)
 ax.set_title("Latency: Sequential vs Parallel Orchestration  (Python-generated)", fontsize=12)
-ax.legend(fontsize=11); ax.grid(alpha=0.3)
+ax.legend(fontsize=11)
+ax.grid(alpha=0.3)
 fig.tight_layout()
 fig.savefig(out / "results_graph.png", dpi=150, bbox_inches="tight")
 plt.close()

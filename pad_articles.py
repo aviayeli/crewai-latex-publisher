@@ -2,8 +2,10 @@
 """Add 'Related Work' chapter to each article and expand thin chapters."""
 from pathlib import Path
 
+
 def write(path, content):
-    p = Path(path); p.parent.mkdir(parents=True, exist_ok=True)
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(content, encoding="utf-8")
 
 def append_chapters(main_tex_path, new_chapters):
