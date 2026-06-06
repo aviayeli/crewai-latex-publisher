@@ -1,6 +1,6 @@
 {
-  "title": "Sine Wave Extraction from Noisy Mixed Signals via Deep Learning",
-  "subtitle": "A Comprehensive Study of RNN and LSTM Architectures for Signal Separation",
+  "title": "Transformers: Architecture and Applications",
+  "subtitle": "A Hebrew-Language Academic Guide to Modern Neural Network Design",
   "language": "hebrew",
   "refs": [
     "vaswani2017attention",
@@ -13,109 +13,133 @@
   "chapters": [
     {
       "number": 1,
-      "hebrew_title": "יסודות ומוטיבציה",
-      "english_title": "Foundations and Motivation",
+      "hebrew_title": "מבוא והקדמה",
+      "english_title": "Introduction and Motivation",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "הקדמה לבעיית הפרדת אותות",
-          "summary": "Introduction to the signal separation problem and its importance in real-world applications."
+          "heading": "רקע היסטורי של מודלים סדרתיים",
+          "summary": "Overview of sequential neural models including RNNs, LSTMs, and their limitations in processing long-range dependencies."
         },
         {
-          "heading": "רקע היסטורי: עיבוד אותות קלאסי לעומת למידה עמוקה",
-          "summary": "Historical context comparing traditional signal processing techniques with modern deep learning approaches."
+          "heading": "המוטיבציה למנגנון הקשב",
+          "summary": "Explanation of why attention mechanisms were developed as a solution to overcome sequential processing bottlenecks."
+        },
+        {
+          "heading": "תיאור כללי של ארכיטקטורת Transformer",
+          "summary": "High-level overview of the Transformer architecture and its revolutionary impact on natural language processing."
         }
       ]
     },
     {
       "number": 2,
-      "hebrew_title": "ניסוח הבעיה ויצירת מערך נתונים",
-      "english_title": "Problem Formulation and Dataset Creation",
+      "hebrew_title": "ארכיטקטורת Transformer הבסיסית",
+      "english_title": "Core Transformer Architecture",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "ניסוח מתמטי של הפרדת גלי סינוס",
-          "summary": "Mathematical formulation of the sine wave extraction problem from mixed noisy signals."
+          "heading": "קשב מדרג עם מכפלה נקודתית",
+          "summary": "Detailed explanation of scaled dot-product attention mechanism, including mathematical formulation and computational complexity."
         },
         {
-          "heading": "יצירת נתונים סינתטיים וריבוי תחומים",
-          "summary": "Synthetic data generation techniques and domain randomization strategies for robust model training."
+          "heading": "קשב רב-ראשי",
+          "summary": "Multi-head self-attention mechanisms that enable parallel processing of multiple representation subspaces simultaneously."
         },
         {
-          "heading": "עיבוד מקדים בתחום הזמן",
-          "summary": "Time-domain preprocessing methods and signal normalization techniques."
+          "heading": "רשתות קדימה ושכבות נורמליזציה",
+          "summary": "Feed-forward networks, layer normalization, residual connections, and other architectural components supporting attention layers."
+        },
+        {
+          "heading": "קידוד מיקומי והטמעות מלל",
+          "summary": "Positional encoding schemes and token embedding mechanisms that preserve sequence order and semantic meaning."
         }
       ]
     },
     {
       "number": 3,
-      "hebrew_title": "שיטות ליבה: LSTM ותחזוקת פרמטרים",
-      "english_title": "Core Methods: LSTM Denoising and Parameter Prediction",
-      "page_budget": 3,
+      "hebrew_title": "וריאציות מודלים ופיתוח ארכיטקטורי",
+      "english_title": "Model Variants and Architectural Evolution",
+      "page_budget": 2,
       "sections": [
         {
-          "heading": "ארכיטקטורת Sequence-to-Sequence LSTM",
-          "summary": "Detailed explanation of encoder-decoder LSTM architectures for time-domain sine wave extraction."
+          "heading": "מודלים דו-כיווניים: BERT ו-ELECTRA",
+          "summary": "Bidirectional pre-training approaches including BERT's masked language modeling and ELECTRA's discriminative pre-training strategy."
         },
         {
-          "heading": "תחזוקת רגרסיה של פרמטרים: משרעת, תדר ופאזה",
-          "summary": "LSTM regression techniques for direct prediction of sine wave parameters including amplitude, frequency, and phase."
+          "heading": "מודלי שפה חד-כיווניים: GPT ו-LLaMA",
+          "summary": "Autoregressive language models including GPT's causal attention and LLaMA's efficient scaling approaches for large-scale deployment."
         },
         {
-          "heading": "מנגנוני קשב וחיבורים שיורים",
-          "summary": "Integration of attention mechanisms and residual connections to enhance LSTM performance."
+          "heading": "השיפורים האדריכליים והחידושים",
+          "summary": "Key architectural innovations across model variants including attention patterns, normalization schemes, and activation functions."
         }
       ]
     },
     {
       "number": 4,
-      "hebrew_title": "ארכיטקטורות מתקדמות",
-      "english_title": "Advanced Architectures and Frequency-Domain Processing",
-      "page_budget": 2,
+      "hebrew_title": "הכשרה וקיזום עדין",
+      "english_title": "Training and Fine-Tuning Methodologies",
+      "page_budget": 3,
       "sections": [
         {
-          "heading": "עיבוד בתחום התדר: STFT וסיכוך ספקטרלי",
-          "summary": "Frequency-domain preprocessing using Short-Time Fourier Transform and spectral masking techniques."
+          "heading": "הכשרת מסלול (Pre-training) ותהליכים קודמים",
+          "summary": "Pre-training objectives and strategies including masked language modeling, next sentence prediction, and contrastive learning approaches."
         },
         {
-          "heading": "ארכיטקטורות היברידיות CNN-LSTM",
-          "summary": "Hybrid convolutional-recurrent architectures combining CNN feature extraction with LSTM temporal modeling."
+          "heading": "קיזום עדין ויישומים ספציפיים",
+          "summary": "Supervised fine-tuning techniques for task-specific adaptation, including classification, sequence labeling, and question answering."
+        },
+        {
+          "heading": "טיונינג יעיל וטכניקות לעד סקלה",
+          "summary": "Parameter-efficient fine-tuning methods including LoRA, adapter modules, and techniques for training with limited computational resources."
+        },
+        {
+          "heading": "אימון מחדש בחוסן אנושי (RLHF)",
+          "summary": "Reinforcement learning from human feedback approaches for aligning model outputs with human preferences and values."
         }
       ]
     },
     {
       "number": 5,
-      "hebrew_title": "אימון והתאמה",
-      "english_title": "Training Strategies and Optimization",
+      "hebrew_title": "יישומים בעולם האמתי",
+      "english_title": "Practical Applications and Deployment",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "פונקציות הפסד מתקדמות",
-          "summary": "Advanced loss functions tailored for sine wave extraction, including multi-task learning objectives."
+          "heading": "יישומים בעיבוד שפה טבעית",
+          "summary": "Real-world applications including machine translation, text summarization, named entity recognition, and semantic search systems."
         },
         {
-          "heading": "אסטרטגיות אימון ורגולריזציה",
-          "summary": "Training strategies including batch normalization, dropout, and techniques for handling imbalanced signal characteristics."
+          "heading": "מודלים גדולים של שפה בתעשייה",
+          "summary": "Industrial deployment of large language models for conversational AI, content generation, and knowledge-intensive tasks."
         },
         {
-          "heading": "כיוונון היפר-פרמטרים ויציבות מודל",
-          "summary": "Hyperparameter tuning methods and model stability analysis for reproducible deep learning results."
+          "heading": "הערכה וביצועים",
+          "summary": "Benchmarking methodologies, evaluation metrics, and performance analysis across various downstream tasks and domains."
+        },
+        {
+          "heading": "אתגרים בפריסה ובייצור",
+          "summary": "Practical challenges in deploying models at scale including latency optimization, memory constraints, and cost management."
         }
       ]
     },
     {
       "number": 6,
-      "hebrew_title": "הערכה ויישור בסיסי",
-      "english_title": "Evaluation and Baseline Comparison",
+      "hebrew_title": "כיוונים עתידיים וסיכום",
+      "english_title": "Future Directions and Conclusion",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "מדדי הערכה לפרדת אותות",
-          "summary": "Evaluation metrics including Signal-to-Noise Ratio (SNR), Mean Squared Error, and perceptual quality measures."
+          "heading": "מגבלות וחסמים של ארכיטקטורה הנוכחית",
+          "summary": "Known limitations of current Transformer models including computational complexity, hallucination problems, and context window constraints."
         },
         {
-          "heading": "השוואה בין עיבוד קלאסי לבין למידה עמוקה",
-          "summary": "Comparative analysis between classical signal processing baselines and deep learning approaches, including computational complexity."
+          "heading": "כיוונים עתידיים במחקר",
+          "summary": "Promising research directions including efficient architectures, multimodal learning, and improved reasoning capabilities."
+        },
+        {
+          "heading": "שיקולים אתיים ומשפטיים",
+          "summary": "Ethical considerations in deploying large language models, including bias mitigation, privacy concerns, and responsible AI governance."
         }
       ]
     }
