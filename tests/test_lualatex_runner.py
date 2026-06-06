@@ -88,6 +88,7 @@ def test_build_biber_cmd_contains_stem():
 
 def test_biber_called_between_lualatex_passes(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", False)
     (tmp_path / "main.log").write_text("This is LuaTeX\n")
     with patch("src.tools.lualatex_runner.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(returncode=0)
@@ -100,6 +101,7 @@ def test_biber_called_between_lualatex_passes(tmp_path, monkeypatch):
 
 def test_biber_skipped_when_run_biber_false(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", False)
     (tmp_path / "main.log").write_text("This is LuaTeX\n")
     with patch("src.tools.lualatex_runner.subprocess.run") as mock_run:
         mock_run.return_value = MagicMock(returncode=0)
@@ -119,6 +121,9 @@ def test_hitl_gate_prompts_when_enabled(tmp_path, monkeypatch):
         with patch("builtins.input", return_value="Y") as mock_input:
             lualatex_runner_tool._run(tex_file="main.tex", passes=1, run_biber=False)
             mock_input.assert_called_once()
+            prompt = mock_input.call_args[0][0]
+            assert "templates are ready" in prompt
+            assert "Y/N" in prompt
 
 
 def test_hitl_gate_aborts_when_user_declines(tmp_path, monkeypatch):

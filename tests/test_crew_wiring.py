@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from crewai import Process
@@ -41,16 +41,30 @@ def test_compile_task_context_contains_bidi_and_figure():
 # ── Agent settings ────────────────────────────────────────────────────────────
 
 
-def test_all_agents_llm_matches_settings():
-    with patch("src.crew._load_skill", return_value="dummy"):
-        crew = PublisherCrew()
-    all_agents = [
-        crew.manager_agent, crew.researcher_agent, crew.outline_agent,
-        crew.content_agent, crew.bidi_agent, crew.figure_agent,
-        crew.compiler_agent,
-    ]
-    for agent in all_agents:
-        assert agent.llm.model == settings.LLM_MODEL
+def test_fast_tier_agents_use_fast_builder():
+    """Outline, Compiler, Manager must call build_llm_fast — not the default builder."""
+    # Return a model-name string so crewai Agent pydantic validation passes.
+    _fast = MagicMock(return_value=settings.LLM_MODEL_FAST)
+    with (
+        patch("src.crew._load_skill", return_value="dummy"),
+        patch("src.agents.outline_agent.build_llm_fast", _fast),
+        patch("src.agents.compiler_agent.build_llm_fast", _fast),
+        patch("src.agents.manager_agent.build_llm_fast", _fast),
+    ):
+        PublisherCrew()
+    assert _fast.call_count == 3
+
+
+def test_smart_tier_agents_use_smart_builder():
+    """ContentWriter and BiDiValidator must call build_llm_smart."""
+    _smart = MagicMock(return_value=settings.LLM_MODEL_SMART)
+    with (
+        patch("src.crew._load_skill", return_value="dummy"),
+        patch("src.agents.content_agent.build_llm_smart", _smart),
+        patch("src.agents.bidi_agent.build_llm_smart", _smart),
+    ):
+        PublisherCrew()
+    assert _smart.call_count == 2
 
 
 def test_all_agents_max_retry_matches_settings():

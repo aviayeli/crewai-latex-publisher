@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from src.config import Settings, build_llm, settings
+from src.config import Settings, build_llm, build_llm_fast, build_llm_smart, settings
 
 _K = {"ANTHROPIC_API_KEY": "x", "PERPLEXITY_API_KEY": "x"}
 
@@ -10,6 +10,26 @@ _K = {"ANTHROPIC_API_KEY": "x", "PERPLEXITY_API_KEY": "x"}
 
 def test_prompt_caching_enabled_default_is_true():
     assert Settings(**_K).PROMPT_CACHING_ENABLED is True
+
+
+def test_hitl_enabled_default_is_true():
+    assert Settings(**_K).HITL_ENABLED is True
+
+
+def test_build_llm_fast_uses_fast_model(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_fast()
+    assert MockLLM.call_args.kwargs["model"] == settings.LLM_MODEL_FAST
+
+
+def test_build_llm_smart_uses_smart_model(monkeypatch):
+    monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
+    with patch("crewai.LLM") as MockLLM:
+        MockLLM.return_value = MagicMock()
+        build_llm_smart()
+    assert MockLLM.call_args.kwargs["model"] == settings.LLM_MODEL_SMART
 
 
 def test_prompt_caching_can_be_disabled_via_env(monkeypatch):

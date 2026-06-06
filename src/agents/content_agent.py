@@ -2,7 +2,7 @@
 
 from crewai import Agent
 
-from src.config import build_llm, settings
+from src.config import build_llm_smart, settings
 from src.tools.latex_writer import latex_writer_tool
 from src.tools.markdown_converter import markdown_converter_tool
 
@@ -16,7 +16,7 @@ def build_content_agent(backstory: str) -> Agent:
         ),
         backstory=backstory,
         tools=[latex_writer_tool, markdown_converter_tool],
-        llm=build_llm(),
+        llm=build_llm_smart(),
         max_iter=settings.MAX_ITER,
         max_retry_limit=settings.MAX_AGENT_RETRIES,
         verbose=True,

@@ -49,6 +49,7 @@ def test_suggest_fix_returns_non_empty_string_for_any_error():
 
 def test_compilation_error_message_includes_skillopt_hint(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+    monkeypatch.setattr(settings, "HITL_ENABLED", False)
     (tmp_path / "main.log").write_text("! Undefined control sequence.\n")
     with patch("src.tools.lualatex_runner.subprocess.run") as mock_run:
         mock_run.side_effect = subprocess.CalledProcessError(1, "lualatex")
@@ -61,6 +62,7 @@ def test_compilation_error_message_includes_skillopt_hint(tmp_path, monkeypatch)
 class TestLualatexIntegration:
     def test_minimal_tex_compiles_successfully(self, tmp_path, monkeypatch):
         monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+        monkeypatch.setattr(settings, "HITL_ENABLED", False)
         tex_file = tmp_path / "minimal.tex"
         tex_file.write_text(
             "\\documentclass{article}\n\\begin{document}\nHello.\n\\end{document}\n"
@@ -72,6 +74,7 @@ class TestLualatexIntegration:
 
     def test_invalid_tex_raises_compilation_error(self, tmp_path, monkeypatch):
         monkeypatch.setattr(settings, "OUTPUT_DIR", str(tmp_path))
+        monkeypatch.setattr(settings, "HITL_ENABLED", False)
         tex_file = tmp_path / "broken.tex"
         tex_file.write_text(
             "\\documentclass{article}\n\\begin{document}\n"

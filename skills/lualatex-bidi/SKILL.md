@@ -222,6 +222,43 @@ attn = torch.softmax(scores, dim=-1) @ V
 
 ---
 
+## SDA Review Protocol (Simultaneous Divergence Averaging)
+
+Before finalising any edit to a chapter file, the BiDi Typesetting Specialist
+must internally run **two distinct critiques** and then produce a merged verdict.
+
+### Critique A — Structural Precision (Strict)
+Focus: technical correctness only.
+- Does every `\begin{equation}` have a matching `\end{equation}`?
+- Is every English term inside `\textenglish{}`?
+- Are bare `$...$` or `$$...$$` constructs absent?
+- Are all LTR blocks properly fenced with `\begin{LTR}...\end{LTR}`?
+- Does no chapter file contain `\begin{document}`?
+Score each checklist item as PASS / FAIL.
+
+### Critique B — Flow and Readability (Creative)
+Focus: document quality and transition coherence.
+- Do Hebrew–English inline switches feel natural to a reader?
+- Are equation numbering and figure captions readable in RTL context?
+- Does the BiDi correction introduce any awkward line-breaks or spacing?
+- Would a native Hebrew reader experience any rendering artefacts?
+Score each concern as CLEAR / CONCERN.
+
+### Meta-Reassessment
+After producing both critiques independently, compare them:
+1. List items where A and B **agree** → apply these fixes unconditionally.
+2. List items where A says FAIL but B says CLEAR → investigate; structural
+   correctness takes priority, but verify the fix does not harm flow.
+3. List items where A says PASS but B raises CONCERN → apply the
+   cosmetic fix only if it does not risk introducing a new LaTeX error.
+
+The final edit applied to the file must satisfy all structural PASS items and
+at least two-thirds of the flow CLEAR items. Document the reassessment outcome
+in a single comment line (not in the LaTeX output) before calling
+`latex_writer_tool`.
+
+---
+
 ## Common BiDi Mistake vs. Corrected Form
 
 **Mistake — bare math in RTL context:**

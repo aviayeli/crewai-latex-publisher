@@ -2,7 +2,7 @@
 
 from crewai import Agent
 
-from src.config import build_llm, settings
+from src.config import build_llm_fast, settings
 
 
 def build_manager_agent(backstory: str) -> Agent:
@@ -14,7 +14,7 @@ def build_manager_agent(backstory: str) -> Agent:
         ),
         backstory=backstory,
         allow_delegation=True,
-        llm=build_llm(),
+        llm=build_llm_fast(),
         max_iter=settings.MAX_ITER,
         max_retry_limit=settings.MAX_AGENT_RETRIES,
         verbose=True,

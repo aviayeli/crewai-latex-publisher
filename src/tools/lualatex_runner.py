@@ -84,12 +84,12 @@ class LualatexRunnerTool(BaseTool):
         """Compile *tex_file*, run biber if requested, and repeat for *passes*."""
         if settings.HITL_ENABLED:
             answer = input(
-                f"\n[HITL] Press Y to execute the {passes}-step PDF compilation"
-                f" for '{tex_file}' [Y/n]: "
+                f"\n[HITL] The .tex templates are ready."
+                f" Proceed with LuaLaTeX compilation? (Y/N): "
             ).strip().upper()
             if answer != "Y":
                 raise RuntimeError(
-                    "HITL gate: compilation cancelled by operator."
+                    "HITL gate: LuaLaTeX compilation aborted by operator."
                 )
 
         log_path = Path(settings.OUTPUT_DIR) / (Path(tex_file).stem + ".log")

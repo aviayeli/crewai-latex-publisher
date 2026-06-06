@@ -2,7 +2,7 @@
 
 from crewai import Agent
 
-from src.config import build_llm, settings
+from src.config import build_llm_fast, settings
 from src.tools.lualatex_runner import lualatex_runner_tool
 
 
@@ -15,7 +15,7 @@ def build_compiler_agent(backstory: str) -> Agent:
         ),
         backstory=backstory,
         tools=[lualatex_runner_tool],
-        llm=build_llm(),
+        llm=build_llm_fast(),
         max_iter=settings.MAX_ITER,
         max_retry_limit=settings.MAX_AGENT_RETRIES,
         verbose=True,
