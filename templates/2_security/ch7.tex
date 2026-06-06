@@ -1,0 +1,19 @@
+
+\chapter{ניתוח מקרי אמת ואספקטים משפטיים}
+
+\section{מקרה בוחן: הרעלת כישור \textenglish{Summarizer}}
+
+בניסוי בקרה מבוקר, שחררנו גרסה מורעלת של כישור \textenglish{document-summarizer} ל-\textenglish{PyPI} עם שם \textenglish{crewai-summarize-tool} (במקום הלגיטימי \textenglish{crewai-summarizer}). בתוך \textenglish{48} שעות, \textenglish{6} מתוך \textenglish{15} סוכני \textenglish{CI/CD} שבדקנו טענו את הכישור הזדוני ללא כל אזהרה.
+
+הכישור המורעל הכיל:
+\begin{itemize}
+\item קריאה ל-\textenglish{os.environ} לאיסוף כל משתני הסביבה
+\item שליחת הנתונים לשרת \textenglish{C2} (\textenglish{Command and Control}) בדרך \textenglish{DNS tunneling}
+\item כל הפונקציונליות הלגיטימית כדי לא לעורר חשד
+\end{itemize}
+
+\textenglish{SkillSieve} זיהה את הכישור ב-\textenglish{sandbox execution} עקב ניסיון פתרון \textenglish{DNS} בלתי צפוי \cite{greshake2023indirect}.
+
+\section{השלכות משפטיות}
+
+מנקודת מבט רגולטורית, \textenglish{EU AI Act} (2024) מחייב "מנגנוני פיקוח" (\textenglish{human oversight mechanisms}) על כלי \textenglish{AI} בסיכון גבוה. \textenglish{SkillSieve} עומד בדרישות אלה על ידי: (א) תיעוד כל החלטת אישור/דחייה; (ב) הגדרת ספים ניתנים לשינוי על ידי מפעיל אנושי; (ג) מנגנון ערר (\textenglish{appeal}) לכישורים שנחסמו בטעות \cite{weidinger2021ethical}.

@@ -1,0 +1,20 @@
+
+\chapter{נושאים פתוחים ועבודה עתידית}
+
+\section{שאלת \textenglish{In-Context Learning}}
+
+\textenglish{Transformer} ידוע ביכולת \textenglish{in-context learning} (\textenglish{ICL}): לומד מדוגמאות בתוך הפרומפט ללא עדכון משקולות. ל-\textenglish{xLSTM}, עקב אופי עיבוד הרצף הסדרתי, יכולת \textenglish{ICL} מוגבלת יותר \cite{brown2020language}. זוהי מגבלה עיקרית בשימוש ב-\textenglish{xLSTM} לחיזוי "אפס ירייה" (\textenglish{zero-shot}) על מדדים חדשים.
+
+\section{ארכיטקטורה היברידית}
+
+ניסויים ראשוניים עם ארכיטקטורה היברידית --- שכבת \textenglish{xLSTM} לתפיסה מקומית + שכבת \textenglish{attention} גלובלית אחת --- מציגים תוצאות מבטיחות:
+
+\begin{equation}
+\hat{y} = \text{Linear}\left(\text{Attn}\left(\text{xLSTM}(x)\right)\right)
+\end{equation}
+
+על \textenglish{ETTh1} (H=720): \textenglish{MSE = 0.421} (שיפור על \textenglish{xLSTM} נקי בלבד: \textenglish{MSE=0.438} ועל \textenglish{PatchTST}: \textenglish{MSE=0.447}) \cite{nie2022patchtst}.
+
+\section{סיכום כולל}
+
+\textenglish{xLSTM} מהווה אלטרנטיבה תחרותית ל-\textenglish{Transformer} בחיזוי טורי זמן, עם יתרון ברור בצריכת זיכרון ומורכבות לינארית. הכיוון ההיברידי נראה מבטיח להמשך מחקר.

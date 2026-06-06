@@ -36,13 +36,6 @@ line-length = 88
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
 
-[tool.ruff.lint.per-file-ignores]
-# Build scripts contain long Hebrew/LaTeX content strings that cannot be split
-"build_articles.py" = ["E501"]
-"expand_articles.py" = ["E501"]
-"generate_figures.py" = ["E501"]
-"pad_articles.py" = ["E501"]
-
 [tool.pytest.ini_options]
 addopts = "--cov=src -m 'not slow'"
 pythonpath = ["."]

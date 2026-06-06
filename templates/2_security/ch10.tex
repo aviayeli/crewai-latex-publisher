@@ -1,0 +1,44 @@
+
+\chapter{נספח: פרטים טכניים משלימים}
+
+\section{הגדרות מתמטיות מלאות}
+
+סעיף זה מספק פירוט מתמטי נוסף של הנוסחאות המרכזיות במאמר.
+לשם הנוחות, נאסוף את כל הסימונים:
+
+\begin{itemize}
+\item \(\sigma(\cdot)\): פונקציית \textenglish{sigmoid}: \(\sigma(x) = \frac{1}{1+e^{-x}}\)
+\item \(\tanh(\cdot)\): פונקציית \textenglish{tanh}: \(\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}\)
+\item \(\odot\): מכפלת \textenglish{Hadamard} (אלמנט-אלמנט)
+\item \(\mathbb{E}[\cdot]\): תוחלת מתמטית
+\item \(\|\cdot\|_F\): נורמת \textenglish{Frobenius} למטריצות
+\end{itemize}
+
+\section{פרטי מימוש}
+
+כל הניסויים בוצעו על \textenglish{NVIDIA A100 80GB GPU} עם \textenglish{PyTorch 2.1} ו-\textenglish{CUDA 12.1}.
+הקוד המלא יפורסם ב-\textenglish{GitHub} עם קבלת המאמר. 
+זמן אימון ממוצע: \textenglish{$\sim$4 שעות} לניסוי מלא על \textenglish{GPU} יחיד.
+אחסון: כל ניסוי דורש \textenglish{$\sim$2 GB} עבור נקודות המחסום (\textenglish{checkpoints}).
+
+\section{רשימת \textenglish{Hyperparameters}}
+
+\begin{table}[H]
+\centering
+\caption{ערכי \textenglish{Hyperparameters} מלאים}
+\label{tab:hparams}
+\begin{english}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Hyperparameter} & \textbf{Value} & \textbf{Search Range} \\
+\midrule
+Learning Rate       & $3 \times 10^{-4}$ & $[10^{-5}, 10^{-3}]$ \\
+Batch Size          & 32              & \{16, 32, 64\}       \\
+Hidden Dim          & 256             & \{128, 256, 512\}    \\
+Layers              & 4               & \{2, 4, 6, 8\}       \\
+Dropout             & 0.2             & [0.0, 0.4]           \\
+Weight Decay        & $10^{-5}$       & $[10^{-6}, 10^{-4}]$ \\
+\bottomrule
+\end{tabular}
+\end{english}
+\end{table}

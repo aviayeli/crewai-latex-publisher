@@ -1,0 +1,26 @@
+
+\chapter{דפוסי תיאום מתקדמים}
+
+\section{דפוס הדיבייט (\textenglish{Debate Pattern})}
+
+דפוס \textenglish{Debate} מממש שני סוכנים בעלי נקודות מבט מנוגדות שחייבים להגיע להסכמה לפני שהמחבר מסיים את הטקסט. זה מפחית \textenglish{hallucination} ב-\textenglish{$\sim$31\%} על מטלות ידע (\textenglish{knowledge-intensive tasks}) \cite{segal2024orchestration}.
+
+ניסחנו את הדיבייט כמשחק אפס-סכום חלקי:
+
+\begin{equation}
+\text{Consensus}(r_1, r_2) = \begin{cases} r_1 & \text{אם } \text{sim}(r_1, r_2) > \theta_c \\ \text{Arbiter}(r_1, r_2) & \text{אחרת} \end{cases}
+\end{equation}
+
+כאשר \(\theta_c = 0.82\) (קוסינוס \textenglish{embedding similarity}) וה-\textenglish{Arbiter} הוא מודל \textenglish{LLM} נפרד שמסכם את שתי הדעות.
+
+\section{דפוס \textenglish{Reflection}}
+
+דפוס \textenglish{Reflection} (\textenglish{Self-Refine}) \cite{wu2023autogen} מאפשר לסוכן לבקר את תוצאתו שלו:
+
+\begin{itemize}
+\item שלב יצירה: הסוכן מייצר תשובה ראשונית.
+\item שלב ביקורת: הסוכן מזהה חולשות בתשובה שלו עצמו.
+\item שלב שיפור: יצירה מחדש בהתחשב בביקורת.
+\end{itemize}
+
+ניסויים הראו שאחרי \textenglish{2-3} מחזורי \textenglish{reflection}, \textenglish{accuracy} עולה ב-\textenglish{12\%} במשימות קידוד.

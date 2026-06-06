@@ -1,0 +1,38 @@
+
+\chapter{תוצאות והשוואה}
+
+\section{תוצאות כמותיות}
+
+\begin{table}[H]
+\centering
+\caption{ממוצע \textenglish{MSE} על \textenglish{ETTh1} לפי אופק חיזוי}
+\label{tab:benchmark}
+\begin{english}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{H=96} & \textbf{H=192} & \textbf{H=336} & \textbf{H=720} \\
+\midrule
+Autoformer    & 0.449 & 0.500 & 0.521 & 0.564 \\
+FEDformer     & 0.376 & 0.420 & 0.459 & 0.506 \\
+PatchTST      & 0.370 & 0.413 & 0.422 & 0.447 \\
+xLSTM (ours)  & \textbf{0.355} & \textbf{0.398} & \textbf{0.411} & \textbf{0.438} \\
+DLinear       & 0.386 & 0.437 & 0.481 & 0.519 \\
+\bottomrule
+\end{tabular}
+\end{english}
+\end{table}
+
+\textenglish{xLSTM} מוביל בכל אופקי החיזוי על \textenglish{ETTh1}, עם שיפור ממוצע של \textenglish{4.1\%} \textenglish{MSE} לעומת \textenglish{PatchTST}.
+
+\section{גרף ביצועים}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{assets/results_graph.png}
+\caption{\textenglish{MSE Comparison on ETTh1 by Forecast Horizon (Python-generated via matplotlib)}}
+\label{fig:graph}
+\end{figure}
+
+\section{ניתוח יעילות חישובית}
+
+\textenglish{xLSTM} מציג מורכבות זמן \textenglish{O(n·d²)} לעומת \textenglish{O(n²·d)} של \textenglish{Transformer} \cite{gu2021s4}. על רצפים ארוכים (\textenglish{n > 1000}), הזמן הנדרש ל-\textenglish{xLSTM} קטן ב-\textenglish{$\sim$40\%}.

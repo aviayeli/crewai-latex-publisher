@@ -1,0 +1,33 @@
+
+\chapter{ניתוח מעמיק: מנגנוני זיכרון}
+
+\section{מטריצת זיכרון לעומת קשב רב-ראשי}
+
+המנגנון המרכזי המבדיל \textenglish{xLSTM} מ-\textenglish{Transformer} הוא אופן אחסון המידע. ב-\textenglish{Transformer} \cite{vaswani2017attention}, המידע אגור בדיוק במטריצות הקשב (\textenglish{KV-cache}) ומחושב מחדש בכל צעד. ב-\textenglish{mLSTM}, מטריצת הזיכרון \(C_t \in \mathbb{R}^{d \times d}\) מתעדכנת בצורה סדרתית-יעילה:
+
+\begin{equation}
+h_t = o_t \odot \frac{C_t q_t}{\max(|n_t^T q_t|, 1)}, \quad n_t = f_t \odot n_{t-1} + i_t \odot k_t
+\end{equation}
+
+\(n_t\) הוא וקטור נורמליזציה מצטבר. הנרמול \textenglish{max-normalization} מונע אי-יציבות מספרית בצעדי זמן ארוכים \cite{beck2024xlstm}.
+
+\section{שיקולי \textenglish{Memory Efficiency}}
+
+\begin{table}[H]
+\centering
+\caption{עלות זיכרון (\textenglish{GB VRAM}) לאורך רצפים שונים (\textenglish{batch=16})}
+\label{tab:memory}
+\begin{english}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{n=512} & \textbf{n=1024} & \textbf{n=2048} \\
+\midrule
+PatchTST (Transformer)  & 2.1 & 7.8  & 30.4 \\
+Autoformer              & 1.8 & 6.2  & 23.1 \\
+xLSTM                   & \textbf{1.4} & \textbf{2.8} & \textbf{5.6} \\
+\bottomrule
+\end{tabular}
+\end{english}
+\end{table}
+
+צריכת הזיכרון של \textenglish{xLSTM} לינארית באורך הרצף, בעוד \textenglish{Transformer} ריבועית. עבור \textenglish{n=2048}, החיסכון הוא \(\times 5.4\) \cite{gu2021s4}.

@@ -7,19 +7,22 @@ __pycache__/
 .venv/
 *.egg-info/
 
-# LaTeX generated output (except .gitkeep placeholders)
-latex_output/*.pdf
-latex_output/*.aux
-latex_output/*.log
-latex_output/*.bbl
-latex_output/*.bcf
-latex_output/*.blg
-latex_output/*.run.xml
-latex_output/*.toc
+# LaTeX build artifacts — globally ignored in all directories
+**/*.aux
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*.fdb_latexmk
+**/*.fls
+**/*.log
+**/*.out
+**/*.run.xml
+**/*.toc
 latex_output/chapters/*.tex
 latex_output/assets/*.png
 latex_output/figures/*.tex
 latex_output/main.tex
+latex_output/*.pdf
 
 # Coverage
 .coverage

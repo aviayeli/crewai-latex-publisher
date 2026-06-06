@@ -1,0 +1,20 @@
+
+\chapter{סיכום ועבודה עתידית}
+
+\section{תרומות המחקר}
+
+מחקר זה הציג ארכיטקטורת \textenglish{BiLSTM Encoder-Decoder} לחילוץ גלי סינוס מאותות מעורבבים רועשים. הושגו שיפורים עקביים של \textenglish{2--4 dB} ב-\textenglish{SI-SNR} על פני כלל קווי הבסיס. הממצאים מראים כי:
+
+\begin{itemize}
+\item עיבוד דו-כיווני (\textenglish{bidirectional}) מהותי לחילוץ מדויק של פרמטרי תדר.
+\item פונקציית אובדן \textenglish{SI-SNR} עדיפה על \textenglish{MSE} בתנאי רעש חזק.
+\item \textenglish{Curriculum learning} משפר התכנסות בכ-\textenglish{15\%} ממספר ה-\textenglish{epochs}.
+\end{itemize}
+
+\section{מגבלות}
+
+המודל הנוכחי מניח מספר מרכיבים ידוע מראש (\textenglish{K} קבוע). הרחבה לסינוסים עם מספר לא ידוע דורשת גישה של זיהוי (\textenglish{detection}) לפני הערכת הפרמטרים, כמוצע ב-\cite{nachmani2020voice}.
+
+\section{כיוונים עתידיים}
+
+עבודה עתידית תכלול שילוב ה-\textenglish{BiLSTM} עם שכבות קונבולוציה זמניות לחילוץ תכונות מקומיות \cite{luo2019convtasnet}, וכן התאמה לעיבוד בזמן אמת (\textenglish{real-time}) על מחשבי קצה (\textenglish{edge devices}) בעלי זיכרון מוגבל. כמו כן יש לחקור האם ארכיטקטורת \textenglish{xLSTM} \cite{hochreiter1997lstm} עם שערי מטריצה מציגה יתרון נוסף בהפרדת מרכיבים תדריים סמוכים.

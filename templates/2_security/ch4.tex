@@ -1,0 +1,32 @@
+
+\chapter{הערכה כמותית}
+
+\section{מערך הבדיקה}
+
+הכנו מערך של \textenglish{1,200} כישורים: \textenglish{800} לגיטימיים ו-\textenglish{400} זדוניים שנוצרו ב-\textenglish{ClawHavoc}. החלוקה: \textenglish{70/15/15} לאימון/אימות/בדיקה.
+
+\section{מדדי ביצוע}
+
+\begin{table}[H]
+\centering
+\caption{השוואת מסנני אבטחה: דיוק (\textenglish{Precision}), היזכרות (\textenglish{Recall}), \textenglish{F1}}
+\label{tab:security}
+\begin{english}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Defense Method} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+\midrule
+Regex Filter (Naive)  & 0.71 & 0.54 & 0.61 \\
+Embedding Similarity  & 0.83 & 0.76 & 0.79 \\
+SkillSieve (Static)   & 0.89 & 0.82 & 0.85 \\
+SkillSieve (Full)     & \textbf{0.94} & \textbf{0.91} & \textbf{0.92} \\
+\bottomrule
+\end{tabular}
+\end{english}
+\end{table}
+
+ה-\textenglish{SkillSieve} המלא משיג \textenglish{F1 = 0.92}, שיפור של \textenglish{31 נקודות אחוז} על הסינון הנאיבי.
+
+\section{ניתוח שגיאות}
+
+הפרצות הנותרות (\textenglish{8\%} מהתקפות לא זוהו) ריכזו עצמן ב-\textenglish{3} קטגוריות: הזרקות בקידוד \textenglish{Unicode} מרובה שלבים, כישורים לגיטימיים שנחטפו (\textenglish{legitimate skills hijacked post-release}) ותקיפות "ישנות מספיק" שעברו קסש (\textenglish{cache bypass}). אתגרים אלו מהווים כיוון מחקר פתוח \cite{greshake2023indirect}.
