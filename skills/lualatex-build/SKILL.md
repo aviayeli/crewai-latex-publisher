@@ -43,16 +43,167 @@ The binary path is sourced from `settings.PANDOC_BIN` (default: `"pandoc"`). Nev
 
 ---
 
-## Document Class Declaration
+## CRITICAL: Document Class — ALWAYS `report`/`12pt`, NEVER `extarticle`/`17pt`
 
-Every `main.tex` must begin with:
+Every `main.tex` and `templates/preamble.tex` must begin with:
 
 ```latex
-\documentclass[17pt,a4paper]{extarticle}
+\documentclass[12pt,a4paper]{report}
 ```
 
-- `extarticle` is required for the `17pt` font size option (not available in the standard `article` class).
-- `a4paper` sets the paper size to A4 (210 × 297 mm).
+- `report` is the correct class for a multi-chapter Hebrew academic document.
+- `12pt` is the correct font size — do NOT use `17pt`.
+- NEVER use `extarticle` — it is incompatible with the `\chapter{}` command used by all six chapter files.
+- NEVER use `article`, `book`, or any other class.
+
+---
+
+## CRITICAL: Cover Page — Logical Hebrew Author Name, AI Watermark, Empty Page Style
+
+The cover page (inside `\begin{titlepage}...\end{titlepage}`) must contain ALL of the following:
+
+1. **Author name in LOGICAL Hebrew order**: `אבי איילי` — NEVER write `ילייא יבא` (reversed).
+   - Correct: `\author{אבי איילי --- ת.ז. \textenglish{300228160}}`
+   - The abbreviation MUST be `ת.ז.` (with the period after each letter).
+2. **AI-generation watermark** — the cover page body must include this exact line:
+   ```latex
+   {\small מסמך זה נוצר בסיוע בינה מלאכותית\par}
+   ```
+3. **Empty page style on the cover** — the very first command after `\begin{titlepage}` must be:
+   ```latex
+   \thispagestyle{empty}
+   ```
+   This suppresses headers and footers on the cover page only.
+
+---
+
+## CRITICAL: Headers and Footers — ALWAYS `fancyhdr`, NEVER `\textdir TLT`
+
+Load `fancyhdr` in the preamble:
+
+```latex
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+```
+
+Then configure headers and footers inside `\makeatletter`/`\makeatother` with `\AtBeginDocument`:
+
+```latex
+\makeatletter
+\AtBeginDocument{%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \fancyhead[R]{\@title}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[R]{\@title}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+  }%
+}
+\makeatother
+```
+
+**FORBIDDEN patterns:**
+- `\textdir TLT \thepage` — `\textdir` is a LuaTeX direction primitive, not a fancyhdr command. It produces `! Undefined control sequence` errors.
+- `\def\ps@plain{...}` — low-level override; incompatible with fancyhdr active at document level.
+- `\fancyfoot[C]{\textdir TLT \thepage}` — same as the first forbidden pattern above.
+
+**The footer MUST be exactly:** `\fancyfoot[C]{\thepage}` — nothing else.
+
+---
+
+## CRITICAL: `\addbibresource` — Exactly Once in `templates/preamble.tex`
+
+`templates/preamble.tex` MUST contain exactly this line:
+
+```latex
+\addbibresource{refs.bib}
+```
+
+`build_articles.py` MUST NOT inject an additional `\addbibresource` line when assembling articles. The function `_main_tex()` must build its `parts` list WITHOUT the addbibresource line — the preamble already supplies it.
+
+**Forbidden pattern in `build_articles.py`:**
+```python
+# FORBIDDEN — causes Biber fatal error "found duplicate resource 'refs.bib'"
+parts = [preamble, f"\\addbibresource{{{bib}}}\n", meta, ...]
+```
+
+**Required pattern:**
+```python
+# CORRECT — preamble.tex already declares \addbibresource
+parts = [preamble, meta, ...]
+```
+
+Biber crashes with `FATAL - Error: Found duplicate resource 'refs.bib'` when `\addbibresource` appears twice.
+
+---
+
+## CRITICAL: BiDi Section-Number Reversal — `\renewcommand` Required
+
+In RTL documents, section numbers like `1.3` render as `3.1` without explicit counter wrapping. `templates/preamble.tex` and `main.tex` MUST include:
+
+```latex
+\renewcommand{\thechapter}{\textenglish{\arabic{chapter}}}
+\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}
+\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}
+```
+
+These MUST appear after `\usepackage{biblatex}` and before `\begin{document}`.
+
+---
+
+## CRITICAL: BiDi Headers — NEVER Bare English Words in `\fancyhead`
+
+In RTL headers, bare English words are subject to the BiDi algorithm and render reversed (the infamous "eltit" bug where `\title` renders letter-by-letter in RTL order).
+
+**Wrong:**
+```latex
+\fancyhead[R]{My Title}  % renders as "eltiT yM"
+```
+
+**Correct:**
+```latex
+\fancyhead[R]{\@title}   % \@title is stored as a Hebrew string — safe
+```
+
+Or for English words in header:
+```latex
+\fancyhead[L]{\textenglish{Chapter \thechapter}}
+```
+
+---
+
+## CRITICAL: `\printbibliography` — Mandatory in `main.tex`
+
+Every assembled `main.tex` MUST contain `\printbibliography` as the last command before `\end{document}`:
+
+```latex
+\printbibliography
+
+\end{document}
+```
+
+Without `\printbibliography`, the bibliography section is silently dropped from the PDF even when Biber runs successfully.
+
+---
+
+## CRITICAL: PDF Must Pass Through `.gitignore` for CI Verification
+
+Add the following negation to `.gitignore` after the glob that ignores PDFs:
+
+```gitignore
+latex_output/*.pdf
+!latex_output/main.pdf
+```
+
+This un-ignores `latex_output/main.pdf` specifically so GitHub Actions can upload it as a workflow artifact. Without this, CI cannot verify that the PDF was actually generated.
+
+---
+
+## Document Class Declaration
 
 ---
 
@@ -68,10 +219,14 @@ Load the following packages in this order in the preamble:
 | `geometry` | Page margin control |
 | `graphicx` | PNG/PDF figure inclusion |
 | `amsmath` | Display math environments |
+| `amssymb` | Extended math symbols |
 | `hyperref` | PDF hyperlinks and metadata |
-| `tikz` | TikZ diagram support |
+| `tikz` | TikZ block-diagram support |
 | `booktabs` | Publication-quality table rules |
 | `xcolor` | Colour support |
+| `float` | Figure placement control (`[H]`) |
+| `etoolbox` | Internal LaTeX patching |
+| `fancyhdr` | Headers and footers (MANDATORY) |
 
 **Important:** `polyglossia` must be used as the language package. Using `babel` instead of `polyglossia` will break Hebrew BiDi rendering under LuaLaTeX.
 
@@ -118,34 +273,66 @@ If `David CLM` is not installed, LuaLaTeX will fall back to `Frank Ruehl CLM`, t
 ## Complete Preamble Skeleton
 
 ```latex
-\documentclass[17pt,a4paper]{extarticle}
+\documentclass[12pt,a4paper]{report}
 
 \usepackage{fontspec}
 \usepackage{polyglossia}
 \setmainlanguage{hebrew}
 \setotherlanguage{english}
 
-\usepackage[backend=biber,style=authoryear]{biblatex}
-\addbibresource{refs.bib}
+\usepackage[backend=biber,style=numeric,language=english]{biblatex}
 
-\usepackage{geometry}
+% BiDi section-number fix — MUST appear before \begin{document}
+\renewcommand{\thechapter}{\textenglish{\arabic{chapter}}}
+\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}
+\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}
+
+\usepackage[margin=2.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{hyperref}
-\usepackage{tikz}
+\usepackage{float}
 \usepackage{booktabs}
 \usepackage{xcolor}
-\usepackage{float}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\usepackage{tikz}
 
-\newfontfamily\hebrewfont[Script=Hebrew]{David CLM}
+\setlength{\headheight}{15pt}
 
-% MANDATORY cover page metadata — all three lines required
-\title{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}
-\author{Avi Ayeli -- 300228160}
-\date{\textenglish{June 2026}}
+% Hebrew fonts (Windows / WSL path)
+\setmainfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,Script=Hebrew]{Arial}
+\newfontfamily\hebrewfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,Script=Hebrew]{Arial}
+
+\addbibresource{refs.bib}
+
+% Cover page metadata — logical Hebrew author name REQUIRED
+\title{<כותרת המאמר>}
+\author{אבי איילי --- ת.ז. \textenglish{300228160}}
+\date{\today}
+
+% fancyhdr — active on all pages except the cover
+\makeatletter
+\AtBeginDocument{%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \fancyhead[R]{\@title}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[R]{\@title}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+  }%
+}
+\makeatother
 ```
 
-These three declaration lines (`\title`, `\author`, `\date`) **must appear in the preamble** before `\begin{document}`. Omitting any one of them will produce a blank or incorrect cover page.
+The `\title`, `\author`, and `\date` lines **must appear before `\begin{document}`**. The `\author` field MUST use the logical Hebrew name `אבי איילי` (NEVER reversed).
 
 ---
 
@@ -156,7 +343,24 @@ The assembled `main.tex` must be written to `latex_output/main.tex` via `latex_w
 ```latex
 \begin{document}
 
-\maketitle
+% Cover page — MUST suppress headers/footers with \thispagestyle{empty}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{hebrew}
+\begin{center}
+\vspace*{3cm}
+{\bfseries\LARGE <כותרת המאמר>\par}
+\vspace{1.5cm}
+{\large אבי איילי --- ת.ז. \textenglish{300228160}\par}
+{\large קורס: אורקסטרציה של סוכני \textenglish{AI}\par}
+{\large מרצה: ד"ר יורם סגל\par}
+{\large \textenglish{\the\year}\par}
+\vspace{1.5cm}
+{\small מסמך זה נוצר בסיוע בינה מלאכותית\par}
+\end{center}
+\end{hebrew}
+\end{titlepage}
+
 \tableofcontents
 \newpage
 
@@ -172,11 +376,11 @@ The assembled `main.tex` must be written to `latex_output/main.tex` via `latex_w
 \end{document}
 ```
 
-- **`\maketitle`** — renders the cover page using the `\title`, `\author`, and `\date` declared in the preamble. **This line is mandatory and must be the first command after `\begin{document}`.**
-- **`\tableofcontents`** — generates the table of contents. Must appear immediately after `\maketitle`.
-- **`\newpage`** — separates the table of contents from chapter 1. Must appear immediately after `\tableofcontents`.
+- **`\thispagestyle{empty}`** — MANDATORY first command inside `\begin{titlepage}` to suppress headers/footers on the cover page.
+- **`\tableofcontents`** — generates the table of contents. Must appear after the titlepage.
+- **`\newpage`** — separates the table of contents from chapter 1.
 - `\input{}` paths are relative to `main.tex` location (`latex_output/`).
-- `\printbibliography` must appear after the last `\input{}` and before `\end{document}`.
+- **`\printbibliography`** — MANDATORY; must appear after the last `\input{}` and before `\end{document}`.
 - Do not use `\include{}` — it forces a page break before each file. Use `\input{}` instead.
 
 ---

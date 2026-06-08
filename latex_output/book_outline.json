@@ -1,145 +1,121 @@
 {
-  "title": "Transformers: Architecture and Applications",
-  "subtitle": "A Hebrew-Language Academic Guide to Modern Neural Network Design",
+  "title": "The Evolution of Multi-Tool Orchestration in LLM Agents",
+  "subtitle": "From Single-Tool Integration to Complex Agent Ecosystems",
   "language": "hebrew",
   "refs": [
-    "vaswani2017attention",
-    "devlin2019bert",
-    "brown2020language",
-    "radford2019language",
-    "touvron2023llama",
-    "clark2020electra"
+    "Anthropic_2024_AgentArchitecture",
+    "Anthropic_2024_MCPProtocol",
+    "Anthropic_Palo_Alto_2024_PromptInjectionSecurity",
+    "Stanford_MIT_2023_HierarchicalMultiAgentRL",
+    "CrewAI_2024_HierarchicalDelegation",
+    "OpenAI_2024_AgentsMCPIntegration"
   ],
   "chapters": [
     {
       "number": 1,
-      "hebrew_title": "מבוא והקדמה",
-      "english_title": "Introduction and Motivation",
+      "hebrew_title": "יסודות סוכני שפה גדולים",
+      "english_title": "Foundations of LLM Agents and Tool Integration",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "רקע היסטורי של מודלים סדרתיים",
-          "summary": "Overview of sequential neural models including RNNs, LSTMs, and their limitations in processing long-range dependencies."
+          "heading": "הצורך בסוכנים המסוגלים להשתמש בכלים",
+          "summary": "Overview of why large language models require access to external tools and how single-tool integration evolved into multi-tool ecosystems."
         },
         {
-          "heading": "המוטיבציה למנגנון הקשב",
-          "summary": "Explanation of why attention mechanisms were developed as a solution to overcome sequential processing bottlenecks."
-        },
-        {
-          "heading": "תיאור כללי של ארכיטקטורת Transformer",
-          "summary": "High-level overview of the Transformer architecture and its revolutionary impact on natural language processing."
+          "heading": "ארכיטקטורה בסיסית של סוכנים",
+          "summary": "Fundamental patterns for building LLM-based agents, including decision-making loops, action execution, and feedback mechanisms."
         }
       ]
     },
     {
       "number": 2,
-      "hebrew_title": "ארכיטקטורת Transformer הבסיסית",
-      "english_title": "Core Transformer Architecture",
-      "page_budget": 3,
+      "hebrew_title": "פרוטוקול ההקשר של הדגם - MCP",
+      "english_title": "The Model Context Protocol: Standardizing Tool Exposure",
+      "page_budget": 2,
       "sections": [
         {
-          "heading": "קשב מדרג עם מכפלה נקודתית",
-          "summary": "Detailed explanation of scaled dot-product attention mechanism, including mathematical formulation and computational complexity."
+          "heading": "הצורך בתקן פתוח לחשיפת כלים",
+          "summary": "Motivation for developing an open standard protocol (MCP) to expose tools and resources to AI systems in a consistent manner."
         },
         {
-          "heading": "קשב רב-ראשי",
-          "summary": "Multi-head self-attention mechanisms that enable parallel processing of multiple representation subspaces simultaneously."
-        },
-        {
-          "heading": "רשתות קדימה ושכבות נורמליזציה",
-          "summary": "Feed-forward networks, layer normalization, residual connections, and other architectural components supporting attention layers."
-        },
-        {
-          "heading": "קידוד מיקומי והטמעות מלל",
-          "summary": "Positional encoding schemes and token embedding mechanisms that preserve sequence order and semantic meaning."
+          "heading": "מבנה ותכונות ה-MCP",
+          "summary": "Technical specifications of the Model Context Protocol, including message formats, resource discovery, and tool invocation patterns."
         }
       ]
     },
     {
       "number": 3,
-      "hebrew_title": "וריאציות מודלים ופיתוח ארכיטקטורי",
-      "english_title": "Model Variants and Architectural Evolution",
-      "page_budget": 2,
+      "hebrew_title": "ארכיטקטורות לתיאום כלים מרובים",
+      "english_title": "Multi-Tool Orchestration Architectures",
+      "page_budget": 3,
       "sections": [
         {
-          "heading": "מודלים דו-כיווניים: BERT ו-ELECTRA",
-          "summary": "Bidirectional pre-training approaches including BERT's masked language modeling and ELECTRA's discriminative pre-training strategy."
+          "heading": "אסטרטגיות בחירת כלים",
+          "summary": "Methods and patterns for agents to select appropriate tools from a toolkit based on task requirements and context."
         },
         {
-          "heading": "מודלי שפה חד-כיווניים: GPT ו-LLaMA",
-          "summary": "Autoregressive language models including GPT's causal attention and LLaMA's efficient scaling approaches for large-scale deployment."
+          "heading": "תיאום סדרתי מול מקבילי",
+          "summary": "Comparison of sequential tool execution chains versus parallel tool invocation and their trade-offs in performance and complexity."
         },
         {
-          "heading": "השיפורים האדריכליים והחידושים",
-          "summary": "Key architectural innovations across model variants including attention patterns, normalization schemes, and activation functions."
+          "heading": "ניהול מצב וזיכרון בחלוקות כלים",
+          "summary": "Techniques for maintaining state consistency across multiple tool calls, including context passing and result aggregation."
         }
       ]
     },
     {
       "number": 4,
-      "hebrew_title": "הכשרה וקיזום עדין",
-      "english_title": "Training and Fine-Tuning Methodologies",
+      "hebrew_title": "הנחיה היררכית ותיאום סוכנים",
+      "english_title": "Hierarchical Delegation and Multi-Agent Coordination",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "הכשרת מסלול (Pre-training) ותהליכים קודמים",
-          "summary": "Pre-training objectives and strategies including masked language modeling, next sentence prediction, and contrastive learning approaches."
+          "heading": "דפוסי ניהול היררכיים",
+          "summary": "Manager-based hierarchical delegation patterns where higher-level agents coordinate the actions of specialized sub-agents."
         },
         {
-          "heading": "קיזום עדין ויישומים ספציפיים",
-          "summary": "Supervised fine-tuning techniques for task-specific adaptation, including classification, sequence labeling, and question answering."
+          "heading": "למידת חיזוק רב-סוכנית",
+          "summary": "Hierarchical multi-agent reinforcement learning approaches for optimizing agent coordination and tool selection policies."
         },
         {
-          "heading": "טיונינג יעיל וטכניקות לעד סקלה",
-          "summary": "Parameter-efficient fine-tuning methods including LoRA, adapter modules, and techniques for training with limited computational resources."
-        },
-        {
-          "heading": "אימון מחדש בחוסן אנושי (RLHF)",
-          "summary": "Reinforcement learning from human feedback approaches for aligning model outputs with human preferences and values."
+          "heading": "תקשורת בין-סוכנית וסכום",
+          "summary": "Communication protocols and message passing mechanisms that enable effective coordination between multiple agents in an orchestrated system."
         }
       ]
     },
     {
       "number": 5,
-      "hebrew_title": "יישומים בעולם האמתי",
-      "english_title": "Practical Applications and Deployment",
+      "hebrew_title": "אבטחה וחוסן במערכות מרובות כלים",
+      "english_title": "Security and Robustness in Multi-Tool Agent Systems",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "יישומים בעיבוד שפה טבעית",
-          "summary": "Real-world applications including machine translation, text summarization, named entity recognition, and semantic search systems."
+          "heading": "הוקעות הזרקת הנושא",
+          "summary": "Analysis of prompt injection attacks where adversaries manipulate agent behavior through crafted inputs to override intended tool selection."
         },
         {
-          "heading": "מודלים גדולים של שפה בתעשייה",
-          "summary": "Industrial deployment of large language models for conversational AI, content generation, and knowledge-intensive tasks."
+          "heading": "הגבלת הרשאות והפחתת סיכונים",
+          "summary": "Mechanisms for enforcing principle of least privilege, sandboxing tool execution, and preventing privilege escalation in agent systems."
         },
         {
-          "heading": "הערכה וביצועים",
-          "summary": "Benchmarking methodologies, evaluation metrics, and performance analysis across various downstream tasks and domains."
-        },
-        {
-          "heading": "אתגרים בפריסה ובייצור",
-          "summary": "Practical challenges in deploying models at scale including latency optimization, memory constraints, and cost management."
+          "heading": "וידוא ותוקף כלים",
+          "summary": "Techniques for validating tool outputs, detecting anomalous behavior, and ensuring the integrity and trustworthiness of tool invocations."
         }
       ]
     },
     {
       "number": 6,
-      "hebrew_title": "כיוונים עתידיים וסיכום",
-      "english_title": "Future Directions and Conclusion",
+      "hebrew_title": "כיוונים עתידיים והתפתחות",
+      "english_title": "Future Directions and Evolution of Agent Orchestration",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "מגבלות וחסמים של ארכיטקטורה הנוכחית",
-          "summary": "Known limitations of current Transformer models including computational complexity, hallucination problems, and context window constraints."
+          "heading": "דפוסים משתנים בתיאום סוכנים",
+          "summary": "Emerging patterns and evolving best practices in multi-tool orchestration, including adaptive agent behavior and dynamic tool discovery."
         },
         {
-          "heading": "כיוונים עתידיים במחקר",
-          "summary": "Promising research directions including efficient architectures, multimodal learning, and improved reasoning capabilities."
-        },
-        {
-          "heading": "שיקולים אתיים ומשפטיים",
-          "summary": "Ethical considerations in deploying large language models, including bias mitigation, privacy concerns, and responsible AI governance."
+          "heading": "שאלות מחקר פתוחות",
+          "summary": "Unresolved challenges and future research directions including improved agent reasoning, security, scalability, and interoperability across agent ecosystems."
         }
       ]
     }

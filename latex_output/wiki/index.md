@@ -1,35 +1,30 @@
-# Research Index: Sine Wave Extraction from Noisy Mixed Signals via Deep Learning
+# Research Index — Multi-Tool Orchestration in LLM Agents
 
-## Quick Reference
+## Citation Key Reference
 
 | Citation Key | One-Line Description |
 |---|---|
-| `perplexity_2024_lstm_denoising` | Sequence-to-sequence bidirectional LSTM mapping noisy 1-D signals to clean sine waveforms via stacked recurrent layers. |
-| `perplexity_2024_synthetic_data_generation` | Synthetic dataset generation with domain randomization (SNR −20 to +20 dB) and curriculum learning for robust LSTM training. |
-| `perplexity_2024_frequency_domain_preprocessing` | STFT-based spectral masking and frequency-domain preprocessing to improve LSTM denoising at very low SNR. |
-| `perplexity_2024_sine_parameter_prediction` | LSTM regression of sine amplitude, frequency, and phase directly, reconstructing signals via parameterization. |
-| `perplexity_2024_hybrid_cnn_lstm_architecture` | Three-stage CNN-LSTM-decoder hybrid combining local feature extraction with long-range temporal modeling for state-of-the-art performance. |
-| `perplexity_2024_loss_functions_training` | Advanced loss functions (time-domain MSE, FFT-based spectral, circular phase) and mini-batch curriculum learning strategies. |
-| `perplexity_2024_lstm_vs_classical_baselines` | Comparative analysis of LSTM vs. classical filters (band-pass, FFT thresholding, wavelets) with quantitative SNR benchmarks. |
+| `Anthropic_2024_AgentArchitecture` | Multi-tool orchestration as a coordination layer managing which tools run, in what order; separates orchestrator/router, specialized agents, shared state, and evaluation guardrails. |
+| `Anthropic_2024_MCPProtocol` | Model Context Protocol (MCP): open standard for exposing tools, data, and prompts to LLMs; achieves N+M integration complexity by standardizing tool discovery and invocation across clients. |
+| `Anthropic_Palo_Alto_2024_PromptInjectionSecurity` | Agentic security threats from prompt injection and jailbreak attacks that leverage tool orchestration, multi-step reasoning, and multi-agent ecosystems for privilege escalation and data exfiltration. |
+| `Stanford_MIT_2023_HierarchicalMultiAgentRL` | Hierarchical orchestration combines RL, symbolic planning, and decomposition; planning agents construct execution plans for specialist agents with continuous learning and feedback loops. |
+| `CrewAI_2024_HierarchicalDelegation` | Manager-agent pattern in CrewAI: manager decomposes tasks, delegates to workers, aggregates results; optional custom managers; Flow-based alternative for full delegation control. |
+| `OpenAI_2024_AgentsMCPIntegration` | OpenAI Agents SDK integrates MCP servers as tools via multiple transports (hosted, HTTP, SSE, stdio) for seamless multi-tool agent orchestration across frameworks. |
 
 ## Full Descriptions
 
-See [sources.md](sources.md) for detailed one-paragraph descriptions and research contributions of each source.
+For detailed one-paragraph descriptions of each source's contribution, see [wiki/sources.md](./sources.md).
+
+## Research Scope
+
+This research corpus addresses:
+- **AI Agent Architecture:** orchestrator/router patterns, specialized agents, shared state, and guardrails
+- **MCP Protocol:** standardized tool exposure, client–server architecture, capabilities discovery, interoperability
+- **Multi-Tool Orchestration:** dynamic planning vs. code-based control flow, hierarchical vs. sequential/parallel processes
+- **Cybersecurity in Agentic Systems:** direct/indirect prompt injection, privilege escalation, defensive patterns (least-privilege tooling, human-in-the-loop, behavioral analytics, adversarial testing)
+- **Hierarchical Coordination:** RL-based policy learning, multi-agent collaboration, task decomposition, planning agents
+- **Production Frameworks:** CrewAI, OpenAI Agents SDK, LangGraph, Semantic Kernel
 
 ---
 
-## Research Context
-
-**Topic:** Sine Wave Extraction from Noisy Mixed Signals via Deep Learning (RNN/LSTM)
-
-**Focus Areas:**
-- Deep Learning architectures for signal processing
-- PyTorch and RNN/LSTM implementations
-- Sequential data processing and temporal modeling
-- Denoising and source separation
-
-**Sources Collected:** 7 peer-reviewed research directions and methodological approaches.
-
-**Status:** ✓ Raw research saved to `raw/research_raw.md` (audit trail).  
-**Status:** ✓ Distilled wiki entries saved to `wiki/sources.md`.  
-**Status:** ✓ Index created at `wiki/index.md`.
+*Raw research data (unprocessed Perplexity output) is archived at [raw/research_raw.md](../raw/research_raw.md) for audit purposes.*

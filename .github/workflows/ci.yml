@@ -42,3 +42,20 @@ jobs:
             exit 1
           fi
           echo "Line-budget check passed."
+
+      - name: PDF metadata — record pdfinfo for compiled artefact
+        if: hashFiles('latex_output/main.pdf') != ''
+        run: |
+          sudo apt-get install -y --quiet poppler-utils 2>/dev/null || true
+          pdfinfo latex_output/main.pdf > pdf_metadata.txt 2>/dev/null || python3 -c "f=open('latex_output/main.pdf','rb');h=f.read(5);f.seek(0,2);open('pdf_metadata.txt','w').write(h.decode(errors='replace')+' size='+str(f.tell()))"
+          cat pdf_metadata.txt
+
+      - name: Upload compiled PDF as workflow artifact
+        if: hashFiles('latex_output/main.pdf') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-pdf
+          path: |
+            latex_output/main.pdf
+            pdf_metadata.txt
+          if-no-files-found: warn

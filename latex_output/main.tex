@@ -29,13 +29,13 @@
   \pagestyle{fancy}%
   \fancyhf{}%
   \fancyhead[R]{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}%
-  \fancyfoot[C]{\textdir TLT \thepage}%
+  \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
   \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
     \fancyhead[R]{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}%
-    \fancyfoot[C]{\textdir TLT \thepage}%
+    \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
     \renewcommand{\footrulewidth}{0pt}%
   }%
@@ -159,12 +159,28 @@
 \addbibresource{refs.bib}
 
 \title{ארכיטקטורת הטרנספורמר ועיבוד שפה טבעית בעברית}
-\author{Avi Ayeli - ID: 300228160 \\ קורס: אורקסטרציה של סוכני AI \\ מרצה: Dr. Yoram Segal}
+\author{אבי איילי --- ת.ז. \textenglish{300228160}}
 \date{\today}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{hebrew}
+\begin{center}
+\vspace*{3cm}
+{\bfseries\LARGE התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}\par}
+\vspace{1.5cm}
+{\large אבי איילי --- ת.ז. \textenglish{300228160}\par}
+{\large קורס: אורקסטרציה של סוכני \textenglish{AI}\par}
+{\large מרצה: ד"ר יורם סגל\par}
+{\large \textenglish{\the\year}\par}
+\vspace{1.5cm}
+{\small מסמך זה נוצר בסיוע בינה מלאכותית\par}
+\end{center}
+\end{hebrew}
+\end{titlepage}
+
 \tableofcontents
 \newpage
 

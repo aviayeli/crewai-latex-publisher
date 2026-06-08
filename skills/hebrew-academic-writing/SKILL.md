@@ -26,6 +26,217 @@ following the structural outline provided by the Academic Outline Architect,
 the page budget assigned to each chapter, and the typographic rules documented
 in this skill.
 
+---
+
+## CRITICAL: Introduction Must Follow the CARS Model
+
+The Introduction chapter (ch1) MUST follow the **CARS model** (Create a Research Space):
+
+### Move 1 — Establish the Territory
+Open by establishing that the research domain is important, active, and worthy of study. Use references to demonstrate the field's centrality:
+
+```latex
+\section{הקשר המחקרי}
+מחקר בתחום \textenglish{Large Language Models} (LLM) הפך לאחד
+מתחומי המחקר הפעילים ביותר בבינה מלאכותית \cite{brown2020language,vaswani2017attention}.
+```
+
+### Move 2 — Identify the Gap or Limitation
+After establishing the territory, explicitly identify what is missing, contradictory, or under-studied in the existing literature:
+
+```latex
+\section{פער המחקר}
+על אף ההתקדמות המשמעותית, מנגנוני התיאום בין סוכנים מרובים
+עם כלים חיצוניים נותרו חסרי מודל תיאורטי מקיף \cite{schick2023toolformer}.
+```
+
+### Move 3 — State the Aim / Method
+Announce what this work does to fill the gap, and briefly describe the method:
+
+```latex
+\section{מטרת המחקר ומתודולוגיה}
+מחקר זה בוחן... באמצעות ניתוח השוואתי של...
+```
+
+### Move 4 — List Contributions
+Enumerate the specific contributions of this work as a bullet list:
+
+```latex
+\section{תרומות המחקר}
+\begin{itemize}
+  \item ניתוח השוואתי של ארכיטקטורות תיאום מרובות סוכנים.
+  \item מסגרת הערכה חדשה למדידת יעילות שיתוף פעולה בין סוכנים.
+\end{itemize}
+```
+
+**All four CARS moves are mandatory in ch1.** An Introduction that jumps directly to methodology without establishing territory and gap is non-compliant.
+
+---
+
+## CRITICAL: Citation Synthesis — No Dumps, Dense `\cite{}`
+
+### Rule 1: No Citation Dumps
+A citation dump is a sentence that lists multiple citations with no synthesis:
+
+```latex
+% FORBIDDEN — citation dump
+מחקרים רבים עסקו בנושא זה \cite{a,b,c,d,e}.
+```
+
+Instead, each citation must be linked to a specific claim:
+
+```latex
+% CORRECT — synthesized citation
+\textenglish{Vaswani et al.} \cite{vaswani2017attention} הציגו את ארכיטקטורת
+ה-\textenglish{Transformer}, אשר \textenglish{Brown et al.} \cite{brown2020language}
+הרחיבו עד לסדר גודל של 175 מיליארד פרמטרים, ובכך הוכיחו כי גודל המודל...
+```
+
+### Rule 2: Dense `\cite{}` Usage
+Every empirical claim, every model name that is not common knowledge, and every statistical result must carry a `\cite{}`. Target **at least 2–3 `\cite{}` calls per page** of prose. A chapter with fewer than 8 `\cite{}` calls total is under-cited and must be revised before submission.
+
+### Rule 3: Link Every Citation to the Research Gap
+When introducing a cited work in the literature review, explicitly state how it relates to the gap identified in the CARS Move 2:
+
+```latex
+% Correct — links citation to the gap
+בעוד ש-\textenglish{ReAct} \cite{yao2023react} הציג שלב ראשון חשוב,
+הגישה אינה מתייחסת לתיאום בין סוכנים מרובים — הפער המרכזי שמחקר זה עוסק בו.
+```
+
+---
+
+## CRITICAL: Abstract Must Follow the 5-Beat Structure
+
+The Abstract (if present as a chapter section or standalone) MUST follow this exact sequence:
+
+1. **Background** — what is the broader field and why does it matter?
+2. **Gap** — what problem or limitation exists in current work?
+3. **Innovation** — what is the novel approach introduced in this work?
+4. **Contributions** — what are the measurable or verifiable outputs?
+5. **Meaning** — what does this imply for the field?
+
+```latex
+\begin{abstract-hebrew}  % or \section*{תקציר}
+% 1. Background
+מנגנוני תיאום כלים בסוכני \textenglish{LLM} הפכו לתשתית קריטית...
+% 2. Gap
+אולם, מודל תיאורטי מקיף לניתוח מנגנונים אלו טרם הוצג בספרות.
+% 3. Innovation
+מחקר זה מציע מסגרת ניתוח חדשה המבוססת על...
+% 4. Contributions
+המסגרת מאפשרת השוואה כמותית בין... עם שיפור של 23\% ב...
+% 5. Meaning
+ממצאים אלו מרחיבים את הבנתנו לגבי...
+\end{abstract-hebrew}
+```
+
+---
+
+## CRITICAL: Conclusion MUST Include a Future Work Section
+
+The Conclusion chapter (ch6) MUST contain a dedicated `\section{עבודה עתידית}` subsection that:
+
+1. Identifies **at least two specific limitations** of the current work.
+2. Proposes **at least two concrete future research directions**, each with a citation suggesting the open question.
+
+```latex
+\section{עבודה עתידית}
+מחקר זה כפוף למספר מגבלות:
+\begin{itemize}
+  \item ניתוח ניסויי מוגבל לשלושה מודלים בלבד.
+  \item ההערכה בוצעה על בסיס מדגם אחד ולא שוכפלה.
+\end{itemize}
+
+כיווני מחקר עתידיים:
+\begin{itemize}
+  \item הרחבת המסגרת לסוכנים מרובי-מוד \cite{openai2023gpt4}.
+  \item בחינת יעילות התיאום בסביבות בזמן אמת \cite{yao2023react}.
+\end{itemize}
+```
+
+---
+
+## CRITICAL: Mandatory Visual and Mathematical Elements
+
+The full book (6 chapters combined) MUST contain ALL of the following. Missing any one element causes test failure:
+
+### 1. Python-Generated Graph (`\includegraphics`)
+At least one chapter must embed a PNG graph generated by a Python `matplotlib` script:
+
+```latex
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{latex_output/assets/attention_complexity.png}
+    \caption{השוואת מורכבות חישובית: \textenglish{O(n²)} לעומת \textenglish{O(n \log n)}.}
+    \label{fig:complexity}
+\end{figure}
+```
+
+If the PNG is not present at `latex_output/assets/`, trigger `python_runner_tool` to generate it before writing the chapter.
+
+### 2. Comparison Table
+At least one chapter must contain a `\begin{table}` environment with model comparison. EVERY `\begin{tabular}` MUST be wrapped in `\begin{LTR}...\end{LTR}`:
+
+```latex
+\begin{table}[htbp]
+    \centering
+    \caption{השוואת מודלי שפה מרכזיים}
+    \begin{LTR}
+    \begin{tabular}{llll}
+        \toprule
+        Model & Parameters & Score & Notes \\
+        \midrule
+        \textenglish{BERT-base} & 110M & 88.5 & Encoder-only \\
+        \textenglish{GPT-3}     & 175B & 64.3 & Decoder-only \\
+        \bottomrule
+    \end{tabular}
+    \end{LTR}
+\end{table}
+```
+
+### 3. Advanced Math Formula
+At least one chapter must have a display `\begin{equation}` combining at least two of: `\int`, `\sum`, `\frac`, `\prod`, `\lim`.
+
+### 4. TikZ Architecture Diagram (Bonus — Strongly Recommended)
+At least one chapter should include a TikZ block diagram of the agent or model architecture:
+
+```latex
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=1.5cm, auto]
+  \tikzstyle{block} = [rectangle, draw, fill=blue!10, text width=6em,
+                        text centered, rounded corners, minimum height=3em]
+  \tikzstyle{arrow} = [thick,->,>=stealth]
+  \node [block] (input) {\textenglish{Input}};
+  \node [block, right of=input] (encoder) {\textenglish{Encoder}};
+  \node [block, right of=encoder] (decoder) {\textenglish{Decoder}};
+  \draw [arrow] (input) -- (encoder);
+  \draw [arrow] (encoder) -- (decoder);
+\end{tikzpicture}
+\caption{ארכיטקטורת \textenglish{Transformer} בסיסית}
+\end{figure}
+```
+
+---
+
+## CRITICAL: 15-Page Minimum — Mandatory
+
+The combined PDF output MUST reach **at least 15 pages**. This is verified by the integration test `test_pdf_has_minimum_fifteen_pages`. The six chapters must collectively target:
+
+| Chapter | Topic | Min pages |
+|---|---|---|
+| ch1 | Introduction (CARS) | 2 |
+| ch2 | Background & Literature | 3 |
+| ch3 | BiDi / Methodology | 2 |
+| ch4 | Results & Tables | 3 |
+| ch5 | Evaluation | 3 |
+| ch6 | Conclusion + Future Work | 2 |
+
+Each chapter's `page_budget` value from `book_outline.json` takes precedence. A chapter that is short must be expanded with additional analysis, examples, or equations — **never with padding or repetition**.
+
+---
+
 ## Mandate
 
 - Write in formal Hebrew academic register — third person, passive constructions

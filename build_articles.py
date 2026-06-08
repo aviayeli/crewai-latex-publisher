@@ -30,7 +30,6 @@ def _main_tex(article: str, bib: str, chapters: list) -> str:
     meta = _read(tmpl / "meta.tex")
     parts = [
         preamble,
-        f"\\addbibresource{{{bib}}}\n",
         meta,
         "\\begin{document}\n\\maketitle\n\\tableofcontents\n\\newpage\n",
     ]

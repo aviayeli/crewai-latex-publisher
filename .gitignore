@@ -23,6 +23,7 @@ latex_output/assets/*.png
 latex_output/figures/*.tex
 latex_output/main.tex
 latex_output/*.pdf
+!latex_output/main.pdf
 
 # Coverage
 .coverage
