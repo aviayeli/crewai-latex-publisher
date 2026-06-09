@@ -23,9 +23,8 @@ DIMENSION_UNITS = re.compile(
 def is_safe_context(line: str, match_start: int) -> bool:
     """Return True if the decimal at match_start is already in a safe LTR context."""
     before = line[:match_start]
-    # Already inside \textenglish{...} — check unmatched open brace count
-    depth = before.count(r"\textenglish{") - before.count("}")
-    # Rough heuristic: if there's an odd textenglish-open, we're inside one
+
+    # Already inside \textenglish{...}
     if "\\textenglish{" in before:
         opens = [m.start() for m in re.finditer(r"\\textenglish\{", before)]
         if opens:
@@ -43,10 +42,7 @@ def is_safe_context(line: str, match_start: int) -> bool:
         return True
 
     # Inside a LaTeX command argument (backslash-word followed by {)
-    if re.search(r"\\[a-zA-Z@]+\{[^}]*$", before):
-        return True
-
-    return False
+    return bool(re.search(r"\\[a-zA-Z@]+\{[^}]*$", before))
 
 
 def process_file(path: Path, dry_run: bool = False) -> list[str]:
@@ -54,7 +50,6 @@ def process_file(path: Path, dry_run: bool = False) -> list[str]:
     lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
     changes = []
     in_ltr = False
-    in_english = False
     in_math_env = False
     new_lines = []
 
@@ -80,14 +75,14 @@ def process_file(path: Path, dry_run: bool = False) -> list[str]:
 
         # Skip lines we must not touch
         skip = (
-            stripped.startswith("%")          # comment
-            or in_ltr                          # inside LTR/english block
-            or in_math_env                     # inside display math
-            or "\\includegraphics" in line     # graphics path (has dots)
-            or "\\label{" in line              # label refs
+            stripped.startswith("%")
+            or in_ltr
+            or in_math_env
+            or "\\includegraphics" in line
+            or "\\label{" in line
             or "\\ref{" in line
             or "\\hyperref" in line
-            or DIMENSION_UNITS.search(line)    # LaTeX length values
+            or bool(DIMENSION_UNITS.search(line))
         )
 
         if skip:
@@ -102,10 +97,11 @@ def process_file(path: Path, dry_run: bool = False) -> list[str]:
                 continue
             decimal = m.group()
             replacement = f"${decimal}$"
-            new_line = new_line[:adjusted_start] + replacement + new_line[adjusted_start + len(decimal):]
+            end = adjusted_start + len(decimal)
+            new_line = new_line[:adjusted_start] + replacement + new_line[end:]
             offset += len(replacement) - len(decimal)
             changes.append(
-                f"  {path.name}:{lineno}: {decimal!r} → {replacement!r}"
+                f"  {path.name}:{lineno}: {decimal!r} -> {replacement!r}"
             )
 
         new_lines.append(new_line)
@@ -137,9 +133,10 @@ def main():
 
     print()
     if total == 0:
-        print("RESULT: All chapter files are clean — no decimal reversal bugs detected.")
+        print("RESULT: All files clean — no decimal reversal bugs detected.")
     else:
-        print(f"RESULT: {total} decimal(s) wrapped in math mode across {len(tex_files)} files.")
+        count = len(tex_files)
+        print(f"RESULT: {total} decimal(s) wrapped in math mode across {count} files.")
         if dry_run:
             print("(DRY RUN — no files modified. Re-run without --dry-run to apply.)")
 
