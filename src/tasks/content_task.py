@@ -42,7 +42,7 @@ def build_content_tasks(
             f"(md_path='{md}', tex_path='{tex}').\n\n"
             "CHECKPOINT after step 1: report sections written and word count.\n"
             f"CHECKPOINT after step 2: report whether '{tex}' was created.\n"
-            f"Target {pages} pages (~{pages * 375} words)."
+            f"Target {pages} pages (~{pages * 500} words)."
             " Do NOT include \\\\begin{document}."
         )
         tasks.append(

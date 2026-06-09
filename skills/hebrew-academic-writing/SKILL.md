@@ -674,14 +674,15 @@ to fail.
 
 ### How to target a page budget
 
-A single A4 page at 17 pt with the book's geometry settings holds approximately
-**350–400 words of Hebrew body text** (excluding figures and equations). Use
+A single A4 page at 12 pt with the book's geometry settings holds approximately
+**450–500 words of Hebrew body text** (excluding figures and equations). Use
 this heuristic to calibrate prose length before calling `latex_writer_tool`.
+The document uses `\documentclass[12pt,a4paper]{report}` — NOT 17pt.
 
 | Page budget | Target word count (approx.) |
 |---|---|
-| 2 pages | 700 – 800 words |
-| 3 pages | 1 050 – 1 200 words |
+| 2 pages | 900 – 1 000 words |
+| 3 pages | 1 350 – 1 500 words |
 
 ### Enforcement checklist
 
