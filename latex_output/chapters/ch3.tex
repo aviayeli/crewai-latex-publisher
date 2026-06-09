@@ -1,37 +1,135 @@
-\chapter{ניהול מצב ודו-כיווניות טקסט}
+\chapter{יישום ב-PyTorch: מבנה ותהליך הדרכה}
 
-\section{מנגנוני ניהול מצב בעבודה עם מודלים}
+\section{בניית מודלים ב-PyTorch}
 
-מודלים של שפה גדולים דורשים הנהלה שנתונים זהירה של מצב הקשר שלהם. בעל תפקיד מרכזי כאן הוא תהליך של שמירה על קשר קודם של הקלט כך שהמודל יוכל לשמור על זיכרון של המשיח הקודם. בעזרת מנגנוני תשומת הלב (\textenglish{attention mechanisms}), כל הודעה חדשה בשיחה יכולה להיות זהה כל בדוק עם כל הודעה קודמת, לאפשר מתן תשובות קשורות אל הקשר קודם שלו.
+PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבחירה לחוקרי עיבוד אותות בשל גמישותה ותמיכתה בניתוב הדינמי. בעבודה עם סדרות זמן (time series), אנו מגדירים מודלים LSTM מקוננים (stacked) על ידי יצירת מחלקה המורשת מ-\textenglish{nn.Module}. הגדרת שכבת LSTM בודדת דורשת שלושה פרמטרים עיקריים: גודל הקלט (\textenglish{input\_size}), מספר יחידות זיכרון (\textenglish{hidden\_size}), ומספר שכבות (\textenglish{num\_layers}).
 
-בפרט, מודל \textenglish{Transformer} משתמש בשכבות של תשומת לב לכל זוגות של אסימון אחד כל שני אסימון אחר. זה מאפשר למודל לבנות מפה עמוקה של יחסים בתוך הנתוני קלט.
+דוגמה בסיסית:
 
 \begin{equation}
-    \text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+\text{lstm\_layer} = \text{nn.LSTM}(\text{input\_size}=1, \text{hidden\_size}=64, \text{num\_layers}=2)
 \end{equation}
 
-זה הנוסחה לתשומת לב סטנדרטית, שבה \textenglish{Q} היא שאילתה, \textenglish{K} היא מפתח, ו-\textenglish{V} היא ערך. התחזוקה של סטט מהתמונה הקודמת מאפשרת למודל לחזור על הקשר שלו, ובכך לספק תשובות קשורות ויותר טבעיות.
+כאשר הקלט מעוצב כטנסור בגודל \textenglish{[batch\_size, seq\_length, input\_size]}, מערך LSTM עם \textenglish{batch\_first=True} מפיק פלט מצורה דומה, כאשר כל אלמנט בסדרה הופך לווקטור מימד \textenglish{hidden\_size}. תופעת ההדרגה הנעלמת (vanishing gradient), שהייתה בעיה ב-RNNs רגילות, מופחתת בצורה מובנית דרך שערים נטוש (forget gates) של LSTM, המאפשרים זרימת שיפוע עקבית על פני עשרות צעדי זמן.
 
-\section{דו-כיווניות בעיבוד טקסט}
+בעבודה עם חילוץ אותות סינוסואידליים, הצינור הטיפוסי הוא:
 
-עיבוד טקסט בשפות שונות, במיוחד בשפות בעלות כיווניות שונה (כגון עברית, הערבית, והקוריאנית), דורש טיפול מיוחד. תחת טקסט של \textenglish{LTR} (משמאל לימין), כדוגמת \textenglish{English}, הוא מעובד מהשמאל לימין. אך טקסט \textenglish{RTL} (מימין לשמאל), כגון עברית, דורש להיות מעובד בדרך הפוכה.
+\begin{enumerate}
+\item \textenglish{Embedding Layer} (אופציונלי) --- לא רלוונטי לנתוני חידוש רציפים
+\item \textenglish{Stacked LSTM} --- בדרך כלל 2--3 שכבות עם dropout בין שכבות
+\item \textenglish{Dense/Fully-connected} --- שכבת היציאה בגודל \textenglish{output\_size}
+\item \textenglish{Activation} --- בדרך כלל זהות (identity) או \textenglish{ReLU} לצפוי רציף
+\end{enumerate}
 
-מערכות המודל של היום, כגון \textenglish{BERT}, \textenglish{GPT}, ו-\textenglish{LLaMA}, בנויות כדי להוציא קוד עם \textenglish{tokenization} המבוססת על תווים או תת-מילים. עבור שפות \textenglish{RTL}, זה יכול ליצור אתגרים בייצוג, ובמיוחד כאשר משדלים טקסט המכיל גם \textenglish{LTR} (כמו שמות אישיים או מונחים טכניים) וגם \textenglish{RTL} (כמו טקסט בעברית).
+היתרון של PyTorch הוא שכל שכבה היא אובייקט פיתוני, ניתנת לחיבור והרחבה בקלות. מודל BiLSTM מגדיל את מימד הפלט ל-\textenglish{2 × hidden\_size} כי LSTM קדמי ו-LSTM אחורי פולטים וקטורים מובדלים המשורשרים (concatenated) באופן עקבי.
+
+\section{הכנת נתונים ובניית loaders}
+
+לפני הדרכה של כל מודל, סדרות זמן חדשות צריכות להיות מנורמלות ולעבד צורה סטנדרטית. נתונים גולמיים של אותות מעורבבים עם רעש דורשים:
+
+\begin{enumerate}
+\item \textenglish{\textbf{Normalization}} --- קנה מידה ל-\([-1, 1]\) או \([0, 1]\) בעזרת MinMaxScaler או Z-score
+\item \textenglish{\textbf{Windowing}} --- פיצול סדרות ארוכות לחלונות הקלות קטנים (בדרך כלל 128--512 דגימות)
+\item \textenglish{\textbf{Train-test split}} --- הפרדה זמנית (בעבור סדרות זמן, לא אקראית!) בדרך כלל 70--80\% הדרכה
+\item \textenglish{\textbf{Batching}} --- הוצאת תת-קבוצות בגודל קבוע להדרכה מקבילה
+\end{enumerate}
+
+PyTorch מספק את מחלקת \textenglish{Dataset} וה-\textenglish{DataLoader} לתהליך זה:
+
+\begin{equation}
+\text{dataset} = \text{SignalDataset}(\text{noisy\_signals, clean\_signals})
+\end{equation}
+
+\begin{equation}
+\text{loader} = \text{DataLoader}(\text{dataset}, \text{batch\_size}=32, \text{shuffle}=\text{True})
+\end{equation}
+
+בנתוני סדרות זמן, \textenglish{shuffle=True} עבור סט האימון מודגש אך חיוני לא לערבב את סט הבדיקה (שם אנו שומרים על סדר זמני). הבחירה של גודל חלון (\textenglish{window\_size}) משפיעה על איזון בין דגימות סטטיסטיות וביכולת של LSTM להיזכר בתלות זמן ארוכת טווח; חלונות קטנים מדי מביאים לאפילוג רועשים, וחלונות גדולים מדי עלולים לגרום לירידה בביצועים בשל משך תלות תיאורטי של LSTM.
+
+\section{הגדרת פונקציות loss וoptimizers}
+
+בעיית חילוץ אותות היא בעיית רגרסיה, כלומר אנו מנבאים ערכים עם ערכים ממשיים רציפים. שני ה-loss נפוצים ביותר הם \textenglish{Mean Squared Error} (MSE) ו-\textenglish{Mean Absolute Error} (MAE):
+
+\begin{equation}
+\text{MSE} = \frac{1}{N} \sum_{i=1}^{N} (\hat{y}_i - y_i)^2
+\end{equation}
+
+\begin{equation}
+\text{MAE} = \frac{1}{N} \sum_{i=1}^{N} |\hat{y}_i - y_i|
+\end{equation}
+
+כאשר \(\hat{y}_i\) הוא הפלט החזוי של המודל ו-\(y_i\) היא התווית הנכונה (האות הנקי). MSE מעניש על שגיאות גדולות בצורה ריבועית, מה שהופכו לרגיש מאוד לחריגים, בעוד MAE יותר חסון ל-outliers.
+
+עבור חילוץ אותות, בחרנו בדרך כלל \textenglish{MSE} כי אנו רוצים לעקוב מדויק של הטופס מלא. אולם כדי לצמצם השפעה של דגימות רועשות עם שגיאות גדולות במיוחד, אנו יכולים להשתמש בהפסד חלק כמו \textenglish{SmoothL1Loss} (Huber loss):
+
+\begin{equation}
+\text{Huber}(y, \hat{y}) = \begin{cases}
+\frac{1}{2}(y - \hat{y})^2 & \text{if } |y - \hat{y}| \le \delta \\
+\delta(|y - \hat{y}| - \frac{\delta}{2}) & \text{otherwise}
+\end{cases}
+\end{equation}
+
+בחירת \textenglish{optimizer} קריטית לחזוי הדרכה. Adam (\textenglish{torch.optim.Adam}) הוא הבחירה המעשית המובילה כיום:
+
+\begin{equation}
+\text{optimizer} = \text{Adam}(\text{model.parameters()}, \text{lr}=0.001, \text{betas}=(0.9, 0.999))
+\end{equation}
+
+Adam משלב מומנטום אדפטיבי עם שיעור למידה דינמי לכל פרמטר, מה שהופכו לשיטה מקבילה לאופטימיזציה ברוב ההגדרות. האלטרנטיבה, SGD עם מומנטום, דורשת כיול ידני יותר אך יכולה לתת צפויות רעות הטובות יותר במקרים מסוימים.
+
+\section{לולאות הדרכה והערכה}
+
+לולאת הדרכה סטנדרטית (training loop) בפיתוח PyTorch עוקבת אחר תבנית:
+
+\begin{enumerate}
+\item \textbf{Forward pass} --- העבר אצימות דרך המודל כדי לחזות פלטים
+\item \textbf{Compute loss} --- חשב את ה-loss בין חזויים לנכון
+\item \textbf{Backward pass} --- חשב שיפועים בעזרת autograd
+\item \textbf{Optimizer step} --- עדכן משקלים בהתאם לשיפועים
+\item \textbf{Clear gradients} --- אפס את הגרדיאנטים להתחלה נקייה בצעד הבא
+\end{enumerate}
+
+בצורה יותר רשמית:
 
 \begin{LTR}
 \begin{verbatim}
-def process_bidi_text(text):
-    # Detect direction for each segment
-    segments = detect_direction_segments(text)
-    # Process LTR and RTL separately
-    processed = [process_segment(seg, direction) 
-                 for seg, direction in segments]
-    return combine_segments(processed)
+for epoch in range(num_epochs):
+    for batch_idx, (noisy, clean) in enumerate(train_loader):
+        # Forward
+        predictions = model(noisy)
+        loss = criterion(predictions, clean)
+        
+        # Backward
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 \end{verbatim}
 \end{LTR}
 
-עם הבנה זו של דו-כיווניות, אנו יכולים לבנות מערכות שמעבדות טקסט בעברית (ובשפות אחרות של \textenglish{RTL}) בדרך אמינה וביעילות. התהליך דורש הבנה של הן מרכיבי שפה טבעית והן של עקרונות בינאריים בעיצוב מערכות מודרניות.
-\begin{figure}[htbp]
+בדרך כלל, אנו גם מחשבים \textenglish{validation loss} בכל זמן או בסוף כל epoch כדי לבדוק \textenglish{overfitting}. ה-overfitting מתרחש כאשר המודל למדה לזכור את נתוני ההדרכה במדויק אך נכשל להכליל לנתונים חדשים (test). ניתן להימנע מזה באמצעות:
+
+\begin{enumerate}
+\item \textbf{Early stopping} --- עצור את ההדרכה כשה-validation loss מפסיק להשתפר
+\item \textbf{Dropout} --- הוסף dropout layers (בדרך כלל 0.2--0.5 drop rate) בין שכבות LSTM
+\item \textbf{Regularization} --- הוסף L2 regularization (weight decay) ל-optimizer
+\item \textbf{Model checkpointing} --- שמור את המשקלים הטובים ביותר לפי validation metric
+\end{enumerate}
+
+עבור מטרות חילוץ אותות, מדדי הערכה טיפוסיים הם:
+
+\begin{equation}
+\text{SNR} = 10 \log_{10} \frac{\sum_i (y_i^{\text{true}})^2}{\sum_i (y_i^{\text{true}} - y_i^{\text{pred}})^2}
+\end{equation}
+
+\begin{equation}
+\text{NMSE} = \frac{\sum_i (y_i^{\text{true}} - y_i^{\text{pred}})^2}{\sum_i (y_i^{\text{true}})^2}
+\end{equation}
+
+\begin{equation}
+\text{Correlation} = \frac{\text{Cov}(y^{\text{true}}, y^{\text{pred}})}{\sigma_{y^{\text{true}}} \sigma_{y^{\text{pred}}}}
+\end{equation}
+
+SNR משפר כאשר השגיאה בניבוי קטנה בהשוואה להספק האות. NMSE היא שגיאה מנורמלת בטווח [0, ∞) כאשר 0 הוא ניבוי מושלם. מקדם המתאם מודד קיום ליניארי בין החזוי לנכון, עם ערכים כמו 0.95 מסמלים קבלה טובה של צורה.\begin{figure}[htbp]
     \centering
     \input{figures/sdp_attention}
     \caption{ארכיטקטורת \textenglish{Scaled Dot-Product Attention}.}
