@@ -359,24 +359,25 @@ If `David CLM` is not installed, LuaLaTeX will fall back to `Frank Ruehl CLM`, t
 
 % fancyhdr — \AfterEndPreamble fires after ALL package hooks (polyglossia/luabidi).
 % \AtBeginDocument is FORBIDDEN: polyglossia resets \pagestyle after ours,
-% silently dropping the footer on chapter-opening pages.
-\makeatletter
+% silently dropping headers/footers on chapter-opening pages.
+% Classic academic setup: chapter name in header, page number in footer.
+% \chaptermark suppresses uppercasing so Hebrew titles render correctly.
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
-  \fancyhead[R]{\@title}%
+  \fancyhead[R]{\leftmark}%
   \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
   \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
-    \fancyhead[R]{\@title}%
+    \fancyhead[R]{\leftmark}%
     \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
     \renewcommand{\footrulewidth}{0pt}%
   }%
 }
-\makeatother
 ```
 
 The `\title`, `\author`, and `\date` lines **must appear before `\begin{document}`**. The `\author` field MUST use the logical Hebrew name `אבי איילי` (NEVER reversed).

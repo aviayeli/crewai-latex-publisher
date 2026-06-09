@@ -21,23 +21,22 @@
 \setlength{\emergencystretch}{3em}
 \graphicspath{{latex_output/assets/}{latex_output/figures/}{assets/}{figures/}}
 
-\makeatletter
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
-  \fancyhead[R]{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}%
+  \fancyhead[R]{\leftmark}%
   \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
   \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
-    \fancyhead[R]{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}%
+    \fancyhead[R]{\leftmark}%
     \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
     \renewcommand{\footrulewidth}{0pt}%
   }%
 }
-\makeatother
 
 \setmainlanguage{hebrew}
 \setotherlanguage{english}
