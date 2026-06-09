@@ -176,6 +176,52 @@ The BidiAgent must verify each of the following before marking a chapter as BiDi
 10. **`\begin{english}` has matching `\end{english}`** — same unclosed-environment risk as above.
 11. **`\includegraphics` for attention_complexity.png present in at least one chapter** — grep all six chapters for `attention_complexity.png`; if absent, insert the `figure` block into `ch2.tex` (see § Two Mandatory Structural Elements above).
 12. **`\begin{table}` model comparison present in at least one chapter** — grep all six chapters for `\begin{table}`; if absent, insert the comparison table into `ch4.tex` (see § Two Mandatory Structural Elements above).
+13. **All bare decimal numbers in Hebrew RTL text are wrapped in math mode** — scan every chapter for the regex `\d+\.\d+` (e.g., `3.14`, `88.5`, `0.001`). Any match that is NOT already inside `$...$`, `\(...\)`, `\begin{equation}`, `\begin{LTR}`, `\begin{english}`, or `\textenglish{}` MUST be wrapped as `$3.14$`. Rationale: the decimal point `.` is a direction-neutral character in Unicode BiDi; in an RTL paragraph it causes the BiDi algorithm to split the number and render `3.14` as `14.3`. Math mode (`$...$`) forces LR direction unconditionally. Tables with decimal scores must be inside `\begin{LTR}...\end{LTR}`.
+
+---
+
+## RTL Decimal Number Reversal — Mandatory Fix
+
+**Root cause:** The Unicode BiDi algorithm treats `.` (U+002E FULL STOP) as a
+direction-neutral character. Inside an RTL paragraph, a bare number like `3.14`
+is parsed as two LTR runs (`3` and `14`) separated by a neutral `.`. The BiDi
+algorithm then reverses visual display order → `14.3`. This is a silent rendering
+bug that does not produce a LaTeX error.
+
+**Detection — regex:** `\d+\.\d+` anywhere in a line that is NOT inside one of:
+- `$...$` or `\(...\)` — inline math (forces LR)
+- `\begin{equation}` / `\begin{align}` — display math (forces LR)
+- `\begin{LTR}...\end{LTR}` — explicit LTR block
+- `\begin{english}...\end{english}` — explicit English block
+- `\textenglish{...}` — inline English switch
+- A LaTeX command argument containing `.` (e.g., `\setlength{\headheight}{15pt}`)
+
+**Fix:** Wrap the bare decimal in math mode:
+
+```latex
+% BROKEN — renders as "14.3" in RTL paragraph
+דיוק של 3.14 הושג על ידי המודל.
+
+% CORRECT — math mode forces LR direction
+דיוק של $3.14$ הושג על ידי המודל.
+```
+
+**Table cells:** Decimal scores in table cells must be inside `\begin{LTR}...\end{LTR}`:
+```latex
+% BROKEN
+\begin{tabular}{ll}
+  Model & Score \\
+  BERT  & 88.5  \\   % 88.5 reverses in RTL tabular
+\end{tabular}
+
+% CORRECT
+\begin{LTR}
+\begin{tabular}{ll}
+  Model & Score \\
+  BERT  & 88.5  \\   % LTR environment protects the decimal
+\end{tabular}
+\end{LTR}
+```
 
 ---
 
