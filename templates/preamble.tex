@@ -16,18 +16,23 @@
 \usepackage{etoolbox}
 \usepackage{fancyhdr}
 \setlength{\headheight}{15pt}
+% \AfterEndPreamble fires after ALL package hooks including polyglossia/luabidi.
+% \AtBeginDocument is FORBIDDEN: polyglossia hooks fire after ours and reset
+% \pagestyle, silently dropping the footer on chapter-opening pages.
 \makeatletter
-\AtBeginDocument{%
+\AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
   \fancyhead[R]{\@title}%
   \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
     \fancyhead[R]{\@title}%
     \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
   }%
 }
 \makeatother

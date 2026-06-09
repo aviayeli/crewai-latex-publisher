@@ -357,19 +357,23 @@ If `David CLM` is not installed, LuaLaTeX will fall back to `Frank Ruehl CLM`, t
 \author{אבי איילי --- ת.ז. \textenglish{300228160}}
 \date{\today}
 
-% fancyhdr — active on all pages except the cover
+% fancyhdr — \AfterEndPreamble fires after ALL package hooks (polyglossia/luabidi).
+% \AtBeginDocument is FORBIDDEN: polyglossia resets \pagestyle after ours,
+% silently dropping the footer on chapter-opening pages.
 \makeatletter
-\AtBeginDocument{%
+\AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
   \fancyhead[R]{\@title}%
   \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
     \fancyhead[R]{\@title}%
     \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
   }%
 }
 \makeatother
