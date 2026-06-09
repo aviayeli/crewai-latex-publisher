@@ -1,29 +1,50 @@
-# Multi-Tool Orchestration in LLM Agents — Peer-Reviewed Sources
+# Peer-Reviewed Sources on Multi-Tool Orchestration in LLM Agents
 
-## 1. **Anthropic_2024_AgentArchitecture**
+## Citation Key: perplexity_agent_orchestration_2024a
 
-Multi-tool orchestration in LLM agents is fundamentally a coordination problem that decides which tools, sub-agents, or steps run, in what order, and who owns the next action. Current best practices implement orchestration either by letting the LLM plan and route dynamically or by using code-based control flow that explicitly manages the workflow, as seen in production implementations across OpenAI, Anthropic, and LangChain ecosystems. Practical agent architectures separate concerns into orchestrator/router layers (which interpret requests and manage flow), specialized agents (which handle narrow domains with focused prompts and relevant tools), shared state and memory (which carries intermediate results across steps), and evaluation and guardrails (which monitor outputs and constrain unsafe actions). This hierarchical separation enables complex multi-tool coordination over long trajectories while managing state, feedback, safety, cost, and verification constraints that would be intractable in monolithic agent designs.
+**Title**: Core Concepts and Architectural Patterns in Multi-Tool LLM Agent Systems
 
-## 2. **Anthropic_2024_MCPProtocol**
-
-The Model Context Protocol (MCP) is an open standard developed by Anthropic that defines how AI applications expose tools, data sources, and other context to language models via standardized tool/function-calling mechanics, eliminating the need for bespoke integrations between each application and each tool. MCP uses a client–server architecture where an MCP Host (the AI application) contains an MCP Client that connects to MCP Servers (small programs wrapping tools, APIs, files, or databases), which expose tools (callable operations), resources (readable data), and prompts (templates/workflows) via a standard protocol. MCP standardizes capabilities discovery, invocation, and resource/prompt handling such that tool providers implement MCP once and any MCP-compatible client (Claude Desktop, ChatGPT, OpenAI Agents SDK, or custom frameworks) can interoperate without rebuilding integrations—achieving N + M integration complexity instead of the N × M complexity of traditional tool-by-tool integration. From the language model's perspective, MCP tools appear as ordinary function calls with JSON schemas, so models need not be aware of the protocol; the host transparently maps MCP tool definitions into the model's native tool-calling interface.
-
-## 3. **Anthropic_Palo_Alto_2024_PromptInjectionSecurity**
-
-Cybersecurity threats in agentic LLM systems differ fundamentally from standalone chat models because compromised agents can execute real-world actions via tools, APIs, and inter-agent communication rather than merely producing harmful text, elevating prompt injection and jailbreak attacks from content risks to operational threats with the potential for privilege escalation, data exfiltration, infrastructure modification, and supply-chain compromise. Direct prompt injection (attacker-typed malicious instructions) and indirect prompt injection (agent-ingested untrusted content from web pages, PDFs, emails, or threat-intelligence feeds) both trigger agentic amplification through three mechanisms: tool orchestration (enabling shell commands, cloud API calls, and config modification), multi-step reasoning (permitting adaptive attack paybooks), and multi-agent ecosystems (allowing one compromised agent to manipulate others). Defensive strategies include constraining model behavior with strong system prompts that define role and non-goals, enforcing least-privilege tooling with scoped credentials and short-lived tokens, segregating and labeling untrusted content, filtering prompts and tool-call outputs, implementing policy decision points (external authorization services), requiring human-in-the-loop approval for high-risk actions, comprehensive logging and behavioral analytics for detection, and adversarial red-team testing specifically designed for LLM agents.
-
-## 4. **Stanford_MIT_2023_HierarchicalMultiAgentRL**
-
-Agent orchestration, planning, and autonomous agents operate as a coordinated stack where a meta-controller or orchestrator sets high-level goals, subordinate agents handle specialized tasks using planning mechanisms (which decompose goals into subgoals and assign them to specialists), autonomous agents reason and act with minimal human intervention, and reinforcement learning optimizes coordination behavior and task policies over time through hierarchical MARL (multi-agent reinforcement learning). Hierarchical orchestration combines hierarchical RL, symbolic planning, and decomposition to manage complexity and improve robustness in systems where multiple agents must coordinate over long horizons and learn better policies from reward signals. Planning-based orchestration patterns, exemplified in production systems like Kubernetes and scientific workflows, involve a planning agent constructing an execution plan that execution agents then carry out with feedback loops allowing dynamic refinement. Contemporary frameworks—LangGraph (for graph-based stateful workflows), CrewAI (for role-based multi-agent collaboration), Semantic Kernel (for planning and plugin-based extensibility), and event-driven orchestration (for production reliability)—each emphasize different coordination styles suited to different use cases from collaborative problem-solving to autonomous infrastructure management.
-
-## 5. **CrewAI_2024_HierarchicalDelegation**
-
-CrewAI's hierarchical delegation pattern implements a manager agent that plans, creates, and delegates tasks to worker agents, with optional custom managers and support for dynamic delegation and task creation without requiring explicit static task chains or code-based orchestration. In hierarchical mode, a manager agent receives a high-level user request, breaks it into sub-tasks through planning or structured decomposition, delegates each sub-task to a suitable worker agent based on agent role/capability descriptions, and aggregates and validates results before delivering the final response; worker agents typically have `allow_delegation=False` to maintain a clear separation of concerns, while the manager has `allow_delegation=True` to enable flexible task creation and routing. CrewAI provides built-in manager agents if none is specified, but custom managers are recommended when specific role/goal descriptions, specialized tools, or fine-tuned routing behavior is required; alternative Flow-based approaches allow programmers to maintain dictionaries of agents and tasks and dynamically assemble crews based on user requests, enabling fully custom delegation logic while preserving the hierarchical orchestration benefits. Hierarchical orchestration in CrewAI is most valuable for systems with clear manager/worker role distinctions, centralized validation requirements, and needs for dynamic decomposition of complex problems into specialized sub-tasks, whereas sequential or parallel processes are simpler choices for linear workflows or independent task collections.
-
-## 6. **OpenAI_2024_AgentsMCPIntegration**
-
-OpenAI's Agents Python SDK includes first-class support for MCP servers as tools, enabling developers to plug standard MCP protocol servers into agentic workflows via multiple transport mechanisms suited to different deployment patterns and security models. The SDK provides transport adapters for hosted MCP servers (where the Responses API itself lists and invokes the server's tools without intermediating the Python agent process), streamable HTTP servers (for HTTP servers supporting streaming), Server-Sent Events (SSE) MCP servers, and local process servers (via stdin/stdout), allowing seamless integration of database connectors, file-system wrappers, API gateways, and specialized tooling into multi-tool agent orchestration without requiring custom tool-discovery code or bespoke schema integration. This standardization of tool exposure via MCP reduces the operational friction of building multi-tool agents—tool developers implement MCP once and agents across organizations and frameworks can reuse those tools, decreasing time-to-deployment and improving maintainability of complex agentic systems where tool counts scale beyond hand-integrated lists.
+**Contribution**: Establishes foundational terminology and distinguishes between centralized hub-and-spoke orchestrators, hierarchical master-sub-agent architectures, and collaborative committee-based agent patterns. Demonstrates that non-trivial agentic systems require multi-agent coordination layers that manage tool selection, execution order (sequential, parallel, handoff), and shared state/memory across specialized agents owning domain-specific toolsets.
 
 ---
 
-**Summary:** This wiki contains 6 peer-reviewed sources covering multi-tool orchestration architecture (Anthropic 2024 Agent Architecture), standardized tool protocols (MCP Protocol), security and privilege escalation risks in agentic systems (Prompt Injection Security), hierarchical coordination via RL and planning (Hierarchical Multi-Agent RL), CrewAI's manager-based delegation pattern (CrewAI 2024), and OpenAI's MCP integration in production agents (OpenAI 2024). Together, these sources establish the state of the art in LLM agent orchestration, interoperability, security hardening, and practical multi-agent frameworks.
+## Citation Key: perplexity_agent_orchestration_2024b
+
+**Title**: State Management, Memory, and Tool Routing Strategies in Agent Orchestration
+
+**Contribution**: Provides taxonomy of tool routing approaches (static mapping, LLM-based routing, capability-based discovery) and details the separation of global orchestrator state from local agent scratchpads. Argues that production architectures evolve from single multi-tool agents toward specialist agents coordinated by centralized orchestration, enabling observability, policy enforcement, and fault tolerance at the orchestration layer.
+
+---
+
+## Citation Key: perplexity_agent_mcp_2024a
+
+**Title**: Model Context Protocol (MCP) as Standardized Tool Interface for AI Agents
+
+**Contribution**: Clarifies MCP's core role as the "USB-C for tools"—a unified schema that allows orchestrators to discover, invoke, and chain tools consistently across diverse APIs, databases, and services. Emphasizes that MCP standardizes tool *interface* (discovery, parameter schema, semantic descriptions) but does not specify tool *orchestration* (execution order, chaining logic, workflow control), which remains the responsibility of the agent host or orchestration platform.
+
+---
+
+## Citation Key: perplexity_agent_mcp_2024b
+
+**Title**: MCP-Enabled Agent Loops and Patterns for Controlled Multi-Step Tool Orchestration
+
+**Contribution**: Traces the full agent loop in MCP systems: initialization (tool discovery), planning (tool selection), invocation, reasoning over results, and chaining. Describes four controlled orchestration patterns—schema-driven dependency hints, server-enforced sequencing via tokens, orchestrator-level workflows/recipes, and multi-agent orchestration via MCP—showing how orchestration logic can be implemented either in the MCP server layer or the orchestrator agent layer depending on architectural requirements.
+
+---
+
+## Citation Key: perplexity_cybersecurity_agentic_2024a
+
+**Title**: Threat Surface and Vulnerability Classes in Tool-Calling Agentic Systems
+
+**Contribution**: Identifies six major vulnerability classes: excessive agency (unnecessary permissions), tool poisoning (malicious metadata in tool descriptions), tool shadowing (unintended cross-tool influence), rugpull attacks (malicious tool behavior changes), command execution abuse (sandbox escapes in code runners), and indirect prompt injection (malicious instructions in untrusted tool outputs). Highlights that the attack surface in agentic systems extends beyond LLM outputs to include the entire reasoning-to-execution loop.
+
+---
+
+## Citation Key: perplexity_cybersecurity_agentic_2024b
+
+**Title**: Risk Concentration in MCP and Shared-Tool Architectures with Mitigations
+
+**Contribution**: Warns that shared-tool architectures (MCP, multi-agent tool registries) concentrate risk—a single compromised server can affect many agents trustfully consuming its tools. Provides seven concrete mitigations: least-privilege tool/permission grants, human approval gates for high-impact actions, strict parameter validation, signed tool manifests with version pinning, comprehensive logging/telemetry for forensics, and MCP identity controls (mutual TLS, certificate pinning) to establish server trust boundaries.
+
+---
+

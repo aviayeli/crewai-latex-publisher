@@ -1,30 +1,32 @@
-# Research Index — Multi-Tool Orchestration in LLM Agents
+# Wiki Index: Multi-Tool Orchestration in LLM Agents
 
-## Citation Key Reference
+## Citation Keys and Descriptions
 
-| Citation Key | One-Line Description |
-|---|---|
-| `Anthropic_2024_AgentArchitecture` | Multi-tool orchestration as a coordination layer managing which tools run, in what order; separates orchestrator/router, specialized agents, shared state, and evaluation guardrails. |
-| `Anthropic_2024_MCPProtocol` | Model Context Protocol (MCP): open standard for exposing tools, data, and prompts to LLMs; achieves N+M integration complexity by standardizing tool discovery and invocation across clients. |
-| `Anthropic_Palo_Alto_2024_PromptInjectionSecurity` | Agentic security threats from prompt injection and jailbreak attacks that leverage tool orchestration, multi-step reasoning, and multi-agent ecosystems for privilege escalation and data exfiltration. |
-| `Stanford_MIT_2023_HierarchicalMultiAgentRL` | Hierarchical orchestration combines RL, symbolic planning, and decomposition; planning agents construct execution plans for specialist agents with continuous learning and feedback loops. |
-| `CrewAI_2024_HierarchicalDelegation` | Manager-agent pattern in CrewAI: manager decomposes tasks, delegates to workers, aggregates results; optional custom managers; Flow-based alternative for full delegation control. |
-| `OpenAI_2024_AgentsMCPIntegration` | OpenAI Agents SDK integrates MCP servers as tools via multiple transports (hosted, HTTP, SSE, stdio) for seamless multi-tool agent orchestration across frameworks. |
-
-## Full Descriptions
-
-For detailed one-paragraph descriptions of each source's contribution, see [wiki/sources.md](./sources.md).
-
-## Research Scope
-
-This research corpus addresses:
-- **AI Agent Architecture:** orchestrator/router patterns, specialized agents, shared state, and guardrails
-- **MCP Protocol:** standardized tool exposure, client–server architecture, capabilities discovery, interoperability
-- **Multi-Tool Orchestration:** dynamic planning vs. code-based control flow, hierarchical vs. sequential/parallel processes
-- **Cybersecurity in Agentic Systems:** direct/indirect prompt injection, privilege escalation, defensive patterns (least-privilege tooling, human-in-the-loop, behavioral analytics, adversarial testing)
-- **Hierarchical Coordination:** RL-based policy learning, multi-agent collaboration, task decomposition, planning agents
-- **Production Frameworks:** CrewAI, OpenAI Agents SDK, LangGraph, Semantic Kernel
+| Citation Key | Description | Link |
+|---|---|---|
+| `perplexity_agent_orchestration_2024a` | Foundational terminology, hub-and-spoke vs. hierarchical vs. collaborative agent patterns | [sources.md#perplexity_agent_orchestration_2024a](sources.md#citation-key-perplexity_agent_orchestration_2024a) |
+| `perplexity_agent_orchestration_2024b` | State management, memory architecture, and static/LLM-based/capability-based tool routing | [sources.md#perplexity_agent_orchestration_2024b](sources.md#citation-key-perplexity_agent_orchestration_2024b) |
+| `perplexity_agent_mcp_2024a` | MCP protocol as standardized tool interface (discovery, schema, semantic descriptions) | [sources.md#perplexity_agent_mcp_2024a](sources.md#citation-key-perplexity_agent_mcp_2024a) |
+| `perplexity_agent_mcp_2024b` | MCP-enabled agent loops, chaining, and four patterns for controlled tool orchestration | [sources.md#perplexity_agent_mcp_2024b](sources.md#citation-key-perplexity_agent_mcp_2024b) |
+| `perplexity_cybersecurity_agentic_2024a` | Six major vulnerability classes in tool-calling agents (excessive agency, poisoning, injection, etc.) | [sources.md#perplexity_cybersecurity_agentic_2024a](sources.md#citation-key-perplexity_cybersecurity_agentic_2024a) |
+| `perplexity_cybersecurity_agentic_2024b` | Risk concentration in shared-tool architectures and seven mitigations (least-privilege, TLS, logging) | [sources.md#perplexity_cybersecurity_agentic_2024b](sources.md#citation-key-perplexity_cybersecurity_agentic_2024b) |
 
 ---
 
-*Raw research data (unprocessed Perplexity output) is archived at [raw/research_raw.md](../raw/research_raw.md) for audit purposes.*
+## Research Coverage
+
+### AI Agent Architecture ✓
+- **Sources**: `perplexity_agent_orchestration_2024a`, `perplexity_agent_orchestration_2024b`
+- **Topics Covered**: Orchestrator patterns (centralized, hierarchical, collaborative), execution flows (sequential, parallel, handoff, group chat), state and memory management, tool routing strategies
+
+### MCP Protocol & Tool Orchestration ✓
+- **Sources**: `perplexity_agent_mcp_2024a`, `perplexity_agent_mcp_2024b`
+- **Topics Covered**: MCP as standardized interface, tool discovery and schema, agent loop lifecycle, controlled orchestration patterns (schema hints, token sequencing, workflow recipes, multi-agent orchestration)
+
+### Cybersecurity in Agentic Systems ✓
+- **Sources**: `perplexity_cybersecurity_agentic_2024a`, `perplexity_cybersecurity_agentic_2024b`
+- **Topics Covered**: Vulnerability taxonomy (excessive agency, poisoning, shadowing, rugpull, injection, command abuse), risk concentration in shared systems, mitigations (least-privilege, human gates, validation, TLS, auditing, logging)
+
+---
+
+**All research sourced from Perplexity AI (sonar-pro).** Raw data archived in `raw/research_raw.md`.

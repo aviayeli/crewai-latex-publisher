@@ -1,121 +1,121 @@
 {
   "title": "The Evolution of Multi-Tool Orchestration in LLM Agents",
-  "subtitle": "From Single-Tool Integration to Complex Agent Ecosystems",
+  "subtitle": "From Core Architecture to Security Implications",
   "language": "hebrew",
   "refs": [
-    "Anthropic_2024_AgentArchitecture",
-    "Anthropic_2024_MCPProtocol",
-    "Anthropic_Palo_Alto_2024_PromptInjectionSecurity",
-    "Stanford_MIT_2023_HierarchicalMultiAgentRL",
-    "CrewAI_2024_HierarchicalDelegation",
-    "OpenAI_2024_AgentsMCPIntegration"
+    "perplexity_agent_orchestration_2024a",
+    "perplexity_agent_orchestration_2024b",
+    "perplexity_agent_mcp_2024a",
+    "perplexity_agent_mcp_2024b",
+    "perplexity_cybersecurity_agentic_2024a",
+    "perplexity_cybersecurity_agentic_2024b"
   ],
   "chapters": [
     {
       "number": 1,
-      "hebrew_title": "יסודות סוכני שפה גדולים",
-      "english_title": "Foundations of LLM Agents and Tool Integration",
+      "hebrew_title": "מבוא וקונטקסט היסטורי",
+      "english_title": "Introduction and Historical Context",
       "page_budget": 2,
       "sections": [
         {
-          "heading": "הצורך בסוכנים המסוגלים להשתמש בכלים",
-          "summary": "Overview of why large language models require access to external tools and how single-tool integration evolved into multi-tool ecosystems."
+          "heading": "מהו סוכן LLM רב-כלים",
+          "summary": "Definition and fundamental concepts of multi-tool LLM agents and why they are essential for modern AI systems."
         },
         {
-          "heading": "ארכיטקטורה בסיסית של סוכנים",
-          "summary": "Fundamental patterns for building LLM-based agents, including decision-making loops, action execution, and feedback mechanisms."
+          "heading": "מוטיבציה לתיאום כלים",
+          "summary": "Historical evolution of agent systems and the emergence of the need for coordinated multi-tool orchestration."
         }
       ]
     },
     {
       "number": 2,
-      "hebrew_title": "פרוטוקול ההקשר של הדגם - MCP",
-      "english_title": "The Model Context Protocol: Standardizing Tool Exposure",
-      "page_budget": 2,
+      "hebrew_title": "ארכיטקטורה ודפוסי עיצוב",
+      "english_title": "Architecture and Design Patterns",
+      "page_budget": 3,
       "sections": [
         {
-          "heading": "הצורך בתקן פתוח לחשיפת כלים",
-          "summary": "Motivation for developing an open standard protocol (MCP) to expose tools and resources to AI systems in a consistent manner."
+          "heading": "מרכיבים ליבה של מערכת תיאום",
+          "summary": "Core architectural components including the reasoning engine, tool registry, and orchestration layer."
         },
         {
-          "heading": "מבנה ותכונות ה-MCP",
-          "summary": "Technical specifications of the Model Context Protocol, including message formats, resource discovery, and tool invocation patterns."
+          "heading": "דפוסי עיצוב מוכחים",
+          "summary": "Established design patterns for multi-tool agent systems and their implementation trade-offs."
+        },
+        {
+          "heading": "זרימת ביצוע וחזרות",
+          "summary": "Execution flow, feedback loops, and error handling in multi-tool orchestration systems."
         }
       ]
     },
     {
       "number": 3,
-      "hebrew_title": "ארכיטקטורות לתיאום כלים מרובים",
-      "english_title": "Multi-Tool Orchestration Architectures",
-      "page_budget": 3,
+      "hebrew_title": "ניהול מצב וניתוב כלים",
+      "english_title": "State Management and Tool Routing",
+      "page_budget": 2,
       "sections": [
         {
-          "heading": "אסטרטגיות בחירת כלים",
-          "summary": "Methods and patterns for agents to select appropriate tools from a toolkit based on task requirements and context."
+          "heading": "מנגנוני זיכרון וניהול קונטקסט",
+          "summary": "Memory systems, context window management, and state persistence across multi-step agent operations."
         },
         {
-          "heading": "תיאום סדרתי מול מקבילי",
-          "summary": "Comparison of sequential tool execution chains versus parallel tool invocation and their trade-offs in performance and complexity."
-        },
-        {
-          "heading": "ניהול מצב וזיכרון בחלוקות כלים",
-          "summary": "Techniques for maintaining state consistency across multiple tool calls, including context passing and result aggregation."
+          "heading": "אסטרטגיות ניתוב וסלקציה",
+          "summary": "Tool selection strategies, routing algorithms, and decision-making processes for multi-tool allocation."
         }
       ]
     },
     {
       "number": 4,
-      "hebrew_title": "הנחיה היררכית ותיאום סוכנים",
-      "english_title": "Hierarchical Delegation and Multi-Agent Coordination",
+      "hebrew_title": "פרוטוקול הקשר המודל (MCP)",
+      "english_title": "The Model Context Protocol",
       "page_budget": 3,
       "sections": [
         {
-          "heading": "דפוסי ניהול היררכיים",
-          "summary": "Manager-based hierarchical delegation patterns where higher-level agents coordinate the actions of specialized sub-agents."
+          "heading": "MCP כממשק מתוקנן",
+          "summary": "Overview of the Model Context Protocol as a standardized interface for tool discovery, invocation, and communication."
         },
         {
-          "heading": "למידת חיזוק רב-סוכנית",
-          "summary": "Hierarchical multi-agent reinforcement learning approaches for optimizing agent coordination and tool selection policies."
+          "heading": "לולאות סוכן מונחות MCP",
+          "summary": "Agent loop patterns enabled by MCP, including controlled multi-step orchestration and error recovery mechanisms."
         },
         {
-          "heading": "תקשורת בין-סוכנית וסכום",
-          "summary": "Communication protocols and message passing mechanisms that enable effective coordination between multiple agents in an orchestrated system."
+          "heading": "יתרונות וקנה המידה של MCP",
+          "summary": "Benefits of standardized protocols for scalability, maintainability, and interoperability across diverse tool ecosystems."
         }
       ]
     },
     {
       "number": 5,
-      "hebrew_title": "אבטחה וחוסן במערכות מרובות כלים",
-      "english_title": "Security and Robustness in Multi-Tool Agent Systems",
-      "page_budget": 3,
+      "hebrew_title": "איומים ופגיעויות",
+      "english_title": "Threat Surface and Vulnerabilities",
+      "page_budget": 2,
       "sections": [
         {
-          "heading": "הוקעות הזרקת הנושא",
-          "summary": "Analysis of prompt injection attacks where adversaries manipulate agent behavior through crafted inputs to override intended tool selection."
+          "heading": "סיווג איומים בסוכנים קוראים כלים",
+          "summary": "Taxonomy of security threats specific to tool-calling agentic systems, including injection, privilege escalation, and resource exploitation."
         },
         {
-          "heading": "הגבלת הרשאות והפחתת סיכונים",
-          "summary": "Mechanisms for enforcing principle of least privilege, sandboxing tool execution, and preventing privilege escalation in agent systems."
-        },
-        {
-          "heading": "וידוא ותוקף כלים",
-          "summary": "Techniques for validating tool outputs, detecting anomalous behavior, and ensuring the integrity and trustworthiness of tool invocations."
+          "heading": "שטח ההתקפה של תיאום רב-כלים",
+          "summary": "Unique attack surfaces introduced by tool orchestration complexity, state management, and inter-tool dependencies."
         }
       ]
     },
     {
       "number": 6,
-      "hebrew_title": "כיוונים עתידיים והתפתחות",
-      "english_title": "Future Directions and Evolution of Agent Orchestration",
-      "page_budget": 2,
+      "hebrew_title": "הפחתת סיכון וכיוונים עתידיים",
+      "english_title": "Risk Mitigation and Future Directions",
+      "page_budget": 3,
       "sections": [
         {
-          "heading": "דפוסים משתנים בתיאום סוכנים",
-          "summary": "Emerging patterns and evolving best practices in multi-tool orchestration, including adaptive agent behavior and dynamic tool discovery."
+          "heading": "ריכוז סיכון בארכיטקטורות MCP",
+          "summary": "Analysis of risk concentration in shared-tool architectures and centralized orchestration layers."
         },
         {
-          "heading": "שאלות מחקר פתוחות",
-          "summary": "Unresolved challenges and future research directions including improved agent reasoning, security, scalability, and interoperability across agent ecosystems."
+          "heading": "אסטרטגיות הפחתה מעשיות",
+          "summary": "Practical mitigation strategies including sandboxing, capability-based security, and multi-factor verification for tool invocation."
+        },
+        {
+          "heading": "כיוונים עתידיים בתיאום בטוח",
+          "summary": "Emerging research directions for secure multi-tool orchestration, zero-trust agent architectures, and formal verification approaches."
         }
       ]
     }

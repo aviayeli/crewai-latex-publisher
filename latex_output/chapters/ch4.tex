@@ -1,0 +1,37 @@
+\chapter{פרוטוקול בקרת המודל}
+
+\section{אינטרפייס של \textenglish{Model Context Protocol}}
+
+פרוטוקול בקרת המודל (\textenglish{Model Context Protocol}, או \textenglish{MCP}) הוא ממשק סטנדרטי המעניק יכולת ליישומים חיצוניים לתקשר עם מודלים גדולים של שפה, ובכך להוציא צו מעבר שפה, כדי לשלוט בהקשר שלהם. \textenglish{MCP} מגדיר דרך מסודרת לקריאה למודל עם כלים או משאבים שאינם חלק מניהול שחקן של המודל עצמו.
+
+בחברה של מודלים כגון \textenglish{Claude}, \textenglish{OpenAI API}, ו-\textenglish{Google PaLM}, יש צורך בתקן אונייני שמאפשר יישומים שונים להיות משודרים לתקשוריות דומות. \textenglish{MCP} מהווה סט של כללים וכלים שמספקים יכולת זו.
+
+\begin{table}[htbp]
+    \centering
+    \caption{השוואת מודלי שפה מרכזיים}
+    \label{tab:model_comparison}
+    \begin{LTR}
+    \begin{tabular}{llll}
+        \toprule
+        \textenglish{Model} & \textenglish{Parameters} & \textenglish{Score} & \textenglish{Notes} \\
+        \midrule
+        \textenglish{BERT-base}  & 110M & 88.5 GLUE & \textenglish{Encoder-only} \\
+        \textenglish{GPT-3}      & 175B & 64.3 BIG-G & \textenglish{Decoder-only} \\
+        \textenglish{T5-large}   & 770M & 89.7 GLUE  & \textenglish{Encoder–Decoder} \\
+        \textenglish{LLaMA-2-7B} & 7B   & 63.2 MMLU  & \textenglish{Decoder-only} \\
+        \bottomrule
+    \end{tabular}
+    \end{LTR}
+\end{table}
+
+\section{טכניקות שדרוג קשר}
+
+קשר בתוך מודלים יכול להתהווה בדרכים שונות. אחת מן הטכניקות הנפוצות ביותר היא \textenglish{prompt engineering} — כתיבה של הנחיות ויעדים בדרך שמזמינה את המודל לייצור פלטים חדושים ובעלי ערך. אחרת, אנחנו יכולים להשתמש בשיטות כגון \textenglish{in-context learning}, שם אנו משדרים דוגמאות של קלט וחציצי פלט כדי ללמד את המודל על הדפוס שאנחנו רוצים.
+
+מודל גדול כגון \textenglish{GPT-3} יכול לקבל מאות אלפים של טוקנים (תווים או מילים) בקלט שלו בעת אחת. זה מפתיח הזדמנויות חדשות לשדרוג קשר, אך גם מציב אתגרים. הנהלה של קשר כזה דורשת חישובים משמעותיים, וגם יצירת אסטרטגיה לאילו מידע להכניס למודל ובאיזה סדר.
+
+\section{ביטחון וערכיות בשדרוג קשר}
+
+יש חשיבות גבוהה להבטיח שהקשר שנשדרג למודל הוא בטוח, במבחן שהמודל לא יחשוף מידע חסוי או לא יביא לתוצאות שאינן רוצות. זה דורש בדיקות קפדניות של הנתונים המוקדשים, ובדיקות של אם המודל מנהל את הנתונים בדרך בטוחה.
+
+יותר מכך, \textenglish{Anthropic} (היצרנית של \textenglish{Claude}) ובעלות אחרות משפרות כל הזמן את השיטות שלהם לשדרוג קשר בטוח. טכניקות כגון \textenglish{constitutional AI} וקריאה לפנים של מודלים עוזרות להבטיח שהקשר מנוהל בעיקרון של בטיחות ודיוק.
