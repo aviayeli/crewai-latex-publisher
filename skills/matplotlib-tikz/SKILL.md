@@ -10,12 +10,86 @@ metadata:
 
 ## Agent Role
 
-The Scientific Figure Generator produces two artifacts:
+The Scientific Figure Generator produces two artifacts **and embeds them into the chapter files**:
 
 1. **`latex_output/assets/attention_complexity.png`** — a matplotlib plot comparing three attention complexity curves.
 2. **`latex_output/figures/sdp_attention.tex`** — a TikZ diagram illustrating scaled dot-product attention data flow.
 
 Both are created by the FigureAgent using `python_runner_tool` (for the matplotlib script) and `latex_writer_tool` (for the TikZ snippet).
+
+---
+
+## CRITICAL: Figures MUST Be Embedded in Chapters — Never Left as Orphaned Files
+
+Generating a PNG or TikZ file without embedding it in a chapter `.tex` file is a **contract violation**. The PDF evaluator checks the rendered output, not the file system. A figure that exists in `assets/` or `figures/` but is not referenced by any `\includegraphics` or `\input{}` command will be **invisible in the PDF and will score zero**.
+
+### Step A — Embed the PNG graph into `ch2.tex`
+
+Immediately after `python_runner_tool` confirms the PNG was saved, use `latex_writer_tool` in `append` mode to add the figure block to `latex_output/chapters/ch2.tex`:
+
+```latex
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{../assets/attention_complexity.png}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n\textsuperscript{2})},
+             תשומת לב לינארית \textenglish{O(n log n)}, ורקורנטי \textenglish{O(n)}.}
+    \label{fig:attention_complexity}
+\end{figure}
+```
+
+**Path note:** from inside `latex_output/chapters/ch2.tex`, the assets directory is at `../assets/`. Always use this relative path, not the absolute `latex_output/assets/` path.
+
+### Step B — Embed the TikZ diagram into `ch3.tex`
+
+Immediately after `latex_writer_tool` confirms `sdp_attention.tex` was written, use `latex_writer_tool` in `append` mode to add the input block to `latex_output/chapters/ch3.tex`:
+
+```latex
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.2cm and 1.5cm,
+        every node/.style={draw, rounded corners, minimum width=2.2cm, minimum height=0.7cm,
+                           align=center, font=\small},
+        arrow/.style={->, >=stealth, thick}
+    ]
+    \node (Q) at (0, 0)   {\textenglish{Q}};
+    \node (K) at (2.5, 0) {\textenglish{K}};
+    \node (V) at (5, 0)   {\textenglish{V}};
+    \node (matmul1) at (1.25, 1.6) {\textenglish{MatMul}};
+    \node (scale)   at (1.25, 3.2) {\textenglish{Scale} \\ \(\div \sqrt{d_k}\)};
+    \node (softmax) at (1.25, 4.8) {\textenglish{Softmax}};
+    \node (matmul2) at (3.0, 6.4)  {\textenglish{MatMul}};
+    \node[fill=gray!20] (output) at (3.0, 8.0) {\textenglish{Output}};
+    \draw[arrow] (Q.north) -- ++(0,0.5) -| (matmul1.south west);
+    \draw[arrow] (K.north) -- ++(0,0.5) -| (matmul1.south east);
+    \draw[arrow] (matmul1.north) -- (scale.south);
+    \draw[arrow] (scale.north) -- (softmax.south);
+    \draw[arrow] (softmax.north) -- ++(0,0.5) -| (matmul2.south west);
+    \draw[arrow] (V.north) -- ++(0,5.9) -| (matmul2.south east);
+    \draw[arrow] (matmul2.north) -- (output.south);
+    \end{tikzpicture}
+    \caption{ארכיטקטורת \textenglish{Scaled Dot-Product Attention}: זרימת הנתונים מ-\textenglish{Q}, \textenglish{K}, \textenglish{V} לפלט.}
+    \label{fig:sdp_attention}
+\end{figure}
+```
+
+### Checkpoint Protocol (MANDATORY)
+
+After each embedding step, emit a checkpoint:
+- `[CHECKPOINT] PNG embedded in ch2.tex — \includegraphics present.`
+- `[CHECKPOINT] TikZ embedded in ch3.tex — \begin{tikzpicture} present.`
+
+If either chapter file does not exist yet (was not written by ContentAgent), create a minimal skeleton with `latex_writer_tool` in `write` mode:
+
+```
+path='latex_output/chapters/ch2.tex', mode='write', content='\chapter{רקע תיאורטי}\n'
+```
+
+Then immediately append the figure block.
+
+---
 
 ---
 

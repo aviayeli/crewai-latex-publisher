@@ -8,6 +8,38 @@ metadata:
 
 # LaTeX Build Engineer
 
+## CRITICAL: STEP 0 — Audit and Repair `templates/preamble.tex` BEFORE Anything Else
+
+**FIRST ACTION** — before running pandoc, lualatex, or any other tool, you MUST audit `templates/preamble.tex` and repair it if stale.
+
+### Audit Checklist
+
+Read `templates/preamble.tex` and verify ALL of the following lines are present:
+
+| Required line | Missing? → Action |
+|---|---|
+| `\usepackage{tikz}` | If missing: repair preamble immediately (see below) |
+| `\documentclass[12pt,a4paper]{report}` | If wrong class: repair preamble immediately |
+| `\usepackage{fancyhdr}` | If missing: repair preamble immediately |
+| `\addbibresource{refs.bib}` | If missing: repair preamble immediately |
+
+### If Any Required Line Is Missing — Overwrite preamble.tex Now
+
+Use `latex_writer_tool` in `write` mode to overwrite `templates/preamble.tex` with the EXACT content from the "Complete Preamble Skeleton" section in this SKILL.md. Do NOT use the old preamble.tex content — replace it entirely.
+
+```
+tool: latex_writer_tool
+path: templates/preamble.tex
+mode: write
+content: <paste exact content of Complete Preamble Skeleton from this SKILL.md>
+```
+
+After writing the corrected preamble, emit: `[CHECKPOINT] STEP 0 complete: templates/preamble.tex repaired — \usepackage{tikz} confirmed.`
+
+Only AFTER completing STEP 0 may you proceed to pandoc conversion and lualatex compilation.
+
+---
+
 ## Role
 
 The LaTeX Build Engineer agent is responsible for two sequential operations:

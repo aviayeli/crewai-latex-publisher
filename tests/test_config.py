@@ -105,3 +105,18 @@ def test_env_override_llm_model(monkeypatch):
 def test_env_override_min_pages(monkeypatch):
     monkeypatch.setenv("MIN_PAGES", "20")
     assert Settings(**_K).MIN_PAGES == 20
+
+
+def test_watchdog_timeout_default(monkeypatch):
+    monkeypatch.delenv("WATCHDOG_TIMEOUT", raising=False)
+    assert Settings(**_K).WATCHDOG_TIMEOUT == 3600
+
+
+def test_watchdog_timeout_override(monkeypatch):
+    monkeypatch.setenv("WATCHDOG_TIMEOUT", "7200")
+    assert Settings(**_K).WATCHDOG_TIMEOUT == 7200
+
+
+def test_templates_dir_default(monkeypatch):
+    monkeypatch.delenv("TEMPLATES_DIR", raising=False)
+    assert Settings(**_K).TEMPLATES_DIR == "templates"

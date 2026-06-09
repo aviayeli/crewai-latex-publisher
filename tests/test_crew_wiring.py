@@ -31,11 +31,23 @@ def test_figure_task_context_contains_outline_task():
     assert crew.outline_task in crew.figure_task.context
 
 
-def test_compile_task_context_contains_bidi_and_figure():
+def test_compile_task_context_contains_abstract_and_figure_embed():
     with patch("src.crew._load_skill", return_value="dummy"):
         crew = PublisherCrew()
-    assert crew.bidi_task in crew.compile_task.context
-    assert crew.figure_task in crew.compile_task.context
+    assert crew.abstract_task in crew.compile_task.context
+    assert crew.figure_embed_task in crew.compile_task.context
+
+
+def test_abstract_task_context_contains_bidi_task():
+    with patch("src.crew._load_skill", return_value="dummy"):
+        crew = PublisherCrew()
+    assert crew.bidi_task in crew.abstract_task.context
+
+
+def test_figure_embed_task_context_contains_figure_task():
+    with patch("src.crew._load_skill", return_value="dummy"):
+        crew = PublisherCrew()
+    assert crew.figure_task in crew.figure_embed_task.context
 
 
 # ── Agent settings ────────────────────────────────────────────────────────────

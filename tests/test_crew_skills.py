@@ -90,15 +90,21 @@ def test_no_agent_backstory_is_hardcoded_python_string():
 # ── Task / agent counts ───────────────────────────────────────────────────────
 
 
-def test_crew_has_exactly_eleven_tasks():
+def test_crew_has_exactly_thirteen_tasks():
     with patch("src.crew._load_skill", return_value="dummy"):
         crew = PublisherCrew()
     all_tasks = (
         [crew.research_task, crew.outline_task]
         + crew.content_tasks
-        + [crew.figure_task, crew.bidi_task, crew.compile_task]
+        + [
+            crew.abstract_task,
+            crew.figure_task,
+            crew.figure_embed_task,
+            crew.bidi_task,
+            crew.compile_task,
+        ]
     )
-    assert len(all_tasks) == 11
+    assert len(all_tasks) == 13
 
 
 def test_crew_has_exactly_seven_agents():

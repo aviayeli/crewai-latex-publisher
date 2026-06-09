@@ -38,7 +38,10 @@ class Settings(BaseSettings):
     PANDOC_BIN: str = "pandoc"
     OUTPUT_DIR: str = "latex_output"
     ASSETS_DIR: str = "latex_output/assets"
+    TEMPLATES_DIR: str = "templates"
     MIN_PAGES: int = 15
+    # Hard timeout (seconds) for the full pipeline run via the watchdog.
+    WATCHDOG_TIMEOUT: int = 3600
     # Pause before lualatex_runner executes and prompt operator for approval.
     HITL_ENABLED: bool = True
     # Passes anthropic-beta prompt-caching header via LiteLLM additional_params

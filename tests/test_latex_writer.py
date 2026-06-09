@@ -90,3 +90,53 @@ def test_write_empty_string(tmp_output_dir):
 def test_mode_invalid_raises_validation_error():
     with pytest.raises((ValidationError, ValueError)):
         LatexWriterInput(path="chapters/ch1.tex", content="x", mode="overwrite")
+
+
+# ── prepend mode ──────────────────────────────────────────────────────────────
+
+
+def test_prepend_inserts_before_existing_content(tmp_output_dir):
+    latex_writer_tool._run(path="chapters/ch1.tex", content="BODY\n", mode="write")
+    latex_writer_tool._run(
+        path="chapters/ch1.tex", content="HEADER\n", mode="prepend"
+    )
+    got = (tmp_output_dir / "chapters" / "ch1.tex").read_text(encoding="utf-8")
+    assert got == "HEADER\nBODY\n"
+
+
+def test_prepend_to_nonexistent_creates_file(tmp_output_dir):
+    latex_writer_tool._run(
+        path="chapters/new.tex", content="prefix", mode="prepend"
+    )
+    got = (tmp_output_dir / "chapters" / "new.tex").read_text(encoding="utf-8")
+    assert got == "prefix"
+
+
+def test_prepend_mode_valid_in_schema():
+    obj = LatexWriterInput(path="chapters/ch1.tex", content="x", mode="prepend")
+    assert obj.mode == "prepend"
+
+
+# ── templates directory access ────────────────────────────────────────────────
+
+
+def test_templates_dir_write_allowed(tmp_output_dir, tmp_path, monkeypatch):
+    # OUTPUT_DIR = tmp_path, so ../templates/ resolves to tmp_path.parent/templates/
+    templates_dir = tmp_path.parent / "templates"
+    templates_dir.mkdir(exist_ok=True)
+    monkeypatch.setattr("src.tools.latex_writer.settings.TEMPLATES_DIR",
+                        str(templates_dir))
+    result = latex_writer_tool._run(
+        path="../templates/preamble.tex", content="\\usepackage{tikz}", mode="write"
+    )
+    assert (templates_dir / "preamble.tex").exists()
+    assert "preamble.tex" in result
+
+
+def test_path_outside_both_dirs_rejected(tmp_output_dir, tmp_path, monkeypatch):
+    templates_dir = tmp_path.parent / "templates"
+    templates_dir.mkdir(exist_ok=True)
+    monkeypatch.setattr("src.tools.latex_writer.settings.TEMPLATES_DIR",
+                        str(templates_dir))
+    with pytest.raises(ValueError):
+        latex_writer_tool._run(path="../../etc/passwd", content="x", mode="write")

@@ -16,6 +16,48 @@ metadata:
 
 # Academic Outline Architect
 
+## CRITICAL: STEP 0 — Write Corrected `main.tex` with TikZ Support Before the Outline
+
+BEFORE writing `book_outline.json`, you MUST write a corrected `main.tex` to `latex_output/main.tex` that includes `\usepackage{tikz}`. The compiler agent uses this file to produce the PDF. Without tikz in the preamble, all TikZ diagrams in the chapters will fail to compile.
+
+Use `latex_writer_tool` in **chunked writes** (≤ 30 lines per call). Write the complete `main.tex` using **exactly** these calls, in order:
+
+**Call 1 — write (create file, lines 1–20):**
+```
+path='main.tex', mode='write', content='\documentclass[12pt,a4paper]{report}\n\n\usepackage{fontspec}\n\usepackage{polyglossia}\n\usepackage[backend=biber,style=numeric,language=english]{biblatex}\n\DeclareLanguageMapping{hebrew}{english}\n\DefineBibliographyStrings{hebrew}{bibliography={ביבליוגרפיה}}\n\usepackage[a4paper,margin=2.5cm]{geometry}\n\usepackage{graphicx}\n\usepackage{amsmath}\n\usepackage{amssymb}\n\usepackage{hyperref}\n\usepackage{float}\n\usepackage{booktabs}\n\usepackage{xcolor}\n\usepackage{etoolbox}\n\usepackage{fancyhdr}\n\usepackage{tikz}\n\setlength{\headheight}{15pt}\n\setlength{\emergencystretch}{3em}\n'
+```
+
+**Call 2 — append (lines 21–55, AtBeginDocument block):**
+```
+path='main.tex', mode='append', content='\makeatletter\n\AtBeginDocument{%\n  \pagestyle{fancy}%\n  \fancyhf{}%\n  \fancyhead[R]{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}%\n  \fancyfoot[C]{\thepage}%\n  \renewcommand{\headrulewidth}{0.4pt}%\n  \renewcommand{\footrulewidth}{0pt}%\n  \fancypagestyle{plain}{%\n    \fancyhf{}%\n    \fancyhead[R]{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}%\n    \fancyfoot[C]{\thepage}%\n    \renewcommand{\headrulewidth}{0.4pt}%\n    \renewcommand{\footrulewidth}{0pt}%\n  }%\n  \renewcommand*\l@chapter[2]{%\n    \ifnum \c@tocdepth >\m@ne\n      \addpenalty{-\@highpenalty}%\n      \vskip 1.0em \@plus\p@\n      \setlength\@tempdima{1.5em}%\n      \begingroup\n        \parindent \z@ \rightskip \@pnumwidth\n        \parfillskip -\@pnumwidth\n        \leavevmode \bfseries\n        \advance\leftskip\@tempdima\n        \hskip -\leftskip\n        #1\nobreak\hfil\nobreak\n        \hb@xt@\@pnumwidth{\hss \textenglish{#2}\kern -\p@ \kern \p@ }\par\n        \penalty\@highpenalty\n      \endgroup\n    \fi}%\n'
+```
+
+**Call 3 — append (lines 56–80, end AtBeginDocument + fonts):**
+```
+path='main.tex', mode='append', content='  \def\@dottedtocline#1#2#3#4#5{%\n    \ifnum #1>\c@tocdepth \else\n      \vskip \z@ \@plus .2\p@\n      {\leftskip #2\relax \rightskip \@tocrmarg \parfillskip -\rightskip\n       \parindent #2\relax \@afterindenttrue\n       \interlinepenalty\@M\n       \leavevmode\n       \@tempdima #3\relax\n       \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip\n       {#4}\nobreak\n       \leaders\hbox{$\m@th \mkern \@dotsep mu\hbox{.}\mkern \@dotsep mu$}\hfill\n       \nobreak\n       \hb@xt@\@pnumwidth{\hfil\normalfont\normalcolor\n         \textenglish{#5}\kern -\p@ \kern \p@ }%\n       \par}%\n    \fi}%\n}\n\makeatother\n\n\setmainlanguage{hebrew}\n\setotherlanguage{english}\n'
+```
+
+**Call 4 — append (fonts + BiDi counters):**
+```
+path='main.tex', mode='append', content='\setmainfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,Script=Hebrew,Ligatures=TeX]{Arial}\n\setsansfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,Script=Hebrew,Ligatures=TeX]{Arial}\n\setmonofont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=cour,BoldFont=courbd,ItalicFont=couri,BoldItalicFont=courbi,Script=Hebrew]{CourierNew}\n\newfontfamily\hebrewfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,Script=Hebrew,Ligatures=TeX]{Arial}\n\newfontfamily\hebrewfontsf[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,Script=Hebrew,Ligatures=TeX]{Arial}\n\newfontfamily\hebrewfonttt[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,UprightFont=cour,BoldFont=courbd,ItalicFont=couri,BoldItalicFont=courbi,Script=Hebrew]{CourierNew}\n'
+```
+
+**Call 5 — append (citation format + counters + metadata):**
+```
+path='main.tex', mode='append', content='\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{\textenglish{#1}}}\n\DeclareFieldFormat{labelnumber}{\textenglish{#1}}\n\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}\n\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}\n\renewcommand{\theequation}{\textenglish{\arabic{chapter}.\arabic{equation}}}\n\renewcommand{\thefigure}{\textenglish{\arabic{chapter}.\arabic{figure}}}\n\renewcommand{\thetable}{\textenglish{\arabic{chapter}.\arabic{table}}}\n\addbibresource{refs.bib}\n\title{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}\n\author{אבי איילי --- ת.ז. \textenglish{300228160}}\n\date{\today}\n'
+```
+
+**Call 6 — append (document body):**
+```
+path='main.tex', mode='append', content='\begin{document}\n\begin{titlepage}\n\thispagestyle{empty}\n\begin{hebrew}\n\begin{center}\n\vspace*{3cm}\n{\bfseries\LARGE התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}\par}\n\vspace{1.5cm}\n{\large אבי איילי --- ת.ז. \textenglish{300228160}\par}\n{\large קורס: אורקסטרציה של סוכני \textenglish{AI}\par}\n{\large מרצה: ד"ר יורם סגל\par}\n{\large \textenglish{\the\year}\par}\n\vspace{1.5cm}\n{\small מסמך זה נוצר בסיוע בינה מלאכותית\par}\n\end{center}\n\end{hebrew}\n\end{titlepage}\n\tableofcontents\n\newpage\n\input{chapters/ch1}\n\input{chapters/ch2}\n\input{chapters/ch3}\n\input{chapters/ch4}\n\input{chapters/ch5}\n\input{chapters/ch6}\n\newpage\n\chapter*{ביבליוגרפיה}\n\begin{english}\n\sloppy\n\printbibliography[heading=none]\n\end{english}\n\end{document}\n'
+```
+
+After completing all 6 calls, emit: `[CHECKPOINT] STEP 0 done: main.tex written with \usepackage{tikz} — 6 chunks completed.`
+
+Only AFTER completing STEP 0 may you proceed to writing the outline.
+
+---
+
 ## Role
 
 You are the **Academic Outline Architect**. Your sole responsibility is to

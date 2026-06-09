@@ -17,6 +17,18 @@ metadata:
 
 # Hebrew Academic Writer
 
+## PRIORITY 0 — MANDATORY FIGURE EMBED (DO THIS BEFORE ANY OTHER SECTION WRITING FOR ch2)
+
+**ONLY for Chapter 2 (ch2):** After writing the section on computational complexity or agent architectures, you MUST append this exact figure block to ch2.md using `latex_writer_tool` in `append` mode. The file `latex_output/assets/attention_complexity.png` already exists — just embed the reference:
+
+```
+latex_writer_tool(path='chapters/ch2.md', mode='append', content='\n\n\\begin{figure}[htbp]\n    \\centering\n    \\includegraphics[width=0.85\\textwidth]{../assets/attention_complexity.png}\n    \\caption{השוואת מורכבות חישובית.}\n    \\label{fig:attention_complexity}\n\\end{figure}\n\n')
+```
+
+This is a CONTRACT OBLIGATION. Skip it and ch2 scores zero for visual elements.
+
+After the append, emit: `[MANDATORY CHECKPOINT] ch2.md — \\includegraphics EMBEDDED.`
+
 ## Role
 
 You are the **Hebrew Academic Writer**. Your responsibility is to produce
@@ -217,6 +229,49 @@ At least one chapter should include a TikZ block diagram of the agent or model a
 \caption{ארכיטקטורת \textenglish{Transformer} בסיסית}
 \end{figure}
 ```
+
+---
+
+## CRITICAL: Per-Chapter Mandatory Embeds (ch2 and ch3)
+
+The ContentAgent — not any other agent — MUST embed figures directly when writing these chapters. Do NOT wait for the FigureAgent. The assets already exist.
+
+### Chapter 2 MUST include `\includegraphics` for the Attention Complexity Plot
+
+The file `latex_output/assets/attention_complexity.png` already exists. When writing ch2.md, you MUST write the figure block as PART OF THE MARKDOWN CONTENT — include it as a raw LaTeX block inside the markdown. Pandoc preserves raw LaTeX `\begin{figure}...\end{figure}` blocks verbatim.
+
+**Mandatory: include this block verbatim inside the ch2.md content, as a separate paragraph (blank line before and after):**
+
+```
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\textwidth]{../assets/attention_complexity.png}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n\textsuperscript{2})}, תשומת לב לינארית \textenglish{O(n \log n)}, ורקורנטי \textenglish{O(n)}.}
+    \label{fig:attention_complexity}
+\end{figure}
+```
+
+Place this figure block AFTER the section on computational complexity (or wherever it is most relevant in ch2). Write it using `latex_writer_tool` in `append` mode when appending the section that discusses complexity:
+
+```
+path='latex_output/chapters/ch2.md', mode='append', content='\n\n\\begin{figure}[htbp]\n    \\centering\n    \\includegraphics[width=0.85\\textwidth]{../assets/attention_complexity.png}\n    \\caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \\textenglish{O(n\\textsuperscript{2})}.}\n    \\label{fig:attention_complexity}\n\\end{figure}\n\n'
+```
+
+This is MANDATORY. A ch2.md without `\includegraphics` is non-compliant.
+
+Emit checkpoint: `[CHECKPOINT] ch2.md — \includegraphics{../assets/attention_complexity.png} written inline.`
+
+### Chapter 3 MUST include an inline TikZ diagram of Scaled Dot-Product Attention
+
+When writing ch3, you MUST append the following TikZ block **at the end of the chapter** using `latex_writer_tool` in `append` mode:
+
+```
+path='latex_output/chapters/ch3.tex', mode='append', content='\n\n\\begin{figure}[htbp]\n    \\centering\n    \\begin{tikzpicture}[\n        node distance=1.2cm and 1.5cm,\n        every node/.style={draw, rounded corners, minimum width=2.2cm, minimum height=0.7cm,\n                           align=center, font=\\small},\n        arrow/.style={->, >=stealth, thick}\n    ]\n    \\node (Q) at (0, 0)   {\\textenglish{Q}};\n    \\node (K) at (2.5, 0) {\\textenglish{K}};\n    \\node (V) at (5, 0)   {\\textenglish{V}};\n    \\node (matmul1) at (1.25, 1.6) {\\textenglish{MatMul}};\n    \\node (scale)   at (1.25, 3.2) {\\textenglish{Scale} \\\\\\\\ \\(\\div \\sqrt{d_k}\\)};\n    \\node (softmax) at (1.25, 4.8) {\\textenglish{Softmax}};\n    \\node (matmul2) at (3.0, 6.4)  {\\textenglish{MatMul}};\n    \\node[fill=gray!20] (output) at (3.0, 8.0) {\\textenglish{Output}};\n    \\draw[arrow] (Q.north) -- ++(0,0.5) -| (matmul1.south west);\n    \\draw[arrow] (K.north) -- ++(0,0.5) -| (matmul1.south east);\n    \\draw[arrow] (matmul1.north) -- (scale.south);\n    \\draw[arrow] (scale.north) -- (softmax.south);\n    \\draw[arrow] (softmax.north) -- ++(0,0.5) -| (matmul2.south west);\n    \\draw[arrow] (V.north) -- ++(0,5.9) -| (matmul2.south east);\n    \\draw[arrow] (matmul2.north) -- (output.south);\n    \\end{tikzpicture}\n    \\caption{ארכיטקטורת \\textenglish{Scaled Dot-Product Attention}: זרימת הנתונים מ-\\textenglish{Q}, \\textenglish{K}, \\textenglish{V} לפלט.}\n    \\label{fig:sdp_attention}\n\\end{figure}\n'
+```
+
+This is MANDATORY. A ch3.tex without `\\begin{tikzpicture}` is non-compliant.
+
+Emit checkpoint: `[CHECKPOINT] ch3.tex — TikZ \begin{tikzpicture} embedded.`
 
 ---
 
@@ -690,6 +745,47 @@ terms, inline math with `\(` and `\)`, and a `\cite{}` call:
 - `\cite{}` keys sourced from `refs.bib`
 - Maqaf ־ used correctly in compound constructions
 - No translation of proper nouns
+
+---
+
+## CRITICAL: Read `refs.bib` BEFORE Writing Any `\cite{}` Command
+
+This is a **blocking pre-condition**. Before writing the first chapter, the ContentAgent MUST:
+
+1. Read `latex_output/refs.bib` in full (via `latex_writer_tool` read or file access).
+2. Extract every BibTeX key (the string between `{` and `,` on `@article{...` or `@inproceedings{...` lines).
+3. Build an internal list of **approved keys** — the ONLY keys that may appear in `\cite{}` commands.
+4. REJECT any citation key not in the approved list.
+
+**Why this is mandatory:** `\cite{SomeKey}` where `SomeKey` is absent from `refs.bib` renders as `[?]` in the PDF — an automatic 0 on the Citations rubric.
+
+### Approved-key enforcement
+
+```
+BEFORE writing \cite{X}: "Is X a key in refs.bib?"
+  YES → write \cite{X}
+  NO  → do NOT write it. Use the closest real key instead.
+```
+
+### Minimum citation density
+
+- Every chapter MUST contain at least **4 `\cite{}` commands**.
+- Across all 6 chapters combined: at least **24 `\cite{}` total**.
+
+### For the topic "Evolution of Multi-Tool Orchestration in LLM Agents"
+
+The ResearcherAgent writes these real keys to `refs.bib`. Use them actively in prose:
+
+| Key | What to cite it for |
+|---|---|
+| `schick2023toolformer` | LLMs learning to use external tools via self-supervised learning |
+| `yao2023react` | Reasoning + acting / tool-augmented agents |
+| `xi2023rise` | Survey of LLM agent landscape / background section |
+| `park2023generative` | Multi-agent simulation and emergent social behaviour |
+| `shinn2023reflexion` | Self-correction and verbal reinforcement learning in agents |
+| `wei2022chain` | Chain-of-thought prompting as multi-step reasoning baseline |
+| `brown2020language` | Few-shot prompting and scale as capability foundation |
+| `vaswani2017attention` | Transformer architecture that underpins all modern LLMs |
 
 ---
 

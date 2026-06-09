@@ -12,10 +12,13 @@ from src.config import settings
 class LatexWriterInput(BaseModel):
     """Input schema for the latex_writer tool."""
 
-    path: str = Field(description="Relative path under OUTPUT_DIR")
+    path: str = Field(description="Relative path under OUTPUT_DIR or ../templates/")
     content: str = Field(description="The text to write")
-    mode: Literal["write", "append"] = Field(
-        description="'write' to create/overwrite, 'append' to extend"
+    mode: Literal["write", "append", "prepend"] = Field(
+        description=(
+            "'write' to create/overwrite, 'append' to extend,"
+            " 'prepend' to insert before existing content"
+        )
     )
 
 
@@ -35,20 +38,28 @@ class LatexWriterTool(BaseTool):
     args_schema: type[BaseModel] = LatexWriterInput
 
     def _validate_path(self, path: str) -> Path:
-        """Resolve path and reject any traversal outside OUTPUT_DIR."""
+        """Resolve path; allow OUTPUT_DIR and TEMPLATES_DIR, reject everything else."""
         output_dir = Path(settings.OUTPUT_DIR).resolve()
         resolved = (output_dir / path).resolve()
-        if not resolved.is_relative_to(output_dir):
-            raise ValueError(f"Path {path!r} escapes the output directory")
-        return resolved
+        if resolved.is_relative_to(output_dir):
+            return resolved
+        templates_dir = Path(settings.TEMPLATES_DIR).resolve()
+        if resolved.is_relative_to(templates_dir):
+            return resolved
+        raise ValueError(f"Path {path!r} escapes the allowed directories")
 
     def _run(self, path: str, content: str, mode: str) -> str:
-        """Write or append *content* to *path* and return a confirmation string."""
+        """Write, append, or prepend *content* to *path*; return confirmation."""
         resolved = self._validate_path(path)
         resolved.parent.mkdir(parents=True, exist_ok=True)
-        file_mode = "w" if mode == "write" else "a"
-        with open(resolved, file_mode, encoding="utf-8") as fh:
-            fh.write(content)
+        if mode == "prepend":
+            existing = resolved.read_text(encoding="utf-8") if resolved.exists() else ""
+            with open(resolved, "w", encoding="utf-8") as fh:
+                fh.write(content + existing)
+        else:
+            file_mode = "w" if mode == "write" else "a"
+            with open(resolved, file_mode, encoding="utf-8") as fh:
+                fh.write(content)
         return f"Written: {resolved}"
 
 

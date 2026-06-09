@@ -12,9 +12,11 @@ from src.agents.manager_agent import build_manager_agent
 from src.agents.outline_agent import build_outline_agent
 from src.agents.researcher_agent import build_researcher_agent
 from src.security.skill_sieve import skill_sieve
+from src.tasks.abstract_task import build_abstract_task
 from src.tasks.bidi_task import build_bidi_task
 from src.tasks.compile_task import build_compile_task
 from src.tasks.content_task import build_content_tasks
+from src.tasks.figure_embed_task import build_figure_embed_task
 from src.tasks.figure_task import build_figure_task
 from src.tasks.outline_task import build_outline_task
 from src.tasks.research_task import build_research_task
@@ -51,12 +53,16 @@ class PublisherCrew:
         self.content_tasks = build_content_tasks(
             self.content_agent, self.outline_task, self.research_task
         )
-        self.figure_task = build_figure_task(
-            self.figure_agent, self.outline_task
-        )
+        self.figure_task = build_figure_task(self.figure_agent, self.outline_task)
         self.bidi_task = build_bidi_task(self.bidi_agent, self.content_tasks)
+        self.abstract_task = build_abstract_task(
+            self.content_agent, self.bidi_task
+        )
+        self.figure_embed_task = build_figure_embed_task(
+            self.figure_agent, self.figure_task, self.bidi_task
+        )
         self.compile_task = build_compile_task(
-            self.compiler_agent, self.bidi_task, self.figure_task
+            self.compiler_agent, self.abstract_task, self.figure_embed_task
         )
 
     def kickoff(self) -> str:
@@ -66,6 +72,8 @@ class PublisherCrew:
             *self.content_tasks,
             self.figure_task,
             self.bidi_task,
+            self.abstract_task,
+            self.figure_embed_task,
             self.compile_task,
         ]
         crew = Crew(

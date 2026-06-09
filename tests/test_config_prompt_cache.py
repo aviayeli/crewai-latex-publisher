@@ -12,7 +12,8 @@ def test_prompt_caching_enabled_default_is_true():
     assert Settings(**_K).PROMPT_CACHING_ENABLED is True
 
 
-def test_hitl_enabled_default_is_true():
+def test_hitl_enabled_default_is_true(monkeypatch):
+    monkeypatch.delenv("HITL_ENABLED", raising=False)
     assert Settings(**_K).HITL_ENABLED is True
 
 

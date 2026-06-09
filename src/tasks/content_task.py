@@ -5,7 +5,7 @@ from crewai import Agent, Task
 CHAPTER_SPECS: list[tuple[int, str, str, int]] = [
     (1, "מבוא", "Introduction to Transformers", 2),
     (2, "ארכיטקטורה", "Transformer Architecture Deep Dive", 3),
-    (3, "דו-כיווניות", "BiDi Text in Academic Publishing", 2),
+    (3, "לולאות חשיבה-פעולה", "Reasoning-Action Loops and Chain-of-Thought", 2),
     (4, "יישומים", "Applications and Fine-Tuning", 3),
     (5, "הערכה", "Evaluation Methodologies", 2),
     (6, "סיכום", "Conclusion and Future Work", 3),

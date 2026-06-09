@@ -91,6 +91,63 @@ If Perplexity returns a result without a venue or DOI, classify it as secondary 
 
 ---
 
+## CRITICAL: ResearcherAgent MUST Write New BibTeX Entries to `refs.bib`
+
+The ResearcherAgent is the **sole owner** of `refs.bib`. Every paper it cites must be physically written to `latex_output/refs.bib` using `latex_writer_tool` in **`append`** mode before reporting results to downstream agents. A citation key that does not exist in `refs.bib` will render as `[?]` in the PDF — this is a zero-score outcome.
+
+### Mandatory workflow:
+
+1. Search Perplexity for real peer-reviewed papers matching the topic.
+2. For each paper found, construct a complete `@article` or `@inproceedings` BibTeX entry.
+3. Write EACH entry to `latex_output/refs.bib` via `latex_writer_tool` in **`append`** mode — NEVER `write` mode:
+   ```
+   path='latex_output/refs.bib', mode='append', content='@article{schick2023toolformer,\n  author  = {Schick, Timo and ...},\n  title   = {Toolformer: Language Models Can Teach Themselves to Use Tools},\n  journal = {NeurIPS},\n  year    = {2023}\n}\n\n'
+   ```
+
+   **CRITICAL: DO NOT USE `mode='write'` FOR `refs.bib`.**
+   Using `mode='write'` DESTROYS all existing BibTeX entries (vaswani2017attention, brown2020language, wei2022chain, etc.) that ContentAgent chapters already depend on. This causes biber to fail with undefined references. If you use write mode, you will cause a zero-score bibliography section.
+
+   The only allowed modes for `refs.bib` are:
+   - `mode='append'` — ALWAYS use this to add new entries.
+   - NEVER `mode='write'` for refs.bib regardless of whether the file exists or not.
+
+4. Only AFTER writing to `refs.bib`, report the citation key to downstream agents.
+
+### CRITICAL: Citation Keys MUST Be `author_year_keyword` — ALL LOWERCASE
+
+**FORBIDDEN patterns that have caused zero-score bibliography sections:**
+
+| Forbidden (NEVER use) | Why broken | Correct form |
+|---|---|---|
+| `Anthropic_2024_AgentArchitecture` | CapitalCase + org name ≠ author name | `anthropic2024agents` (only if a real paper) |
+| `CrewAI_2024_HierarchicalDelegation` | CapitalCase + product name | `chase2022lmindex` (cite the actual paper) |
+| `Stanford_MIT_2023_HierarchicalMultiAgentRL` | Institution names, not authors | `lowe2017multiagent` (cite the actual RL paper) |
+| `OpenAI_2024_AgentsMCPIntegration` | Organization + product | `xi2023rise` (cite a real agents survey paper) |
+
+The strict `author_year_keyword` pattern requires:
+- `author`: first author's **last name**, all lowercase, no spaces (e.g., `schick`, `yao`, `brown`)
+- `year`: four-digit year from the paper (e.g., `2023`, `2022`)
+- `keyword`: one lowercase word from the paper title (e.g., `toolformer`, `react`, `language`)
+
+### Authoritative paper list for multi-tool LLM agent topics:
+
+If the research topic is about multi-tool orchestration or LLM agents, these real papers MUST be found and cited:
+
+| Citation key | Paper | Venue |
+|---|---|---|
+| `schick2023toolformer` | Toolformer: Language Models Can Teach Themselves to Use Tools | NeurIPS 2023 |
+| `yao2023react` | ReAct: Synergizing Reasoning and Acting in Language Models | ICLR 2023 |
+| `xi2023rise` | The Rise and Potential of Large Language Model Based Agents: A Survey | arXiv 2023 |
+| `park2023generative` | Generative Agents: Interactive Simulacra of Human Behavior | UIST 2023 |
+| `shinn2023reflexion` | Reflexion: Language Agents with Verbal Reinforcement Learning | NeurIPS 2023 |
+| `wei2022chain` | Chain-of-Thought Prompting Elicits Reasoning in Large Language Models | NeurIPS 2022 |
+| `brown2020language` | Language Models are Few-Shot Learners | NeurIPS 2020 |
+| `vaswani2017attention` | Attention Is All You Need | NeurIPS 2017 |
+
+Write ALL of these to `refs.bib` before reporting. Downstream ContentAgent will use these keys in `\cite{}` commands.
+
+---
+
 ## Citation & Bibliography Guardrail
 
 ### NEVER cite the search tool or AI assistants as academic sources
