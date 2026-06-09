@@ -1,222 +1,333 @@
 # crewai-latex-publisher
 
-A multi-agent CrewAI pipeline that researches, writes, and compiles a
-typeset Hebrew-English bilingual academic book on Transformer models — fully
-automated from Perplexity research to a 15-page LuaLaTeX PDF.
+A multi-agent CrewAI pipeline that autonomously researches, writes, and compiles a
+typeset Hebrew–English bilingual academic paper — from Perplexity research to a
+19-page LuaLaTeX PDF — with production-grade FinOps, agent safety, and strict
+architectural constraints enforced at every layer.
 
 ---
 
 ## Architecture
 
 ```
-Perplexity Research → Outline Planning → Markdown Generation (×6 chapters)
-    → Pandoc Conversion → BiDi Validation → LuaLaTeX + Biber Compilation
+Perplexity Research → JSON Outline → Markdown Chapters (×6)
+    → Pandoc Conversion → BiDi Validation → Figure Generation
+    → LuaLaTeX + Biber (4-pass) → 19-page PDF
 ```
 
-Seven specialised agents collaborate via a hierarchical CrewAI process. Each
-agent is injected with a domain-specific skill file from `skills/`. See
-[`docs/PRD_latex_pipeline.md`](docs/PRD_latex_pipeline.md) for the complete
-mechanism reference.
+Seven specialised agents collaborate via a **hierarchical CrewAI process** managed
+by a central ManagerAgent. Each agent is injected with a domain-specific `SKILL.md`
+file as its `backstory`, validated by SkillSieve before injection.
+
+| Agent | LLM tier | SKILL.md | Responsibility |
+|---|---|---|---|
+| ManagerAgent | Haiku (fast) | `manager/` | Hierarchical task delegation |
+| ResearcherAgent | Haiku (fast) | `perplexity-research/` | Perplexity API search + wiki synthesis |
+| OutlineAgent | Haiku (fast) | `academic-outline/` | 6-chapter JSON outline with page budgets |
+| ContentAgent | Sonnet (smart) | `hebrew-academic-writing/` | Hebrew prose (CARS, citations, math) |
+| BidiAgent | Sonnet (smart) | `lualatex-bidi/` | BiDi correctness, 14-item validation checklist |
+| FigureAgent | Haiku (fast) | `matplotlib-tikz/` | matplotlib PNG + TikZ block diagrams |
+| CompilerAgent | Haiku (fast) | `lualatex-build/` + `latex_expert/` | Pandoc → LuaLaTeX 4-pass compilation |
 
 ---
 
 ## Quick Start
 
 ```bash
-cp .env.example .env       # add ANTHROPIC_API_KEY and PERPLEXITY_API_KEY
+cp .env.example .env        # add ANTHROPIC_API_KEY and PERPLEXITY_API_KEY
 uv sync
-uv run python main.py      # runs the full pipeline
+uv run python main.py       # interactive topic selection → full PDF pipeline
 ```
 
 Output PDF: `latex_output/main.pdf`
 
 ---
 
-## Human-in-the-Loop (HITL) Gate
+## Academic Writing DNA — Agent Constraints
 
-Before the 4-step LuaLaTeX + Biber compilation executes, the pipeline can
-pause and require explicit operator approval. This gives a human the chance to
-inspect the generated `.tex` files before committing compute to compilation.
+The ContentAgent's `SKILL.md` encodes publication-grade writing rules injected as
+its backstory. Agents that violate any rule produce non-compliant output that fails
+the BiDi validation checklist.
 
-**Enable the gate:**
+### CARS Model for Introduction
 
-```bash
-# .env
-HITL_ENABLED=true
+The Introduction chapter (`ch1`) must follow the four-move **CARS** (Create a
+Research Space) structure:
+
+| Move | Hebrew section heading | Purpose |
+|---|---|---|
+| 1 — Establish Territory | הקשר המחקרי | Cite 2+ papers showing field importance |
+| 2 — Identify Gap | פער המחקר | Name the specific limitation in prior work |
+| 3 — State Aim/Method | מטרת המחקר | Announce the novel contribution |
+| 4 — List Contributions | תרומות המחקר | Itemised bullet list of outputs |
+
+### Citation Synthesis (No Dumps)
+
+- Every `\cite{}` must be paired with a specific claim — never a bare list of keys.
+- Minimum **2–3 `\cite{}` calls per page** of prose.
+- Every cited work must be explicitly linked to the research gap identified in Move 2.
+- Fake keys (`perplexity_*`, `search_*`, `tool_*`) are rejected; canonical
+  `author_year_keyword` pattern required.
+
+### Abstract — 5-Beat Structure
+
+Background → Gap → Innovation → Contributions → Meaning
+
+### Conclusion — Future Work Mandate
+
+`ch6` must contain `\section{עבודה עתידית}` with ≥ 2 limitations and ≥ 2 concrete
+future research directions, each with a supporting citation.
+
+### Mandatory Visual Elements
+
+The 6-chapter set must collectively contain all of:
+
+| Element | Minimum | Enforcement |
+|---|---|---|
+| Python-generated graph (`\includegraphics`) | 1 | BiDi checklist item 11 |
+| Comparison table (`\begin{table}` + `\begin{LTR}`) | 1 | BiDi checklist item 12 |
+| Advanced display equation (`\begin{equation}` with ≥ 2 of `\int \sum \frac`) | 1 per chapter | BiDi checklist |
+| TikZ architecture diagram | 1 (strongly recommended) | FigureAgent SKILL.md |
+
+### 15-Page Minimum
+
+Verified by integration test `test_pdf_has_minimum_fifteen_pages`. Current output:
+**19 pages**.
+
+---
+
+## LaTeX Formatting DNA — Hard Rules
+
+The CompilerAgent and BidiAgent SKILL.md files encode these non-negotiable LaTeX
+constraints. Any generated `main.tex` that violates them is regenerated by the
+template audit pass.
+
+| Rule | Correct | Forbidden |
+|---|---|---|
+| Document class | `\documentclass[12pt,a4paper]{report}` | `extarticle`, `17pt`, `article` |
+| Footer | `\fancyfoot[C]{\thepage}` | `\fancyfoot[C]{\textdir TLT \thepage}` |
+| Cover page style | `\thispagestyle{empty}` inside `\begin{titlepage}` | `\maketitle` without titlepage |
+| Author name | `אבי איילי --- ת.ז. \textenglish{300228160}` (logical Hebrew) | `ילייא יבא` (reversed) |
+| AI watermark | `מסמך זה נוצר בסיוע בינה מלאכותית` on cover | omitted |
+| Bibliography resource | `\addbibresource{refs.bib}` once in `preamble.tex` | injected again in `build_articles.py` |
+| Bibliography output | `\printbibliography` before `\end{document}` | omitted |
+| Section numbers (BiDi) | `\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}` | bare `\thesection` (renders as `3.1` not `1.3`) |
+| Tables | every `\begin{tabular}` wrapped in `\begin{LTR}...\end{LTR}` | bare `\begin{tabular}` |
+| Header content | `\fancyhead[R]{\@title}` (Hebrew string, safe) | bare English words in header (renders reversed — "eltit" bug) |
+
+---
+
+## FinOps — Cost Architecture
+
+### Adaptive Model Routing
+
+Two LLM tiers are assigned based on task complexity:
+
+| Tier | Model | Agents | $/MTok in | $/MTok out |
+|---|---|---|---|---|
+| Fast (Tier-1) | `claude-haiku-4-5` | Manager, Researcher, Outline, Figure, Compiler | $0.80 | $4.00 |
+| Smart (Tier-2) | `claude-sonnet-4-6` | Content Writer, BiDi Validator | $3.00 | $15.00 |
+
+Only the two reasoning-heavy agents use the smart tier; structural agents run on
+Haiku. **Estimated saving vs. all-Sonnet: ~70%.**
+
+Models are set in `.env` — never hardcoded in Python source.
+
+### Prompt Caching
+
+All agents inject the `anthropic-beta: prompt-caching-2024-07-31` header via
+LiteLLM `additional_params`. The static cacheable prefix (agent role + goal +
+`SKILL.md` backstory + tool descriptions) is separated from dynamic turns
+(tool call results, compilation logs). Cache hit rate: ≥ 80% on the backstory
+prefix across multi-round tasks.
+
+Controlled by `PROMPT_CACHING_ENABLED=true` in `.env`.
+
+### Token Budget
+
+`MAX_TOKENS=4096` caps every LLM call, preventing runaway cost from unbounded
+completions. Set in `.env`; enforced via `config.py` `_make_llm()` factory.
+
+---
+
+## Agent Safety
+
+### Process Watchdog
+
+`src/watchdog/agent_watchdog.py` wraps any agent callable with a hard timeout:
+
+```python
+from src.watchdog.agent_watchdog import watch, guarded
+
+# Function-call form
+result = watch(my_agent_fn, arg1, arg2, timeout=300)
+
+# Decorator form
+@guarded(timeout=300)
+def my_agent_fn(...): ...
 ```
 
-When enabled, the terminal will display:
+- Default timeout: `WATCHDOG_TIMEOUT=300` seconds (sourced from `settings`).
+- On timeout: raises `WatchdogTimeoutError` and logs `AGENT_TIMEOUT` to `logs/agent_trace.log`.
+- Every start, completion, and error is logged with elapsed time for post-run audit.
+
+### SkillSieve — Injection Blocker
+
+Before any `SKILL.md` content is injected as an agent backstory,
+`src/security/skill_sieve.py` scans it for ClawHavoc-style adversarial patterns:
+
+| Pattern | Tactic |
+|---|---|
+| `ignore all previous instructions` | Prompt override |
+| `you are now in DAN/jailbreak mode` | Role hijack |
+| `disregard your system/safety instructions` | Safety bypass |
+| `<script>` | XSS injection |
+| `eval(`, `exec(`, `__import__(` | Code execution |
+
+Detection raises `SkillSieveViolation` and halts the pipeline before any API call.
+
+### HITL Gate — Operator Approval
+
+Before the 4-pass LuaLaTeX + Biber compilation executes, the pipeline optionally
+pauses for operator approval:
+
+```bash
+HITL_ENABLED=true   # in .env
+```
 
 ```
 [HITL] Press Y to execute the 4-step PDF compilation for 'latex_output/main.tex' [Y/n]:
 ```
 
-- Enter **Y** to proceed with compilation.
-- Enter anything else to abort with a clear error message.
+Disabled by default so CI and tests run unattended.
 
-**Disabled by default** so automated CI runs and tests are unaffected.
-The gate is implemented in `src/tools/lualatex_runner.py` and fully tested
-in `tests/test_lualatex_runner.py`.
+### Circuit Breaker
 
----
+`MAX_AGENT_RETRIES=2` caps fix-and-retry cycles per compilation attempt.
+After 2 failures the pipeline escalates with `[CIRCUIT BREAKER TRIPPED]` and
+halts — it never enters an infinite retry loop.
 
-## LaTeX Pipeline — Mechanism Reference
+### Python Runner AST Guard
 
-Full documentation of every conversion step is in
-[`docs/PRD_latex_pipeline.md`](docs/PRD_latex_pipeline.md), including:
+`src/tools/python_runner.py` statically scans all agent-submitted Python scripts
+via the `ast` module before execution. The following imports are blocked:
 
-- Pandoc CLI flags and `markdown+raw_tex` passthrough rationale
-- Two-pattern `\textenglish{}` regex unescaping protocol
-- 4-step LuaLaTeX / Biber compilation sequence
-- Font stack: David CLM (Hebrew) · Courier New · Arial
-- All `settings` fields and their defaults
+`subprocess`, `sys`, `socket`, `ctypes`, `os` (shell-execution forms)
+
+Dynamic `exec("import subprocess")` bypasses the static scan; a full OS sandbox
+(seccomp / gVisor) is required to block that vector in production.
 
 ---
 
-## Cost Optimisation — 75% Token Cost Reduction
+## No Hardcoded Hyperparameters
 
-The pipeline was migrated from `claude-sonnet-4-6` to `claude-haiku-4-5`
-without any quality regression on Hebrew academic text generation.
-
-![Cost comparison bar chart: Sonnet 4.6 vs Haiku 4.5](assets/cost_optimization.png)
-
-**Estimated per-run savings:**
-
-| Model | Input $/MTok | Output $/MTok | Est. cost / run |
-|---|---|---|---|
-| claude-sonnet-4-6 (previous) | $3.00 | $15.00 | ~$1.56 |
-| claude-haiku-4-5 (current)   | $0.80 | $4.00  | ~$0.42 |
-
-> ~75% reduction in token spend with equivalent output quality for
-> structured Hebrew academic text.
-
-Model is configurable via `LLM_MODEL=` in `.env` — never hardcoded.
-
----
-
-## Skills Inventory
-
-| Skill file | Agent | Purpose |
-|---|---|---|
-| `skills/manager/SKILL.md` | ManagerAgent | Hierarchical orchestration |
-| `skills/perplexity-research/SKILL.md` | ResearcherAgent | Perplexity API search |
-| `skills/academic-outline/SKILL.md` | OutlineAgent | 6-chapter JSON outline |
-| `skills/hebrew-academic-writing/SKILL.md` | ContentAgent | Hebrew prose writing |
-| `skills/lualatex-bidi/SKILL.md` | BidiAgent | BiDi validation (10-item checklist) |
-| `skills/matplotlib-tikz/SKILL.md` | FigureAgent | Chart and TikZ generation |
-| `skills/lualatex-build/SKILL.md` | CompilerAgent | Pandoc → LuaLaTeX pipeline |
-| `skills/latex_expert/SKILL.md` | CompilerAgent | Font injection + regex unescaping |
-
----
-
-## Configuration
-
-All tuneable values are set in `.env` (see `.env.example`). Key fields:
+Per CLAUDE.md §8, all tuneable values live in `.env` and are surfaced through
+`src/config.py` (`pydantic-settings` `Settings` class). No magic numbers in `.py` files.
 
 | Variable | Default | Description |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | — | Required |
 | `PERPLEXITY_API_KEY` | — | Required |
-| `LLM_MODEL` | `anthropic/claude-haiku-4-5-20251001` | Model for all agents |
-| `MAX_AGENT_RETRIES` | `3` | Circuit breaker (3 strikes → halt) |
-| `HITL_ENABLED` | `false` | Enable operator approval gate |
+| `LLM_MODEL` | `anthropic/claude-haiku-4-5-20251001` | Default model |
+| `LLM_MODEL_FAST` | `anthropic/claude-haiku-4-5-20251001` | Tier-1 structural agents |
+| `LLM_MODEL_SMART` | `anthropic/claude-sonnet-4-6` | Tier-2 reasoning agents |
+| `MAX_AGENT_RETRIES` | `2` | Circuit breaker threshold |
+| `MAX_ITER` | `80` | Max tool-call iterations per agent turn |
+| `MAX_TOKENS` | `4096` | Hard output cap per LLM call |
+| `HITL_ENABLED` | `true` | Operator approval gate before compilation |
+| `PROMPT_CACHING_ENABLED` | `true` | Anthropic prompt-caching header |
+| `PYTHON_RUNNER_TIMEOUT_S` | `60` | Sandbox timeout for agent Python scripts |
+| `WATCHDOG_TIMEOUT` | `300` | Hard kill timeout per agent callable |
+| `LUALATEX_BIN` | `lualatex` | LuaLaTeX binary path |
+| `BIBER_BIN` | `biber` | Biber binary path |
+| `PANDOC_BIN` | `pandoc` | Pandoc binary path |
 | `OUTPUT_DIR` | `latex_output` | Output directory |
+| `MIN_PAGES` | `15` | Minimum PDF page count (integration test gate) |
 
 ---
 
-## Enterprise Grade & Security
+## CI/CD Pipeline
 
-### Red-Team Attack Coverage
-
-`tests/red_team_attack.py` simulates two adversarial attack classes against
-the tool layer and asserts each is safely blocked:
-
-| Attack class | Attack vector | Defence layer | Result |
-|---|---|---|---|
-| **Prompt Injection** | Path traversal (`../../etc/passwd`) | `MarkdownConverterTool._validate_path()` | `ValueError: escapes` |
-| **Prompt Injection** | Absolute path injection (`/etc/shadow`) | `_validate_path()` | `ValueError: escapes` |
-| **Prompt Injection** | Null-byte injection (`file\x00.md`) | Python `Path` constructor | `ValueError` |
-| **Tool Misuse** | `import subprocess` in script | `PythonRunnerTool._scan_imports()` AST scan | Flagged + blocked |
-| **Tool Misuse** | `import sys; sys.exit()` | AST scan | Flagged + blocked |
-| **Tool Misuse** | `from subprocess import run` | AST scan (from-import form) | Flagged + blocked |
-| **Tool Misuse** | Chained `import socket, subprocess, ctypes` | AST scan | All 3 flagged |
-
-```bash
-uv run pytest tests/red_team_attack.py -v   # 18 tests, all pass
-```
-
-**Known limitation** (documented, not fixed): `exec("import subprocess")` bypasses
-the static AST scan. A full sandbox (seccomp, gVisor) is required to block
-dynamic eval attacks at the OS level.
-
----
-
-### CI/CD Pipeline
-
-Every push and pull request triggers `.github/workflows/ci.yml`, which enforces:
+Every push and pull request triggers `.github/workflows/ci.yml`, enforcing four gates:
 
 | Gate | Command | Requirement |
 |---|---|---|
-| Zero lint violations | `ruff check .` | exit 0 |
-| Coverage threshold | `pytest --cov=src --cov-fail-under=85` | ≥ 85% |
-| 150-line budget | `find src -name "*.py" \| xargs wc -l` | no file > 150 lines |
+| Zero lint violations | `ruff check .` (excludes `latex_output/`) | exit 0 |
+| Coverage threshold | `pytest --cov=src --cov-fail-under=85` | ≥ 85% (current: 97%) |
+| 150-line budget | `find src tests -name "*.py" \| xargs wc -l` | no file > 150 lines |
+| PDF artifact | `pdfinfo latex_output/main.pdf` → `upload-artifact@v4` | warn if absent |
+
+The PDF artifact step installs `poppler-utils`, records `pdfinfo` metadata to
+`pdf_metadata.txt`, and uploads both files as the `compiled-pdf` workflow artifact.
+This closes the CI verifiability gap: the PDF is no longer gitignored-invisible to
+the pipeline.
+
+`latex_output/main.pdf` is tracked via `.gitignore` negation (`!latex_output/main.pdf`)
+so it can be committed and uploaded as a CI artifact.
 
 ---
 
-### MCP (Model Context Protocol) Server
+## 150-Line Budget — Single-Responsibility Enforcement
+
+No Python source file in `src/` or `tests/` may exceed 150 lines. The CI gate
+enforces this on every push. Largest files currently:
+
+| File | Lines |
+|---|---|
+| `src/tools/lualatex_runner.py` | 143 |
+| `src/tools/markdown_converter.py` | 109 |
+| `src/orchestration/a2a_protocol.py` | 95 |
+
+---
+
+## MCP Server — Agent Interoperability
 
 `src/tools/mcp_latex_server.py` exposes the Markdown→LaTeX converter as a
-JSON-RPC 2.0 MCP endpoint, enabling horizontal agent interoperability with any
-MCP-compatible orchestrator (Claude Desktop, OpenAI Agents SDK, LangGraph, etc.).
-
-**Supported methods:**
-
-| JSON-RPC method | Description |
-|---|---|
-| `tools/list` | Returns the tool manifest (name, description, input schema) |
-| `tools/call` | Dispatches to `markdown_converter_tool` with path-safety validation |
-
-**Usage example:**
+JSON-RPC 2.0 MCP endpoint, enabling interoperability with any MCP-compatible
+orchestrator (Claude Desktop, OpenAI Agents SDK, LangGraph).
 
 ```python
 from src.tools.mcp_latex_server import mcp_latex_server
 
-# Discover available tools
-resp = mcp_latex_server.handle({"jsonrpc": "2.0", "method": "tools/list", "id": 1})
-# → {"jsonrpc": "2.0", "result": {"tools": [{"name": "markdown_to_latex", ...}]}, "id": 1}
-
-# Call the converter
 resp = mcp_latex_server.handle({
-    "jsonrpc": "2.0",
-    "method": "tools/call",
+    "jsonrpc": "2.0", "method": "tools/call",
     "params": {"name": "markdown_to_latex",
-               "arguments": {"md_path": "chapters/ch1.md", "tex_path": "chapters/ch1.tex"}},
-    "id": 2,
+               "arguments": {"md_path": "chapters/ch1.md",
+                              "tex_path": "chapters/ch1.tex"}},
+    "id": 1,
 })
 ```
 
-Path-traversal attacks routed through the MCP endpoint are still blocked by
-`_validate_path()` and returned as JSON-RPC `-32602` errors.
+Path-traversal attacks routed through MCP are still blocked by `_validate_path()`
+and returned as JSON-RPC `-32602` errors.
 
 ---
 
-### OAT Parameter Analysis Notebook
+## SDA Review Protocol
 
-`notebooks/parameter_analysis.ipynb` performs a One-at-a-Time (OAT) sensitivity
-analysis on two key pipeline knobs:
+The `src/debate_agents/debate_reviewer.py` implements **Simultaneous Divergence
+Averaging**: before finalising any chapter, two independent LLM reviewers
+(Deep Learning Expert + NLP/Linguistics Expert) produce critiques in parallel,
+and an Arbiter merges them into a consensus review. The final edit must satisfy
+all structural PASS items and ≥ 2/3 of the flow CLEAR items.
 
-- **`MAX_TOKENS`** (512 → 8 192): cost scales linearly; completion rate saturates
-  at 4 096 — the current default is at the knee of the curve.
-- **`chunk_size`** (300 → 3 000 chars): write operations drop with larger chunks
-  but JSON truncation risk follows a logistic curve that inflects at ~900 chars —
-  exactly the CLAUDE.md §10 hard limit.
+---
 
-The combined heatmap (cost × risk) confirms the current defaults occupy the
-optimal low-cost / low-risk quadrant.
+## Red-Team Attack Coverage
 
-```bash
-jupyter lab notebooks/parameter_analysis.ipynb
-```
+`tests/test_red_team_injection.py` and `tests/test_red_team_tool_misuse.py`
+assert that all documented attack vectors are blocked:
+
+| Attack class | Vector | Defence | Result |
+|---|---|---|---|
+| Path traversal | `../../etc/passwd` | `_validate_path()` | `ValueError` |
+| Absolute path | `/etc/shadow` | `_validate_path()` | `ValueError` |
+| Null-byte injection | `file\x00.md` | `Path` constructor | `ValueError` |
+| Import smuggling | `import subprocess` | AST scan | Blocked |
+| Shell escape | `import sys; sys.exit()` | AST scan | Blocked |
+| From-import | `from subprocess import run` | AST scan | Blocked |
+| Chained imports | `import socket, subprocess, ctypes` | AST scan | All 3 blocked |
+| SkillSieve injection | `ignore all previous instructions` in SKILL.md | SkillSieve regex | `SkillSieveViolation` |
 
 ---
 
@@ -224,18 +335,8 @@ jupyter lab notebooks/parameter_analysis.ipynb
 
 ```bash
 uv run ruff check .                          # lint — must exit 0
-uv run pytest --cov=src --cov-fail-under=85  # ≥ 85% coverage
-uv run pytest tests/red_team_attack.py -v    # security gate
-wc -l src/**/*.py                            # no src/ file may exceed 150 lines
+uv run pytest --cov=src --cov-fail-under=85  # ≥ 85% coverage (currently 97%)
+find src tests -name "*.py" | xargs wc -l   # no file may exceed 150 lines
 ```
 
-CI enforces all three gates on every push via `.github/workflows/ci.yml`.
-
----
-
-## Generating the Cost Chart
-
-```bash
-uv run python scripts/generate_cost_chart.py
-# → assets/cost_optimization.png
-```
+CI enforces all gates on every push via `.github/workflows/ci.yml`.
