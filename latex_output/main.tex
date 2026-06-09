@@ -22,7 +22,7 @@
 \graphicspath{{latex_output/assets/}{latex_output/figures/}{assets/}{figures/}}
 
 \makeatletter
-\AtBeginDocument{%
+\AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
   \fancyhead[R]{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}%

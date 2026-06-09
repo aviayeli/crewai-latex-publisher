@@ -118,25 +118,36 @@ Load `fancyhdr` in the preamble:
 \setlength{\headheight}{15pt}
 ```
 
-Then configure headers and footers inside `\makeatletter`/`\makeatother` with `\AtBeginDocument`:
+Then configure headers and footers using `\AfterEndPreamble` (from etoolbox) — **NOT** `\AtBeginDocument`.
+`\AfterEndPreamble` fires after ALL package hooks including polyglossia/luabidi, so the pagestyle cannot be reset by any subsequent package initialisation:
 
 ```latex
 \makeatletter
-\AtBeginDocument{%
+\AfterEndPreamble{%
   \pagestyle{fancy}%
   \fancyhf{}%
   \fancyhead[R]{\@title}%
   \fancyfoot[C]{\thepage}%
   \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
     \fancyhead[R]{\@title}%
     \fancyfoot[C]{\thepage}%
     \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
   }%
 }
 \makeatother
 ```
+
+**WHY `\AfterEndPreamble`, not `\AtBeginDocument`:**
+`\AtBeginDocument` runs as part of LaTeX's `begindocument` hook queue.
+Polyglossia registers its own hooks in that same queue (to activate RTL bidi),
+and those hooks fire AFTER ours — silently resetting `\pagestyle` and wiping the
+`plain` override. `\AfterEndPreamble` (etoolbox) fires at the very end of
+`\begin{document}` after every package has completed its setup, so the fancy
+pagestyle and plain override are guaranteed to survive.
 
 **FORBIDDEN patterns:**
 - `\textdir TLT \thepage` — `\textdir` is a LuaTeX direction primitive, not a fancyhdr command. It produces `! Undefined control sequence` errors.

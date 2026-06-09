@@ -1,0 +1,27 @@
+% --- fancyhdr: explicit footer + plain pagestyle override ---
+% Use \AfterEndPreamble (etoolbox) so polyglossia/luabidi hooks cannot
+% reset the pagestyle after we set it.  \AtBeginDocument is FORBIDDEN here.
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+
+\makeatletter
+\AfterEndPreamble{%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \fancyhead[R]{\@title}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0pt}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[R]{\@title}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+  }%
+}
+\makeatother
+
+% --- TikZ ---
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
