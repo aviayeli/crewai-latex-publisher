@@ -79,27 +79,15 @@ def test_smart_tier_agents_use_smart_builder():
     assert _smart.call_count == 2
 
 
-def test_all_agents_max_retry_matches_settings():
+def test_all_agents_limits_match_settings():
     with patch("src.crew._load_skill", return_value="dummy"):
         crew = PublisherCrew()
-    all_agents = [
+    for agent in [
         crew.manager_agent, crew.researcher_agent, crew.outline_agent,
         crew.content_agent, crew.bidi_agent, crew.figure_agent,
         crew.compiler_agent,
-    ]
-    for agent in all_agents:
+    ]:
         assert agent.max_retry_limit == settings.MAX_AGENT_RETRIES
-
-
-def test_all_agents_max_iter_matches_settings():
-    with patch("src.crew._load_skill", return_value="dummy"):
-        crew = PublisherCrew()
-    all_agents = [
-        crew.manager_agent, crew.researcher_agent, crew.outline_agent,
-        crew.content_agent, crew.bidi_agent, crew.figure_agent,
-        crew.compiler_agent,
-    ]
-    for agent in all_agents:
         assert agent.max_iter == settings.MAX_ITER
 
 
