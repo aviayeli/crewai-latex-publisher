@@ -23,18 +23,15 @@
 
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \AfterEndPreamble{%
+  \setlength{\headheight}{15pt}%
   \pagestyle{fancy}%
   \fancyhf{}%
-  \fancyhead[R]{\leftmark}%
+  \fancyhead[L]{\leftmark}%
   \fancyfoot[C]{\thepage}%
-  \renewcommand{\headrulewidth}{0.4pt}%
-  \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
-    \fancyhead[R]{\leftmark}%
     \fancyfoot[C]{\thepage}%
-    \renewcommand{\headrulewidth}{0.4pt}%
-    \renewcommand{\footrulewidth}{0pt}%
+    \renewcommand{\headrulewidth}{0pt}%
   }%
 }
 
