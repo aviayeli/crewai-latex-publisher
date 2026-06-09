@@ -111,34 +111,38 @@ The cover page (inside `\begin{titlepage}...\end{titlepage}`) must contain ALL o
 
 ## CRITICAL: Headers and Footers — ALWAYS `fancyhdr`, NEVER `\textdir TLT`
 
-Load `fancyhdr` in the preamble:
+**`templates/preamble.tex` is the single source of truth for all fancyhdr configuration.**
+NEVER inject `\AtBeginDocument`, `\AfterEndPreamble`, `\fancyhdr`, `\pagestyle`, or any
+layout macro directly into `main.tex`. The compiler agent reads `templates/preamble.tex`
+and inlines it — any fancyhdr block in `main.tex` will duplicate or override the source of
+truth and reintroduce the exact bugs described below.
+
+`templates/preamble.tex` already contains the correct setup. Do not touch it unless
+STEP 0 of this skill explicitly flags a missing required line — in that case, overwrite
+`templates/preamble.tex` with the Complete Preamble Skeleton below.
+
+---
+
+The correct fancyhdr configuration (already in `templates/preamble.tex`) is:
 
 ```latex
 \usepackage{fancyhdr}
 \setlength{\headheight}{15pt}
-```
 
-Then configure headers and footers using `\AfterEndPreamble` (from etoolbox) — **NOT** `\AtBeginDocument`.
-`\AfterEndPreamble` fires after ALL package hooks including polyglossia/luabidi, so the pagestyle cannot be reset by any subsequent package initialisation:
-
-```latex
-\makeatletter
+% \chaptermark suppresses uppercasing so Hebrew chapter titles render correctly.
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \AfterEndPreamble{%
+  \setlength{\headheight}{15pt}%
   \pagestyle{fancy}%
   \fancyhf{}%
-  \fancyhead[R]{\@title}%
+  \fancyhead[L]{\leftmark}%
   \fancyfoot[C]{\thepage}%
-  \renewcommand{\headrulewidth}{0.4pt}%
-  \renewcommand{\footrulewidth}{0pt}%
   \fancypagestyle{plain}{%
     \fancyhf{}%
-    \fancyhead[R]{\@title}%
     \fancyfoot[C]{\thepage}%
-    \renewcommand{\headrulewidth}{0.4pt}%
-    \renewcommand{\footrulewidth}{0pt}%
+    \renewcommand{\headrulewidth}{0pt}%
   }%
 }
-\makeatother
 ```
 
 **WHY `\AfterEndPreamble`, not `\AtBeginDocument`:**
@@ -149,10 +153,19 @@ and those hooks fire AFTER ours — silently resetting `\pagestyle` and wiping t
 `\begin{document}` after every package has completed its setup, so the fancy
 pagestyle and plain override are guaranteed to survive.
 
+**WHY `\fancyhead[L]{\leftmark}`, not `\fancyhead[R]{\@title}`:**
+In a polyglossia RTL document, `[L]` maps to the physical right of the page (the
+logical start for Hebrew readers). `\leftmark` holds the current chapter title set by
+`\chaptermark` — giving a proper "running header" that changes per chapter, satisfying
+rubric Criteria 1.3 and 1.5. Using `\@title` (the document title) shows the same
+string on every page and fails the "chapter name in header" requirement.
+
 **FORBIDDEN patterns:**
-- `\textdir TLT \thepage` — `\textdir` is a LuaTeX direction primitive, not a fancyhdr command. It produces `! Undefined control sequence` errors.
-- `\def\ps@plain{...}` — low-level override; incompatible with fancyhdr active at document level.
-- `\fancyfoot[C]{\textdir TLT \thepage}` — same as the first forbidden pattern above.
+- `\AtBeginDocument{... \pagestyle{fancy} ...}` — polyglossia resets pagestyle after this hook.
+- `\textdir TLT \thepage` — `\textdir` is a LuaTeX direction primitive, not a fancyhdr command.
+- `\def\ps@plain{...}` — low-level override; incompatible with fancyhdr at document level.
+- `\fancyhead[R]{\@title}` — document title instead of chapter name; fails the running-header requirement.
+- Any fancyhdr block written directly into `main.tex` — duplicates source of truth in `templates/preamble.tex`.
 
 **The footer MUST be exactly:** `\fancyfoot[C]{\thepage}` — nothing else.
 
@@ -204,18 +217,20 @@ In RTL headers, bare English words are subject to the BiDi algorithm and render 
 
 **Wrong:**
 ```latex
-\fancyhead[R]{My Title}  % renders as "eltiT yM"
+\fancyhead[R]{My Title}           % renders as "eltiT yM"
+\fancyhead[R]{\@title}            % document title — same string every page, fails rubric
+\fancyhead[L]{Chapter \thechapter} % bare English — renders reversed in RTL
 ```
 
-**Correct:**
+**Correct (already in `templates/preamble.tex` — do not duplicate):**
 ```latex
-\fancyhead[R]{\@title}   % \@title is stored as a Hebrew string — safe
+\fancyhead[L]{\leftmark}   % chapter name via \chaptermark — changes per chapter, RTL-safe
 ```
 
-Or for English words in header:
-```latex
-\fancyhead[L]{\textenglish{Chapter \thechapter}}
-```
+`\leftmark` holds the current chapter title as set by `\renewcommand{\chaptermark}[1]{\markboth{#1}{}}`.
+Since the title is stored as a token sequence (not rendered inline), the BiDi algorithm does not
+reverse it. `[L]` in a polyglossia RTL document maps to the physical right side of the page —
+the logical reading-start position for Hebrew.
 
 ---
 
