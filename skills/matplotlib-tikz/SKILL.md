@@ -32,8 +32,8 @@ Immediately after `python_runner_tool` confirms the PNG was saved, use `latex_wr
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{../assets/attention_complexity.png}
-    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n\textsuperscript{2})},
-             תשומת לב לינארית \textenglish{O(n log n)}, ורקורנטי \textenglish{O(n)}.}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{$O(n^{2})$},
+             תשומת לב לינארית \textenglish{$O(n \log n)$}, ורקורנטי \textenglish{$O(n)$}.}
     \label{fig:attention_complexity}
 \end{figure}
 ```
@@ -176,9 +176,9 @@ Use a `figure` environment with `\includegraphics` in the chapter that reference
 ```latex
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\textwidth]{latex_output/assets/attention_complexity.png}
-    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n²)},
-             תשומת לב לינארית \textenglish{O(n \log n)}, ורקורנטי \textenglish{O(n)}.}
+    \includegraphics[width=0.85\textwidth]{../assets/attention_complexity.png}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{$O(n^{2})$},
+             תשומת לב לינארית \textenglish{$O(n \log n)$}, ורקורנטי \textenglish{$O(n)$}.}
     \label{fig:attention_complexity}
 \end{figure}
 ```
@@ -275,6 +275,45 @@ Use TikZ `\draw[->]` with named node anchors. Each `\node` has a label and an ex
 ```
 
 The `tikz` package must be loaded in `main.tex` preamble (it is in the required package list).
+
+---
+
+## CRITICAL: Math Mode Is Mandatory in All Captions and TikZ Labels
+
+Any mathematical expression inside a `\caption{}` or a TikZ `\node{...}` label
+**MUST** be wrapped in inline math mode (`$...$` or `\(...\)`).
+
+**Root cause:** LaTeX math operators (`\log`, `\sin`, `\sqrt`, `\sum`, etc.) are only
+defined inside math mode. Writing `\textenglish{O(n \log n)}` without `$...$` inside
+the `\textenglish{}` argument produces `! Missing $ inserted` and aborts compilation.
+The RTL BiDi algorithm also reverses bare notation — `n^2` renders as `2^n` in Hebrew
+paragraphs unless protected by math mode.
+
+### Mandatory pattern for Big-O complexity in captions
+
+```latex
+% FORBIDDEN — \log outside math mode causes compilation failure
+\caption{... \textenglish{O(n \log n)} ...}
+\caption{... \textenglish{O(n\textsuperscript{2})} ...}
+
+% CORRECT — math mode wraps all notation including operators
+\caption{... \textenglish{$O(n \log n)$} ...}
+\caption{... \textenglish{$O(n^{2})$} ...}
+\caption{... \textenglish{$O(n)$} ...}
+```
+
+### General rule for all captions and TikZ labels
+
+| Expression type | Wrong | Correct |
+|-----------------|-------|---------|
+| Big-O with operator | `\textenglish{O(n \log n)}` | `\textenglish{$O(n \log n)$}` |
+| Superscript | `\textenglish{O(n\textsuperscript{2})}` | `\textenglish{$O(n^{2})$}` |
+| Fraction in node | `\node{d_k / \sqrt{d}}` | `\node{$d_k / \sqrt{d}$}` |
+| Subscript | `\textenglish{W_hh}` | `\textenglish{$W_{hh}$}` |
+| Any `\log`, `\sin`, `\tanh`, etc. | `\textenglish{\log n}` | `\textenglish{$\log n$}` |
+
+Apply this rule **before calling `latex_writer_tool`** — do not rely on the BiDi agent
+to catch caption errors post-hoc.
 
 ---
 

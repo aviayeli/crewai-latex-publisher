@@ -2,7 +2,7 @@
 
 \section{בניית מודלים ב-PyTorch}
 
-PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבחירה לחוקרי עיבוד אותות בשל גמישותה ותמיכתה בניתוב הדינמי. בעבודה עם סדרות זמן (time series), אנו מגדירים מודלים LSTM מקוננים (stacked) על ידי יצירת מחלקה המורשת מ-\textenglish{nn.Module}. הגדרת שכבת LSTM בודדת דורשת שלושה פרמטרים עיקריים: גודל הקלט (\textenglish{input\_size}), מספר יחידות זיכרון (\textenglish{hidden\_size}), ומספר שכבות (\textenglish{num\_layers}).
+PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבחירה לחוקרי עיבוד אותות בשל גמישותה ותמיכתה בניתוב הדינמי. בעבודה עם סדרות זמן (time series), אנו מגדירים מודלים LSTM מקוננים (stacked) על ידי יצירת מחלקה המורשת מ-\textenglish{nn.Module}. הגדרת שכבת LSTM בודדת דורשת שלושה פרמטרים עיקריים: גודל הקלט (\textenglish{$input\_size$}), מספר יחידות זיכרון (\textenglish{$hidden\_size$}), ומספר שכבות (\textenglish{$num\_layers$}).
 
 דוגמה בסיסית:
 
@@ -10,18 +10,18 @@ PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבח
 \text{lstm\_layer} = \text{nn.LSTM}(\text{input\_size}=1, \text{hidden\_size}=64, \text{num\_layers}=2)
 \end{equation}
 
-כאשר הקלט מעוצב כטנסור בגודל \textenglish{[batch\_size, seq\_length, input\_size]}, מערך LSTM עם \textenglish{batch\_first=True} מפיק פלט מצורה דומה, כאשר כל אלמנט בסדרה הופך לווקטור מימד \textenglish{hidden\_size}. תופעת ההדרגה הנעלמת (vanishing gradient), שהייתה בעיה ב-RNNs רגילות, מופחתת בצורה מובנית דרך שערים נטוש (forget gates) של LSTM, המאפשרים זרימת שיפוע עקבית על פני עשרות צעדי זמן.
+כאשר הקלט מעוצב כטנסור בגודל \textenglish{$[batch\_size, seq\_length, input\_size]$}, מערך LSTM עם \textenglish{$batch\_first=True$} מפיק פלט מצורה דומה, כאשר כל אלמנט בסדרה הופך לווקטור מימד \textenglish{$hidden\_size$}. תופעת ההדרגה הנעלמת (vanishing gradient), שהייתה בעיה ב-RNNs רגילות, מופחתת בצורה מובנית דרך שערים נטוש (forget gates) של LSTM, המאפשרים זרימת שיפוע עקבית על פני עשרות צעדי זמן.
 
 בעבודה עם חילוץ אותות סינוסואידליים, הצינור הטיפוסי הוא:
 
 \begin{enumerate}
 \item \textenglish{Embedding Layer} (אופציונלי) --- לא רלוונטי לנתוני חידוש רציפים
 \item \textenglish{Stacked LSTM} --- בדרך כלל 2--3 שכבות עם dropout בין שכבות
-\item \textenglish{Dense/Fully-connected} --- שכבת היציאה בגודל \textenglish{output\_size}
+\item \textenglish{Dense/Fully-connected} --- שכבת היציאה בגודל \textenglish{$output\_size$}
 \item \textenglish{Activation} --- בדרך כלל זהות (identity) או \textenglish{ReLU} לצפוי רציף
 \end{enumerate}
 
-היתרון של PyTorch הוא שכל שכבה היא אובייקט פיתוני, ניתנת לחיבור והרחבה בקלות. מודל BiLSTM מגדיל את מימד הפלט ל-\textenglish{2 × hidden\_size} כי LSTM קדמי ו-LSTM אחורי פולטים וקטורים מובדלים המשורשרים (concatenated) באופן עקבי.
+היתרון של PyTorch הוא שכל שכבה היא אובייקט פיתוני, ניתנת לחיבור והרחבה בקלות. מודל BiLSTM מגדיל את מימד הפלט ל-\textenglish{$2 × hidden\_size$} כי LSTM קדמי ו-LSTM אחורי פולטים וקטורים מובדלים המשורשרים (concatenated) באופן עקבי.
 
 \section{הכנת נתונים ובניית loaders}
 
@@ -44,7 +44,7 @@ PyTorch מספק את מחלקת \textenglish{Dataset} וה-\textenglish{DataLoa
 \text{loader} = \text{DataLoader}(\text{dataset}, \text{batch\_size}=32, \text{shuffle}=\text{True})
 \end{equation}
 
-בנתוני סדרות זמן, \textenglish{shuffle=True} עבור סט האימון מודגש אך חיוני לא לערבב את סט הבדיקה (שם אנו שומרים על סדר זמני). הבחירה של גודל חלון (\textenglish{window\_size}) משפיעה על איזון בין דגימות סטטיסטיות וביכולת של LSTM להיזכר בתלות זמן ארוכת טווח; חלונות קטנים מדי מביאים לאפילוג רועשים, וחלונות גדולים מדי עלולים לגרום לירידה בביצועים בשל משך תלות תיאורטי של LSTM.
+בנתוני סדרות זמן, \textenglish{shuffle=True} עבור סט האימון מודגש אך חיוני לא לערבב את סט הבדיקה (שם אנו שומרים על סדר זמני). הבחירה של גודל חלון (\textenglish{$window\_size$}) משפיעה על איזון בין דגימות סטטיסטיות וביכולת של LSTM להיזכר בתלות זמן ארוכת טווח; חלונות קטנים מדי מביאים לאפילוג רועשים, וחלונות גדולים מדי עלולים לגרום לירידה בביצועים בשל משך תלות תיאורטי של LSTM.
 
 \section{הגדרת פונקציות loss וoptimizers}
 

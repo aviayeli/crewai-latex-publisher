@@ -103,8 +103,8 @@ At least one chapter must embed the pre-generated PNG via a `figure` environment
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.85\textwidth]{latex_output/assets/attention_complexity.png}
-    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{O(n²)},
-             תשומת לב לינארית \textenglish{O(n \log n)}, ורקורנטי \textenglish{O(n)}.}
+    \caption{השוואת מורכבות חישובית: תשומת לב סטנדרטית \textenglish{$O(n^{2})$},
+             תשומת לב לינארית \textenglish{$O(n \log n)$}, ורקורנטי \textenglish{$O(n)$}.}
     \label{fig:attention_complexity}
 \end{figure}
 ```

@@ -2,13 +2,6 @@
 
 \section{רשתות נוירונים חוזרות (RNNs)}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.85\textwidth]{latex_output/assets/attention_complexity.png}
-\caption{השוואת מורכבות חישובית בין תשומת לב סטנדרטית, תשומת לב לינארית, ועיבוד רקורנטי. תרשים זה מדגיש כיצד \textenglish{Linear Attention} מפחיתה מורכבות מ-\(O(n^2)\) ל-\(O(n)\).}
-\label{fig:attention_complexity}
-\end{figure}
-
 רשתות נוירונים חוזרות (Recurrent Neural Networks, RNNs) מהוות את הבסיס של עיבוד סדרות זמניות בלמידה עמוקה. בניגוד לרשתות עצביות מלאות חיבור (feedforward networks) שמעבדות כל קלט באופן עצמאי, RNNs שומרות על \textenglish{hidden state} שמתעדכן בכל צעד זמני. המצב הסמוי (hidden state) משמש כ״זיכרון״ של הרשת, המאפשר לה להשפיע על התפוקה הנוכחית על סמך קלטים קודמים.
 
 הארכיטקטורה הבסיסית של RNN מוגדרת כך:
