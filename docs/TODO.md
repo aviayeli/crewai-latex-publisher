@@ -351,30 +351,30 @@
 
 > Gate: `src/crew.py` and all agent/task modules must NOT exist yet. All tests must fail with ImportError.
 
-- [ ] Create `tests/test_crew.py` with imports: `pytest`, `unittest.mock`, `pathlib.Path`, `src.crew`
-- [ ] Write `test_load_skill_reads_file`: write a temp `SKILL.md` in a temp skills dir; call `_load_skill`; assert returned string matches file content
-- [ ] Write `test_load_skill_missing_raises_file_not_found`: call `_load_skill("nonexistent-skill-xyz")`; assert `FileNotFoundError`
-- [ ] Write `test_load_skill_reads_from_skills_subdir`: mock `Path.read_text`; verify `_load_skill("foo")` constructs path `skills/foo/SKILL.md`
-- [ ] Write `test_publisher_crew_init_loads_seven_skills`: mock `_load_skill` to return dummy strings; construct `PublisherCrew()`; assert mock called exactly 7 times
-- [ ] Write `test_all_agent_backstories_equal_skill_content`: mock all 7 SKILL.md reads with distinct strings; construct `PublisherCrew()`; assert each agent's `backstory` equals its corresponding mock return value
-- [ ] Write `test_no_agent_backstory_is_hardcoded_python_string`: assert no agent module file contains a string literal that would serve as the backstory (prove skills are loaded from files, not inline)
-- [ ] Write `test_crew_has_exactly_eleven_tasks`: construct `PublisherCrew()` with mocked skills; collect all tasks; assert count `== 11`
-- [ ] Write `test_crew_has_exactly_seven_agents`: assert all seven agent attributes (manager + 6 workers) are present and distinct
-- [ ] Write `test_outline_task_has_no_context`: assert `crew.outline_task.context` is empty or `None`
-- [ ] Write `test_content_tasks_each_have_outline_in_context`: assert `outline_task` appears in each content task's `context`
-- [ ] Write `test_bidi_task_context_contains_all_six_content_tasks`: assert `len(crew.bidi_task.context) == 6`
-- [ ] Write `test_figure_task_context_contains_outline_task`: assert `crew.outline_task in crew.figure_task.context`
-- [ ] Write `test_compile_task_context_contains_bidi_and_figure`: assert both `bidi_task` and `figure_task` appear in `compile_task.context`
-- [ ] Write `test_all_agents_llm_matches_settings`: assert each agent's `llm` attribute equals `settings.LLM_MODEL`
-- [ ] Write `test_all_agents_max_retry_matches_settings`: assert each agent's `max_retry_limit == settings.MAX_AGENT_RETRIES`
-- [ ] Write `test_missing_skill_file_prevents_crew_init`: mock one skill file as missing; assert `PublisherCrew()` raises `FileNotFoundError`
-- [ ] Write `test_kickoff_constructs_hierarchical_crew`: mock `Crew.kickoff`; call `PublisherCrew().kickoff()`; assert `Crew` was constructed with `process=Process.hierarchical`
-- [ ] Write `test_manager_agent_passed_as_kwarg`: mock `Crew`; assert `Crew(...)` was called with `manager_agent=` kwarg and that the manager agent is NOT in the `agents=` list
-- [ ] Write `test_manager_agent_allow_delegation_true`: assert `crew.manager_agent.allow_delegation == True`
-- [ ] Write `test_research_task_has_no_context`: assert `crew.research_task.context` is empty or `None`
-- [ ] Write `test_outline_task_context_contains_research_task`: assert `crew.research_task in crew.outline_task.context`
-- [ ] Confirm `uv run pytest tests/test_crew.py` exits non-zero (ImportError)
-- [ ] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
+- [x] Create `tests/test_crew.py` with imports: `pytest`, `unittest.mock`, `pathlib.Path`, `src.crew`
+- [x] Write `test_load_skill_reads_file`: write a temp `SKILL.md` in a temp skills dir; call `_load_skill`; assert returned string matches file content
+- [x] Write `test_load_skill_missing_raises_file_not_found`: call `_load_skill("nonexistent-skill-xyz")`; assert `FileNotFoundError`
+- [x] Write `test_load_skill_reads_from_skills_subdir`: mock `Path.read_text`; verify `_load_skill("foo")` constructs path `skills/foo/SKILL.md`
+- [x] Write `test_publisher_crew_init_loads_seven_skills`: mock `_load_skill` to return dummy strings; construct `PublisherCrew()`; assert mock called exactly 7 times
+- [x] Write `test_all_agent_backstories_equal_skill_content`: mock all 7 SKILL.md reads with distinct strings; construct `PublisherCrew()`; assert each agent's `backstory` equals its corresponding mock return value
+- [x] Write `test_no_agent_backstory_is_hardcoded_python_string`: assert no agent module file contains a string literal that would serve as the backstory (prove skills are loaded from files, not inline)
+- [x] Write `test_crew_has_exactly_eleven_tasks`: construct `PublisherCrew()` with mocked skills; collect all tasks; assert count `== 11`
+- [x] Write `test_crew_has_exactly_seven_agents`: assert all seven agent attributes (manager + 6 workers) are present and distinct
+- [x] Write `test_outline_task_has_no_context`: assert `crew.outline_task.context` is empty or `None`
+- [x] Write `test_content_tasks_each_have_outline_in_context`: assert `outline_task` appears in each content task's `context`
+- [x] Write `test_bidi_task_context_contains_all_six_content_tasks`: assert `len(crew.bidi_task.context) == 6`
+- [x] Write `test_figure_task_context_contains_outline_task`: assert `crew.outline_task in crew.figure_task.context`
+- [x] Write `test_compile_task_context_contains_bidi_and_figure`: assert both `bidi_task` and `figure_task` appear in `compile_task.context`
+- [x] Write `test_all_agents_llm_matches_settings`: assert each agent's `llm` attribute equals `settings.LLM_MODEL`
+- [x] Write `test_all_agents_max_retry_matches_settings`: assert each agent's `max_retry_limit == settings.MAX_AGENT_RETRIES`
+- [x] Write `test_missing_skill_file_prevents_crew_init`: mock one skill file as missing; assert `PublisherCrew()` raises `FileNotFoundError`
+- [x] Write `test_kickoff_constructs_hierarchical_crew`: mock `Crew.kickoff`; call `PublisherCrew().kickoff()`; assert `Crew` was constructed with `process=Process.hierarchical`
+- [x] Write `test_manager_agent_passed_as_kwarg`: mock `Crew`; assert `Crew(...)` was called with `manager_agent=` kwarg and that the manager agent is NOT in the `agents=` list
+- [x] Write `test_manager_agent_allow_delegation_true`: assert `crew.manager_agent.allow_delegation == True`
+- [x] Write `test_research_task_has_no_context`: assert `crew.research_task.context` is empty or `None`
+- [x] Write `test_outline_task_context_contains_research_task`: assert `crew.research_task in crew.outline_task.context`
+- [x] Confirm `uv run pytest tests/test_crew.py` exits non-zero (ImportError)
+- [x] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
 
 ---
 
@@ -382,19 +382,19 @@
 
 > Gate: Implementation must NOT be complete yet. Tests must be skipped or fail.
 
-- [ ] Create `tests/test_integration.py` with imports: `pytest`, `pathlib.Path`, `shutil`, `json`, `subprocess`
-- [ ] Add module-level `pytestmark = pytest.mark.slow`
-- [ ] Add a session-scoped `skipif` guard: skip all tests if `ANTHROPIC_API_KEY` is absent from environment or `lualatex` binary is absent
-- [ ] Write `test_full_pipeline_produces_pdf`: call `PublisherCrew().kickoff()`; assert `Path("latex_output/main.pdf").exists()`
-- [ ] Write `test_pdf_has_minimum_fifteen_pages`: run `pdfinfo latex_output/main.pdf` via subprocess; parse the `Pages:` line; assert value `>= 15`
-- [ ] Write `test_all_six_chapter_files_exist`: assert each of `ch1.tex` through `ch6.tex` exists in `latex_output/chapters/`
-- [ ] Write `test_book_outline_json_is_valid_json`: open `latex_output/book_outline.json`; call `json.load()`; assert no exception
-- [ ] Write `test_book_outline_has_six_chapters`: parse JSON; assert `len(data["chapters"]) == 6`
-- [ ] Write `test_attention_complexity_png_exists`: assert `Path("latex_output/assets/attention_complexity.png").exists()`
-- [ ] Write `test_sdp_attention_tex_exists`: assert `Path("latex_output/figures/sdp_attention.tex").exists()`
-- [ ] Write `test_main_tex_contains_six_input_commands`: read `latex_output/main.tex`; count occurrences of `\\input{`; assert `== 6`
-- [ ] Confirm `uv run pytest tests/test_integration.py` shows all tests skipped or collection error (not a test run crash)
-- [ ] Run `uv run ruff check tests/test_integration.py` — confirm exits 0
+- [x] Create `tests/test_integration.py` with imports: `pytest`, `pathlib.Path`, `shutil`, `json`, `subprocess`
+- [x] Add module-level `pytestmark = pytest.mark.slow`
+- [x] Add a session-scoped `skipif` guard: skip all tests if `ANTHROPIC_API_KEY` is absent from environment or `lualatex` binary is absent
+- [x] Write `test_full_pipeline_produces_pdf`: call `PublisherCrew().kickoff()`; assert `Path("latex_output/main.pdf").exists()`
+- [x] Write `test_pdf_has_minimum_fifteen_pages`: run `pdfinfo latex_output/main.pdf` via subprocess; parse the `Pages:` line; assert value `>= 15`
+- [x] Write `test_all_six_chapter_files_exist`: assert each of `ch1.tex` through `ch6.tex` exists in `latex_output/chapters/`
+- [x] Write `test_book_outline_json_is_valid_json`: open `latex_output/book_outline.json`; call `json.load()`; assert no exception
+- [x] Write `test_book_outline_has_six_chapters`: parse JSON; assert `len(data["chapters"]) == 6`
+- [x] Write `test_attention_complexity_png_exists`: assert `Path("latex_output/assets/attention_complexity.png").exists()`
+- [x] Write `test_sdp_attention_tex_exists`: assert `Path("latex_output/figures/sdp_attention.tex").exists()`
+- [x] Write `test_main_tex_contains_six_input_commands`: read `latex_output/main.tex`; count occurrences of `\\input{`; assert `== 6`
+- [x] Confirm `uv run pytest tests/test_integration.py` shows all tests skipped or collection error (not a test run crash)
+- [x] Run `uv run ruff check tests/test_integration.py` — confirm exits 0
 
 ---
 
@@ -807,70 +807,70 @@
 
 ## Phase 16: Implement `main.py`
 
-- [ ] Open `main.py` and verify it is currently a stub or empty file
-- [ ] Add `from src.crew import PublisherCrew` as the sole import
-- [ ] Add `if __name__ == "__main__":` guard
-- [ ] Inside guard: `crew = PublisherCrew()`
-- [ ] Inside guard: `result = crew.kickoff()`
-- [ ] Inside guard: `print(result)`
-- [ ] Run `uv run ruff check main.py` — confirm exits 0
-- [ ] Run `wc -l main.py` — confirm ≤ 10 lines
-- [ ] Run `uv run pytest --cov=src --cov-fail-under=80` — confirm exits 0 with coverage ≥ 80%
+- [x] Open `main.py` and verify it is currently a stub or empty file
+- [x] Add `from src.crew import PublisherCrew` as the sole import
+- [x] Add `if __name__ == "__main__":` guard
+- [x] Inside guard: `crew = PublisherCrew()`
+- [x] Inside guard: `result = crew.kickoff()`
+- [x] Inside guard: `print(result)`
+- [x] Run `uv run ruff check main.py` — confirm exits 0
+- [x] Run `wc -l main.py` — confirm ≤ 10 lines
+- [x] Run `uv run pytest --cov=src --cov-fail-under=80` — confirm exits 0 with coverage ≥ 80%
 
 ---
 
 ## Phase 17: Directory Scaffolding & `latex_output/refs.bib`
 
-- [ ] Confirm `latex_output/` directory exists and contains `.gitkeep`
-- [ ] Confirm `latex_output/assets/` directory exists and contains `.gitkeep`
-- [ ] Confirm `latex_output/chapters/` directory exists and contains `.gitkeep`
-- [ ] Confirm `latex_output/figures/` directory exists and contains `.gitkeep`
-- [ ] Create `latex_output/refs.bib` (this file is hand-authored and committed to the repository)
-- [ ] Add BibTeX entry 1: `@article{vaswani2017attention}` — Vaswani et al. 2017 "Attention is All You Need"
-- [ ] Add BibTeX entry 2: `@article{devlin2019bert}` — Devlin et al. 2019 "BERT: Pre-training of Deep Bidirectional Transformers"
-- [ ] Add BibTeX entry 3: `@article{brown2020language}` — Brown et al. 2020 "Language Models are Few-Shot Learners"
-- [ ] Add BibTeX entry 4: `@article{radford2019language}` — Radford et al. 2019 "Language Models are Unsupervised Multitask Learners"
-- [ ] Add BibTeX entry 5: `@article{touvron2023llama}` — Touvron et al. 2023 "LLaMA: Open and Efficient Foundation Language Models"
-- [ ] Add BibTeX entry 6: `@article{clark2020electra}` — Clark et al. 2020 "ELECTRA: Pre-training Text Encoders as Discriminators"
-- [ ] Verify `latex_output/refs.bib` contains exactly 6 `@` entry declarations
-- [ ] Verify each BibTeX entry has `author`, `title`, `year`, and `journal` or `booktitle` fields
-- [ ] Verify BibTeX is syntactically valid: balanced braces, comma after each field except the last
-- [ ] Verify no BibTeX key is duplicated in `refs.bib`
-- [ ] Verify citation keys in `refs.bib` match the keys expected to appear in chapter `\cite{}` commands
+- [x] Confirm `latex_output/` directory exists and contains `.gitkeep`
+- [x] Confirm `latex_output/assets/` directory exists and contains `.gitkeep`
+- [x] Confirm `latex_output/chapters/` directory exists and contains `.gitkeep`
+- [x] Confirm `latex_output/figures/` directory exists and contains `.gitkeep`
+- [x] Create `latex_output/refs.bib` (this file is hand-authored and committed to the repository)
+- [x] Add BibTeX entry 1: `@article{vaswani2017attention}` — Vaswani et al. 2017 "Attention is All You Need"
+- [x] Add BibTeX entry 2: `@article{devlin2019bert}` — Devlin et al. 2019 "BERT: Pre-training of Deep Bidirectional Transformers"
+- [x] Add BibTeX entry 3: `@article{brown2020language}` — Brown et al. 2020 "Language Models are Few-Shot Learners"
+- [x] Add BibTeX entry 4: `@article{radford2019language}` — Radford et al. 2019 "Language Models are Unsupervised Multitask Learners"
+- [x] Add BibTeX entry 5: `@article{touvron2023llama}` — Touvron et al. 2023 "LLaMA: Open and Efficient Foundation Language Models"
+- [x] Add BibTeX entry 6: `@article{clark2020electra}` — Clark et al. 2020 "ELECTRA: Pre-training Text Encoders as Discriminators"
+- [x] Verify `latex_output/refs.bib` contains exactly 6 `@` entry declarations
+- [x] Verify each BibTeX entry has `author`, `title`, `year`, and `journal` or `booktitle` fields
+- [x] Verify BibTeX is syntactically valid: balanced braces, comma after each field except the last
+- [x] Verify no BibTeX key is duplicated in `refs.bib`
+- [x] Verify citation keys in `refs.bib` match the keys expected to appear in chapter `\cite{}` commands
 
 ---
 
 ## Phase 18: Post-Run LaTeX Content Validation
 
-- [ ] After running the pipeline, verify `latex_output/book_outline.json` exists
-- [ ] Verify `book_outline.json` is valid JSON: run `python -m json.tool latex_output/book_outline.json` — exits 0
-- [ ] Verify `book_outline.json` has exactly 6 entries in the `chapters` array
-- [ ] Verify each chapter object in `book_outline.json` has a `hebrew_title` field that is non-empty
-- [ ] Verify each chapter object in `book_outline.json` has a `page_budget` field that is a positive integer
-- [ ] Verify the sum of all `page_budget` values in `book_outline.json` equals 15
-- [ ] Verify `latex_output/chapters/ch1.tex` exists and is non-empty
-- [ ] Verify `ch1.tex` begins with `\chapter{` on the first non-blank line
-- [ ] Verify `ch1.tex` does NOT contain the string `\begin{document}`
-- [ ] Verify `latex_output/chapters/ch2.tex` exists and is non-empty
-- [ ] Verify `latex_output/chapters/ch3.tex` exists and is non-empty
-- [ ] Verify `ch3.tex` contains `\textenglish{` at least once
-- [ ] Verify `ch3.tex` contains `\begin{equation}` at least once
-- [ ] Verify `ch3.tex` contains `\begin{LTR}` at least once
-- [ ] Verify `latex_output/chapters/ch4.tex`, `ch5.tex`, `ch6.tex` all exist and are non-empty
-- [ ] Verify `latex_output/assets/attention_complexity.png` exists
-- [ ] Verify PNG file size is greater than 10 KB (not a placeholder empty file)
-- [ ] Verify `latex_output/figures/sdp_attention.tex` exists and is non-empty
-- [ ] Verify `sdp_attention.tex` contains `\begin{tikzpicture}` and `\end{tikzpicture}`
-- [ ] Verify `latex_output/main.tex` exists and is non-empty
-- [ ] Verify `main.tex` contains `\documentclass`
-- [ ] Verify `main.tex` contains `\usepackage{fontspec}`
-- [ ] Verify `main.tex` contains `\usepackage{polyglossia}` or the polyglossia load directive
-- [ ] Verify `main.tex` contains `\setmainlanguage{hebrew}`
-- [ ] Verify `main.tex` contains exactly 6 occurrences of `\input{`
-- [ ] Verify `main.tex` contains `\addbibresource{refs.bib}`
-- [ ] Verify `main.tex` contains `\printbibliography`
-- [ ] Verify `latex_output/main.pdf` exists
-- [ ] Verify `main.pdf` file size is greater than 100 KB
+- [x] After running the pipeline, verify `latex_output/book_outline.json` exists
+- [x] Verify `book_outline.json` is valid JSON: run `python -m json.tool latex_output/book_outline.json` — exits 0
+- [x] Verify `book_outline.json` has exactly 6 entries in the `chapters` array
+- [x] Verify each chapter object in `book_outline.json` has a `hebrew_title` field that is non-empty
+- [x] Verify each chapter object in `book_outline.json` has a `page_budget` field that is a positive integer
+- [x] Verify the sum of all `page_budget` values in `book_outline.json` equals 15
+- [x] Verify `latex_output/chapters/ch1.tex` exists and is non-empty
+- [x] Verify `ch1.tex` begins with `\chapter{` on the first non-blank line
+- [x] Verify `ch1.tex` does NOT contain the string `\begin{document}`
+- [x] Verify `latex_output/chapters/ch2.tex` exists and is non-empty
+- [x] Verify `latex_output/chapters/ch3.tex` exists and is non-empty
+- [x] Verify `ch3.tex` contains `\textenglish{` at least once
+- [x] Verify `ch3.tex` contains `\begin{equation}` at least once
+- [x] Verify `ch3.tex` contains `\begin{LTR}` at least once
+- [x] Verify `latex_output/chapters/ch4.tex`, `ch5.tex`, `ch6.tex` all exist and are non-empty
+- [x] Verify `latex_output/assets/attention_complexity.png` exists
+- [x] Verify PNG file size is greater than 10 KB (not a placeholder empty file)
+- [x] Verify `latex_output/figures/sdp_attention.tex` exists and is non-empty
+- [x] Verify `sdp_attention.tex` contains `\begin{tikzpicture}` and `\end{tikzpicture}`
+- [x] Verify `latex_output/main.tex` exists and is non-empty
+- [x] Verify `main.tex` contains `\documentclass`
+- [x] Verify `main.tex` contains `\usepackage{fontspec}`
+- [x] Verify `main.tex` contains `\usepackage{polyglossia}` or the polyglossia load directive
+- [x] Verify `main.tex` contains `\setmainlanguage{hebrew}`
+- [x] Verify `main.tex` contains exactly 6 occurrences of `\input{`
+- [x] Verify `main.tex` contains `\addbibresource{refs.bib}`
+- [x] Verify `main.tex` contains `\printbibliography`
+- [x] Verify `latex_output/main.pdf` exists
+- [x] Verify `main.pdf` file size is greater than 100 KB
 
 ---
 
