@@ -1,78 +1,48 @@
-% Scaled Dot-Product Attention Block (TikZ)
-% This diagram illustrates the core mechanism of the attention operation
-
+% Scaled Dot-Product Attention — canonical anchored LTR-safe version
+% \begin{LTR} prevents RTL mirroring from Polyglossia's global RTL context.
+% every node/.style includes anchor=center so text sits exactly on each shape.
+\begin{LTR}
 \begin{tikzpicture}[
-    node distance=1.5cm,
-    block/.style={
-        rectangle,
+    every node/.style={
         draw,
-        fill=blue!20,
-        text width=1.8cm,
-        text centered,
-        rounded corners=2pt,
-        font=\small
-    },
-    input/.style={
-        rectangle,
-        draw,
-        fill=green!20,
-        text width=1.5cm,
-        text centered,
-        rounded corners=2pt,
-        font=\small
-    },
-    output/.style={
-        rectangle,
-        draw,
-        fill=red!20,
-        text width=1.8cm,
-        text centered,
-        rounded corners=2pt,
-        font=\small
-    },
-    operation/.style={
-        circle,
-        draw,
-        fill=yellow!30,
-        text width=1.5cm,
-        minimum size=1.6cm,
+        rounded corners=3pt,
+        minimum width=2.2cm,
+        minimum height=0.8cm,
         align=center,
-        font=\small\bfseries
+        anchor=center,
+        font=\small
     },
-    arrow/.style={
-        ->,
-        thick,
-        line width=1.2pt
-    }
+    arrow/.style={->, >=stealth, thick}
 ]
 
-% Input nodes
-\node[input] (Q) at (0, 3) {$Q$\\Query};
-\node[input] (K) at (2, 3) {$K$\\Key};
-\node[input] (V) at (4, 3) {$V$\\Value};
+% Input nodes — bottom row
+\node (Q)       at (0,   0) {Q};
+\node (K)       at (2.5, 0) {K};
+\node (V)       at (5,   0) {V};
 
-% Operations
-\node[operation] (matmul1) at (1, 1.5) {$\times$};
-\node[operation] (scale) at (1, 0) {$/\sqrt{d_k}$};
-\node[operation] (softmax) at (1, -1.5) {Softmax};
-\node[operation] (matmul2) at (2.5, -1.5) {$\times$};
+% Computation chain (left branch, 1.8 cm vertical spacing > 0.8 cm node height)
+\node (matmul1) at (1.25, 1.8) {MatMul};
+\node (scale)   at (1.25, 3.6) {Scale \\ \(\div\sqrt{d_k}\)};
+\node (softmax) at (1.25, 5.4) {Softmax};
 
-% Output
-\node[output] (out) at (2.5, -3) {Output};
+% Merge + output
+\node           (matmul2) at (3.0, 7.2) {MatMul};
+\node[fill=gray!20] (output)  at (3.0, 9.0) {Output};
 
-% Arrows
-\draw[arrow] (Q) -- (matmul1);
-\draw[arrow] (K) -- (matmul1);
-\draw[arrow] (matmul1) -- (scale);
-\draw[arrow] (scale) -- (softmax);
-\draw[arrow] (softmax) -- (matmul2);
-\draw[arrow] (V) -- (4, -1.5) -- (matmul2);
-\draw[arrow] (matmul2) -- (out);
+% Q and K feed into first MatMul
+\draw[arrow] (Q.north) -- ++(0,0.5) -| (matmul1.south west);
+\draw[arrow] (K.north) -- ++(0,0.5) -| (matmul1.south east);
 
-% Annotation box
-\node[text width=4cm, font=\tiny, align=left] at (2.5, -4.2) {
-\textbf{Scaled Dot-Product Attention:}\\
-$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$
-};
+% Vertical computation chain
+\draw[arrow] (matmul1.north) -- (scale.south);
+\draw[arrow] (scale.north)   -- (softmax.south);
+
+% Softmax and V feed into second MatMul
+\draw[arrow] (softmax.north) -- ++(0,0.5) -| (matmul2.south west);
+\draw[arrow] (V.north)       -- ++(0,6.5) -| (matmul2.south east);
+
+% Final output
+\draw[arrow] (matmul2.north) -- (output.south);
 
 \end{tikzpicture}
+\end{LTR}

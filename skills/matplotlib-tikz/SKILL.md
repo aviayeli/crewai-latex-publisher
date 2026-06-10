@@ -327,6 +327,78 @@ right of x=524 pt (the right text-area boundary on A4).
 
 ---
 
+## CRITICAL: TW-3 — Node Anchoring, Positioning, and RTL-Safe Embedding
+
+### Rule TW-3a — Every `\node` must declare `anchor=center` explicitly
+
+In TikZ, nodes placed with `at (x,y)` use the center by default, but this default is
+fragile: any `every node/.style` override or inherited style can silently shift the
+anchor. Always declare it explicitly so text sits exactly on its intended target:
+
+```latex
+% FORBIDDEN — anchor implicit, fragile under style inheritance
+\node[draw] (foo) at (2.5, 3) {text};
+
+% CORRECT — anchor declared, predictable placement
+\node[draw, anchor=center] (foo) at (2.5, 3) {text};
+
+% CORRECT — set globally for all nodes
+every node/.style={draw, align=center, anchor=center, ...}
+```
+
+For **edge labels** (text on an arrow), use `midway` with a direction:
+```latex
+\draw[arrow] (A) -- node[midway, above, anchor=center] {label} (B);
+```
+
+### Rule TW-3b — TikZ figures MUST be wrapped in `\begin{LTR}...\end{LTR}`
+
+**Root cause of RTL mirroring:** When Polyglossia sets Hebrew as the main document
+language, the entire document runs in RTL mode. A TikZ picture inherits this RTL
+paragraph direction, causing its x-axis to run right-to-left. A node at TikZ x=5
+therefore renders on the LEFT side of the page while x=0 renders on the RIGHT — the
+diagram is a mirror image of the intended layout.
+
+**Fix:** Wrap every `\begin{tikzpicture}` in `\begin{LTR}...\end{LTR}` (provided by
+the bidi package that polyglossia auto-loads for RTL documents):
+
+```latex
+% FORBIDDEN — tikzpicture in inherited RTL context; x-axis is mirrored
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[...]
+    ...
+    \end{tikzpicture}
+```
+
+```latex
+% CORRECT — LTR wrapper restores standard left-to-right x-axis
+\begin{figure}[htbp]
+    \centering
+    \begin{LTR}
+    \begin{tikzpicture}[...]
+    ...
+    \end{tikzpicture}
+    \end{LTR}
+```
+
+This applies to **any** TikZ content embedded in documents with `\setmainlanguage{hebrew}`.
+The `sdp_attention.tex` fragment must begin with `\begin{LTR}` and end with `\end{LTR}`.
+
+### Rule TW-3c — Node spacing must exceed node diameter
+
+When using `minimum size` on circle nodes, adjacent nodes will **visually overlap** if
+`node distance ≤ minimum size`. Always ensure:
+
+```
+node_distance > maximum(minimum_size, rendered_text_width + padding)
+```
+
+Prefer rectangular nodes (`draw, rounded corners`) over circles for multi-word labels
+to avoid this constraint — rectangles grow vertically with text, circles do not.
+
+---
+
 ## CRITICAL: Math Mode Is Mandatory in All Captions and TikZ Labels
 
 Any mathematical expression inside a `\caption{}` or a TikZ `\node{...}` label
