@@ -62,7 +62,7 @@ h_t = o_t \odot \tanh(C_t)
 
 \section{מנגנוני קשב בסדרות}
 
-\textenglish{Attention mechanisms} הם כלים חזקים שמאפשרים לרשת למדוד איזה חלקים של הקלט חשובים ביותר לתפוקה הנוכחית. במודל \textenglish{Transformer} של Vaswani וחברים, תנגנון קשב זה משמש כבסיס עיקרי.
+\textenglish{Attention mechanisms} הם כלים חזקים שמאפשרים לרשת למדוד איזה חלקים של הקלט חשובים ביותר לתפוקה הנוכחית~\cite{vaswani2017attention}. במודל \textenglish{Transformer} של Vaswani וחברים, תנגנון קשב זה משמש כבסיס עיקרי.
 
 מנגנון \textenglish{Scaled Dot-Product Attention} מוגדר כ:
 
@@ -70,7 +70,7 @@ h_t = o_t \odot \tanh(C_t)
 \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V
 \end{equation}
 
-כאשר $Q$ היא מטריצת השאלות (\textenglish{Query}), $K$ היא מטריצת המפתחות (\textenglish{Key}), ו-$V$ היא מטריצת הערכים (\textenglish{Value}). כל השלוש מטריצות אלה נלמדות במהלך האימון. ה-$\sqrt{d_k}$ הוא גורם נורמליזציה, כאשר $d_k$ הוא מימדיות המפתחות.
+כאשר $Q$ היא מטריצת השאלות (\textenglish{Query}), $K$ היא מטריצת המפתחות (\textenglish{Key}), ו-$V$ היא מטריצת הערכים (\textenglish{Value}). כל השלוש מטריצות אלה נלמדות במהלך האימון. ה-$\sqrt{d_k}$ הוא גורם נורמליזציה, כאשר $d_k$ הוא מימדיות המפתחות~\cite{vaswani2017attention}.
 
 הרעיון הוא שהקשב מחשב עקביות בין כל זוג של עמדות בסדרה, ואחר כך משקללת את הערכים לפי עקביות אלה. בדרך זו, הרשת יכולה \textenglish{focus} על המידע החשוב ולהתעלם מאחרים.
 
@@ -78,7 +78,7 @@ h_t = o_t \odot \tanh(C_t)
 
 \section{LSTMs דו-כיווניים (BiLSTM)}
 
-עד כה דברנו על LSTMs שמעבדים סדרות בכיוון אחד בלבד (מקדימה לאחור בזמן). \textenglish{Bidirectional LSTM (BiLSTM)} מוסיפה LSTM שני שמעבד את הסדרה בכיוון ההפוך. שתי הרשתות מעבדות את אותו קלט באופן סימולטני, והתפוקות שלהן משולבות (בדרך כלל על ידי שרשור).
+עד כה דברנו על LSTMs שמעבדים סדרות בכיוון אחד בלבד (מקדימה לאחור בזמן). \textenglish{Bidirectional LSTM (BiLSTM)} מוסיפה LSTM שני שמעבד את הסדרה בכיוון ההפוך~\cite{xi2023rise}. שתי הרשתות מעבדות את אותו קלט באופן סימולטני, והתפוקות שלהן משולבות (בדרך כלל על ידי שרשור).
 
 \begin{equation}
 h_t^{\text{BiLSTM}} = [h_t^{\text{forward}} ; h_t^{\text{backward}}]

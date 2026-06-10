@@ -2,7 +2,7 @@
 
 \section{בניית מודלים ב-PyTorch}
 
-PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבחירה לחוקרי עיבוד אותות בשל גמישותה ותמיכתה בניתוב הדינמי. בעבודה עם סדרות זמן (time series), אנו מגדירים מודלים LSTM מקוננים (stacked) על ידי יצירת מחלקה המורשת מ-\textenglish{nn.Module}. הגדרת שכבת LSTM בודדת דורשת שלושה פרמטרים עיקריים: גודל הקלט (\textenglish{$input\_size$}), מספר יחידות זיכרון (\textenglish{$hidden\_size$}), ומספר שכבות (\textenglish{$num\_layers$}).
+PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבחירה לחוקרי עיבוד אותות בשל גמישותה ותמיכתה בניתוב הדינמי~\cite{brown2020language}. בעבודה עם סדרות זמן (time series), אנו מגדירים מודלים LSTM מקוננים (stacked) על ידי יצירת מחלקה המורשת מ-\textenglish{nn.Module}. הגדרת שכבת LSTM בודדת דורשת שלושה פרמטרים עיקריים: גודל הקלט (\textenglish{$input\_size$}), מספר יחידות זיכרון (\textenglish{$hidden\_size$}), ומספר שכבות (\textenglish{$num\_layers$}).
 
 דוגמה בסיסית:
 
@@ -10,7 +10,7 @@ PyTorch היא ספריית למידה עמוקה שהפכה למסגרת הבח
 \text{lstm\_layer} = \text{nn.LSTM}(\text{input\_size}=1, \text{hidden\_size}=64, \text{num\_layers}=2)
 \end{equation}
 
-כאשר הקלט מעוצב כטנסור בגודל \textenglish{$[batch\_size, seq\_length, input\_size]$}, מערך LSTM עם \textenglish{$batch\_first=True$} מפיק פלט מצורה דומה, כאשר כל אלמנט בסדרה הופך לווקטור מימד \textenglish{$hidden\_size$}. תופעת ההדרגה הנעלמת (vanishing gradient), שהייתה בעיה ב-RNNs רגילות, מופחתת בצורה מובנית דרך שערים נטוש (forget gates) של LSTM, המאפשרים זרימת שיפוע עקבית על פני עשרות צעדי זמן.
+כאשר הקלט מעוצב כטנסור בגודל \textenglish{$[batch\_size, seq\_length, input\_size]$}, מערך LSTM עם \textenglish{$batch\_first=True$} מפיק פלט מצורה דומה, כאשר כל אלמנט בסדרה הופך לווקטור מימד \textenglish{$hidden\_size$}. תופעת ההדרגה הנעלמת (vanishing gradient), שהייתה בעיה ב-RNNs רגילות, מופחתת בצורה מובנית דרך שערים נטוש (forget gates) של LSTM, המאפשרים זרימת שיפוע עקבית על פני עשרות צעדי זמן~\cite{xi2023rise}.
 
 בעבודה עם חילוץ אותות סינוסואידליים, הצינור הטיפוסי הוא:
 

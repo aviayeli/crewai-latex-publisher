@@ -2,7 +2,7 @@
 
 \section{יישומים בעולם האמיתי}
 
-טכניקות חילוץ אותות סינוסואידליים מרעש באמצעות רשתות נוירונים עמוקות מוצאות יישומים רחבים בתחומים מתנועעים. בתקשורת וברדיו, אפליקציות \textenglish{AM}/\textenglish{FM} מסורתיות ודיגיטליות תלויות בשחזור של אותות נושאים (\textenglish{carrier waves}) מתוך תערובות רעש ותדרים מנוצלים. בשנים האחרונות, ארכיטקטורות \textenglish{LSTM} ו-\textenglish{BiLSTM} שיפרו את היכולת למחזק (\textenglish{enhance}) אותות דיבור וממוצע רעש תחתו רמות \textenglish{SNR} שבהן שיטות קלאסיות נכשלות.
+טכניקות חילוץ אותות סינוסואידליים מרעש באמצעות רשתות נוירונים עמוקות מוצאות יישומים רחבים בתחומים מתנועעים. בתקשורת וברדיו, אפליקציות \textenglish{AM}/\textenglish{FM} מסורתיות ודיגיטליות תלויות בשחזור של אותות נושאים (\textenglish{carrier waves}) מתוך תערובות רעש ותדרים מנוצלים. בשנים האחרונות, ארכיטקטורות \textenglish{LSTM} ו-\textenglish{BiLSTM} שיפרו את היכולת למחזק (\textenglish{enhance}) אותות דיבור וממוצע רעש תחתו רמות \textenglish{SNR} שבהן שיטות קלאסיות נכשלות~\cite{wang2023survey_agents}.
 
 בעיבוד אותות רפואיים, גלי כדורי בדיקה (\textenglish{ECG}) וקרינת המוח (\textenglish{EEG}) משודרים דרך הגוף האנושי בתוך רעש ביולוגי עצום --- התכווצויות שריריות, רעש התקן, והפרעות חשמליות. מודלי \textenglish{denoising autoencoder} המאומנים על סיגנלים נקיים בתיוק מצליחים לחלץ טעמים לבי וקצב פעימה אישי עם הפרעה מינימלית, ובכך משפרים אבחנה קלינית ועוקבות מטופלים.
 
@@ -30,15 +30,15 @@
 
 \subsection{Transfer Learning ו-Domain Adaptation}
 
-אחד המקורות הגדולים של כישלון הכללה הוא \textit{domain shift} --- התבדלות בין התפלגות בנתוני הדרכה לבין התפלגות בנתוני בדיקה בעולם אמיתי. הגישה של \textbf{transfer learning} מכוונת להדרכת מודל על תחום עשיר ענק (למשל, טרנספורמציות סינוסואיד מסונתזות עם מליארדי טעם), ולאחר מכן התאמה מהירה לתחום יעד קטן (למשל, \textenglish{ECG} אנושי בעל הפרה ראשונית). ערכות דומיין מתקדמות כגון \textenglish{sequential alignment} מעניקות אפשרויות כדי שתחת שיטות למידה-ללא-פיקוח ניתן לחלץ אותות במתחמים חדשים ללא תוויות ענפיות.
+אחד המקורות הגדולים של כישלון הכללה הוא \textit{domain shift} --- התבדלות בין התפלגות בנתוני הדרכה לבין התפלגות בנתוני בדיקה בעולם אמיתי. הגישה של \textbf{transfer learning} מכוונת להדרכת מודל על תחום עשיר ענק (למשל, טרנספורמציות סינוסואיד מסונתזות עם מליארדי טעם), ולאחר מכן התאמה מהירה לתחום יעד קטן (למשל, \textenglish{ECG} אנושי בעל הפרה ראשונית). ערכות דומיין מתקדמות כגון \textenglish{sequential alignment} מעניקות אפשרויות כדי שתחת שיטות למידה-ללא-פיקוח ניתן לחלץ אותות במתחמים חדשים ללא תוויות ענפיות~\cite{brown2020language}.
 
 \subsection{Efficient Architectures}
 
-התקורה החישובית של \textenglish{LSTM} וזיכרון-집약 decoders גורמת להן לבלתי מעשיות בהתקנים מוגבלי כוח (כגון \textenglish{edge devices}, \textenglish{IoT}). חוקרים פותחים \textbf{lightweight RNN} variants כגון \textenglish{GRU} קטנים, \textenglish{gated linear units}, וקונבולוציוני חד-כיווניים מיוצרים שמחזיקים ביצוע קרוב ל-\textenglish{LSTM} אך עם חוקי חישוב \(O(n)\) בהשוואה ל-\(O(n^2)\) עבור \textenglish{attention}-based models בסדרות ארוכות. דחיסה מודל דרך quantization וpruning מקל גם על התמונה בהתקנים מוגבלים.
+התקורה החישובית של \textenglish{LSTM} וזיכרון-집약 decoders גורמת להן לבלתי מעשיות בהתקנים מוגבלי כוח (כגון \textenglish{edge devices}, \textenglish{IoT}). חוקרים פותחים \textbf{lightweight RNN} variants כגון \textenglish{GRU} קטנים, \textenglish{gated linear units}, וקונבולוציוני חד-כיווניים מיוצרים שמחזיקים ביצוע קרוב ל-\textenglish{LSTM} אך עם חוקי חישוב \(O(n)\) בהשוואה ל-\(O(n^2)\) עבור \textenglish{attention}-based models בסדרות ארוכות~\cite{vaswani2017attention}. דחיסה מודל דרך quantization וpruning מקל גם על התמונה בהתקנים מוגבלים.
 
 \subsection{Physics-Informed Neural Networks (PINNs)}
 
-רשתות המשלבות ידע פיזיקלי קודם דרך loss regularization הראו הבטחה בחילוץ אותות. במקום לאפשר לרשת ללמוד בחופשיות מוחלטת, ניתן להטיל אילוצי חלקי:
+רשתות המשלבות ידע פיזיקלי קודם דרך loss regularization הראו הבטחה בחילוץ אותות~\cite{yao2023react}. במקום לאפשר לרשת ללמוד בחופשיות מוחלטת, ניתן להטיל אילוצי חלקי:
 
 \begin{equation}
 L_{\text{total}} = L_{\text{data}} + \lambda L_{\text{physics}}

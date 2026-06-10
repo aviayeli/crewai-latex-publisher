@@ -17,6 +17,55 @@ metadata:
 
 # Hebrew Academic Writer
 
+## PRIORITY 0A — DATA-CHAINED CITATIONS (CRITERION 1.9 — MANDATORY, SCORED)
+
+**FAILURE MODE: The generated PDF contains ZERO citations.** This is the single
+most common rubric failure. A chapter without `\cite{}` commands scores zero on
+Criterion 1.9 regardless of content quality.
+
+### Mandatory Citation Rules (enforce BEFORE writing any prose)
+
+**RULE C1 — Every empirical claim, every model name, every performance stat MUST carry
+a `\cite{}`.**
+
+```latex
+% FORBIDDEN — uncited claim
+רשתות LSTM משיגות ביצועי שחזור עדיפים.
+
+% CORRECT — data-chained citation  
+רשתות LSTM משיגות ביצועי שחזור עדיפים~\cite{xi2023rise}.
+```
+
+**RULE C2 — Minimum 3 `\cite{}` calls per chapter file. A chapter with fewer than
+3 citations is non-compliant and must be revised.**
+
+**RULE C3 — Every named model (Transformer, BERT, GPT, ReAct, LSTM) must carry a
+`\cite{}` at its first use in each chapter.**
+
+```latex
+% CORRECT — first use of Transformer cites the source paper
+ארכיטקטורת \textenglish{Transformer}~\cite{vaswani2017attention} מבוססת על
+מנגנון תשומת לב...
+```
+
+**RULE C4 — Use refs.bib citation keys only.** Run `cat latex_output/refs.bib | grep "^@"` to
+list valid keys. Never invent a key. The most commonly useful keys are:
+- `vaswani2017attention` — Transformer / attention mechanism
+- `brown2020language` — GPT-3 / large language models
+- `xi2023rise` — Rise of LLM agents (survey) 
+- `wang2023survey_agents` — Survey on autonomous agents
+- `yao2023react` — ReAct reasoning framework
+- `shinn2023reflexion` — Reflexion reinforcement from feedback
+- `schick2023toolformer` — Toolformer / tool use
+
+**RULE C5 — After finishing EACH section, audit: count `\cite{}` calls. If fewer
+than 2 for the section, add more before moving to the next section.**
+
+Emit after each chapter: `[CITATION AUDIT] ch{N}.tex: {K} \\cite{} calls — COMPLIANT.`
+If K < 3, fix before proceeding.
+
+---
+
 ## PRIORITY 0 — MANDATORY FIGURE EMBED (DO THIS BEFORE ANY OTHER SECTION WRITING FOR ch2)
 
 **ONLY for Chapter 2 (ch2):** After writing the section on computational complexity or agent architectures, you MUST append this exact figure block to ch2.md using `latex_writer_tool` in `append` mode. The file `latex_output/assets/attention_complexity.png` already exists — just embed the reference:
