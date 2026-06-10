@@ -278,6 +278,55 @@ The `tikz` package must be loaded in `main.tex` preamble (it is in the required 
 
 ---
 
+## CRITICAL: Text Wrapping in Figures — Mandatory Node and Table Constraints
+
+**Root cause:** TikZ `\node` shapes do not auto-wrap text by default. Without an explicit
+`text width` constraint, a node expands horizontally to fit the entire label on one line,
+overflowing the drawn shape (circle or rectangle) and potentially colliding with adjacent
+nodes. Table columns declared as `c` (centered) similarly do not wrap — they expand
+indefinitely and push content outside the page margins.
+
+### Rule TW-1 — Every TikZ `\node` with descriptive text MUST have `text width` + `align`
+
+```latex
+% FORBIDDEN — text overflows the circle at runtime
+\node[circle, text width=0.8cm] (op) {...Softmax...};
+
+% CORRECT — text wraps inside the shape; minimum size keeps shape visible
+\node[circle, text width=1.5cm, minimum size=1.6cm, align=center] (op) {...Softmax...};
+```
+
+**Minimum `text width` guide by node style:**
+
+| Style | Shape | Recommended `text width` | Add `minimum size`? |
+|-------|-------|--------------------------|---------------------|
+| Operation (circle) | circle | ≥ 1.5cm | Yes — match text width |
+| Block (rectangle) | rectangle | ≥ 1.8cm | No |
+| Input/output | rectangle | ≥ 1.5cm | No |
+| Annotation text box | plain | 4–6cm | No |
+
+Always set `align=center` (or `align=left` for prose) on every node that contains more
+than a single character. Never rely on `text centered` alone — it does not constrain width.
+
+### Rule TW-2 — Table columns with prose MUST use `p{Xcm}` not `c`
+
+The `c` column type does not wrap. Any column that contains English phrases longer than
+a few words must use `p{Xcm}` (paragraph column):
+
+```latex
+% FORBIDDEN — Notes column expands, overflows right page margin
+\begin{tabular}{|l|c|c|c|}
+
+% CORRECT — Notes column wraps at 4 cm
+\begin{tabular}{|l|c|c|p{4cm}|}
+```
+
+Choose `p{4cm}` for a 4-column table on A4 with 2.5 cm margins. Adjust down if the
+other columns are wide. Always verify with `pdfinfo` or PyMuPDF that no word appears
+right of x=524 pt (the right text-area boundary on A4).
+
+---
+
 ## CRITICAL: Math Mode Is Mandatory in All Captions and TikZ Labels
 
 Any mathematical expression inside a `\caption{}` or a TikZ `\node{...}` label

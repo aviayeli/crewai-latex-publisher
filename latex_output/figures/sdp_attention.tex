@@ -1,0 +1,78 @@
+% Scaled Dot-Product Attention Block (TikZ)
+% This diagram illustrates the core mechanism of the attention operation
+
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    block/.style={
+        rectangle,
+        draw,
+        fill=blue!20,
+        text width=1.8cm,
+        text centered,
+        rounded corners=2pt,
+        font=\small
+    },
+    input/.style={
+        rectangle,
+        draw,
+        fill=green!20,
+        text width=1.5cm,
+        text centered,
+        rounded corners=2pt,
+        font=\small
+    },
+    output/.style={
+        rectangle,
+        draw,
+        fill=red!20,
+        text width=1.8cm,
+        text centered,
+        rounded corners=2pt,
+        font=\small
+    },
+    operation/.style={
+        circle,
+        draw,
+        fill=yellow!30,
+        text width=1.5cm,
+        minimum size=1.6cm,
+        align=center,
+        font=\small\bfseries
+    },
+    arrow/.style={
+        ->,
+        thick,
+        line width=1.2pt
+    }
+]
+
+% Input nodes
+\node[input] (Q) at (0, 3) {$Q$\\Query};
+\node[input] (K) at (2, 3) {$K$\\Key};
+\node[input] (V) at (4, 3) {$V$\\Value};
+
+% Operations
+\node[operation] (matmul1) at (1, 1.5) {$\times$};
+\node[operation] (scale) at (1, 0) {$/\sqrt{d_k}$};
+\node[operation] (softmax) at (1, -1.5) {Softmax};
+\node[operation] (matmul2) at (2.5, -1.5) {$\times$};
+
+% Output
+\node[output] (out) at (2.5, -3) {Output};
+
+% Arrows
+\draw[arrow] (Q) -- (matmul1);
+\draw[arrow] (K) -- (matmul1);
+\draw[arrow] (matmul1) -- (scale);
+\draw[arrow] (scale) -- (softmax);
+\draw[arrow] (softmax) -- (matmul2);
+\draw[arrow] (V) -- (4, -1.5) -- (matmul2);
+\draw[arrow] (matmul2) -- (out);
+
+% Annotation box
+\node[text width=4cm, font=\tiny, align=left] at (2.5, -4.2) {
+\textbf{Scaled Dot-Product Attention:}\\
+$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$
+};
+
+\end{tikzpicture}
