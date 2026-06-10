@@ -52,6 +52,8 @@
 \renewcommand{\theequation}{\textenglish{\arabic{chapter}.\arabic{equation}}}
 \renewcommand{\thefigure}{\textenglish{\arabic{chapter}.\arabic{figure}}}
 \renewcommand{\thetable}{\textenglish{\arabic{chapter}.\arabic{table}}}
+% Prevents RTL digit reversal in page numbers (ToC, fancyhdr footers, hyperref)
+\renewcommand{\thepage}{\textenglish{\arabic{page}}}
 \addbibresource{refs.bib}
 \title{התפתחות מנגנוני תיאום כלים מרובים בסוכני \textenglish{LLM}}
 \author{אבי איילי --- ת.ז. \textenglish{300228160}}

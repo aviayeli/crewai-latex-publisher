@@ -62,3 +62,5 @@
 \renewcommand{\theequation}{\textenglish{\arabic{chapter}.\arabic{equation}}}
 \renewcommand{\thefigure}{\textenglish{\arabic{chapter}.\arabic{figure}}}
 \renewcommand{\thetable}{\textenglish{\arabic{chapter}.\arabic{table}}}
+% Prevents RTL digit reversal in page numbers (ToC, fancyhdr footers, hyperref)
+\renewcommand{\thepage}{\textenglish{\arabic{page}}}

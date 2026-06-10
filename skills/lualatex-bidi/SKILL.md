@@ -225,6 +225,39 @@ bug that does not produce a LaTeX error.
 
 ---
 
+## CRITICAL: Global Page Numbering — Prevent RTL Digit Reversal in ToC and Footers
+
+**Root cause:** `\thepage` is evaluated inside Polyglossia's global RTL paragraph context.
+Multi-digit page numbers (e.g., 12, 21) are subject to the Unicode BiDi algorithm: each
+decimal digit is an LTR-strong character, but the sequence is laid out inside an RTL
+paragraph, so the visual order is reversed — page 12 prints as "21".
+
+**Fix — add to preamble, after all language/bidi packages are loaded:**
+
+```latex
+% Prevents RTL digit reversal in page numbers (ToC, fancyhdr, PDF cross-refs)
+\renewcommand{\thepage}{\textenglish{\arabic{page}}}
+```
+
+Using `\textenglish{}` is preferred over bare `\LRE{}` because:
+- It uses Polyglossia's language-switch mechanism, which is safe for hyperref PDF strings.
+- It is consistent with the existing `\thesection`, `\theequation`, `\thefigure`,
+  `\thetable` redefinitions that all use `\textenglish{}` in this project.
+- `\LRE{}` is a lower-level bidi primitive that can produce malformed PDF bookmarks
+  when hyperref serialises `\thepage` into a PDF string via `\pdfstringdef`.
+
+**Placement rule:** This `\renewcommand` must appear AFTER `\setmainlanguage{hebrew}`
+and AFTER the `\renewcommand{\thetable}` block, but BEFORE `\begin{document}`.
+It must NOT appear inside `\AtBeginDocument` or `\AfterEndPreamble` — both fire too late
+for the `.toc` file write-ahead that ToC page numbers depend on.
+
+**Mandatory checklist addition (item 14):**
+After any preamble edit, verify that `\thepage` is redefined as
+`\textenglish{\arabic{page}}` in the preamble. Any preamble that is missing this
+redefinition will produce reversed multi-digit page numbers in the ToC and footers.
+
+---
+
 ## Scope: All 6 Chapters
 
 The BidiAgent validates **all six chapters** (`ch1.tex` through `ch6.tex`), not only Chapter 3. Every chapter may contain English technical terms in Hebrew prose. Chapter 3 receives the additional mandatory-constructs check.
