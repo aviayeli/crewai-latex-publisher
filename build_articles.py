@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
-"""Assemble 4 research articles from templates/ into results/."""
+"""Assemble and compile 4 research articles from templates/ into results/."""
+import os
+import subprocess
 from pathlib import Path
+
+_LUALATEX = os.environ.get("LUALATEX_BIN", "lualatex")
+_BIBER = os.environ.get("BIBER_BIN", "biber")
 
 TEMPLATES = Path("templates")
 _CH9  = [f"ch{i}" for i in range(1, 10)]
@@ -43,6 +48,14 @@ def _main_tex(article: str, bib: str, chapters: list) -> str:
     return "".join(parts)
 
 
+def compile_article(base: Path) -> None:
+    """Run lualatex→biber→lualatex→lualatex compilation inside base dir."""
+    lualatex_cmd = [_LUALATEX, "-interaction=nonstopmode", "main.tex"]
+    biber_cmd = [_BIBER, "main"]
+    for cmd in [lualatex_cmd, biber_cmd, lualatex_cmd, lualatex_cmd]:
+        subprocess.run(cmd, cwd=base, check=True)
+
+
 def build_article(article: str, bib: str, chapters: list) -> None:
     tmpl = TEMPLATES / article
     base = Path("results") / article
@@ -50,7 +63,9 @@ def build_article(article: str, bib: str, chapters: list) -> None:
     for ch in chapters:
         _write(f"{base}/chapters/{ch}.tex", _read(tmpl / f"{ch}.tex"))
     _write(f"{base}/main.tex", _main_tex(article, bib, chapters))
-    print(f"Built {article}")
+    print(f"[CHECKPOINT] Step 1/2 done: {article} assembled. Compiling...")
+    compile_article(base)
+    print(f"[CHECKPOINT] Step 2/2 done: {article} → results/{article}/main.pdf")
 
 
 if __name__ == "__main__":

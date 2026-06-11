@@ -114,6 +114,59 @@ uv run python main.py       # interactive topic selection → full PDF pipeline
 
 Output PDF: `latex_output/main.pdf`
 
+### Mass Production — 4 Pre-Built Articles
+
+```bash
+uv run python build_articles.py   # assemble + compile all 4 articles → results/
+```
+
+Assembles `.tex` from `templates/`, runs lualatex→biber→lualatex×2 for each
+article, and writes the final PDFs to `results/{article}/main.pdf`.
+
+| Directory | Title | Pages |
+|---|---|---|
+| `results/1_sine_wave/` | חילוץ גלי סינוס (BiLSTM sine-wave extraction) | 15 |
+| `results/2_security/` | אבטחת שרשרת האספקה (supply-chain security) | 15 |
+| `results/3_xlstm/` | השוואת ביצועים: Transformer vs xLSTM | 15 |
+| `results/4_orchestration/` | תיאום כלים מרובים בסוכני LLM (multi-tool orchestration) | 15 |
+
+---
+
+## Repository Structure
+
+```
+crewai-latex-publisher/
+├── src/                        # Pipeline source (150-line limit enforced)
+│   ├── agents/                 # 6 specialised CrewAI agents
+│   ├── tasks/                  # Task factories (one file per task)
+│   ├── tools/                  # lualatex_runner, python_runner, MCP server…
+│   ├── security/               # SkillSieve injection blocker
+│   ├── watchdog/               # Process watchdog (hard timeout)
+│   └── config.py               # pydantic-settings — no magic numbers in .py
+├── templates/                  # Article blueprints (preamble + per-article dirs)
+│   ├── preamble.tex            # Shared LuaLaTeX/Polyglossia preamble
+│   ├── 1_sine_wave/            # ch1–ch9 + meta.tex + refs.bib
+│   ├── 2_security/             # ch1–ch10 …
+│   ├── 3_xlstm/                # ch1–ch10 …
+│   └── 4_orchestration/        # ch1–ch10 …
+├── results/                    # Mass-produced PDFs (build_articles.py output)
+│   ├── 1_sine_wave/main.pdf    # BiLSTM sine-wave extraction — 15 pages
+│   ├── 2_security/main.pdf     # Supply-chain security — 15 pages
+│   ├── 3_xlstm/main.pdf        # Transformer vs xLSTM — 15 pages
+│   └── 4_orchestration/main.pdf# Multi-tool LLM orchestration — 15 pages
+├── skills/                     # SKILL.md backstory files (per-agent DNA)
+│   ├── lualatex-bidi/          # BiDi rules, RTL digit-reversal fix
+│   ├── matplotlib-tikz/        # TW-1/2/3 overflow + anchoring rules
+│   └── …
+├── tests/                      # 289 tests · 97% coverage
+├── docs/                       # PRD.md, TODO.md, PLAN.md
+├── latex_output/               # Single-topic pipeline output (main.py)
+├── build_articles.py           # Mass production: assemble + compile 4 articles
+├── main.py                     # Interactive single-topic pipeline entry point
+├── CLAUDE.md                   # AI behavioral contract (enforced every session)
+└── .env.example                # Environment variable template
+```
+
 ---
 
 ## Academic Writing DNA — Agent Constraints

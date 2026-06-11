@@ -2,6 +2,7 @@
 
 Run BEFORE fixing build_articles.py to see red → green cycle.
 """
+import subprocess
 import sys
 from pathlib import Path
 
@@ -51,3 +52,21 @@ def test_six_chapter_inputs_generated():
     result = _main_tex("1_sine_wave", "refs.bib", chapters)
     for ch in chapters:
         assert f"\\input{{chapters/{ch}}}" in result
+
+
+def test_compile_article_four_pass_order(tmp_path, monkeypatch):
+    """compile_article must run lualatex→biber→lualatex→lualatex in that order."""
+    import build_articles
+
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd[0])
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    build_articles.compile_article(tmp_path)
+    assert len(calls) == 4, f"Expected 4 subprocess calls, got {calls}"
+    assert "lualatex" in calls[0], f"First call must be lualatex, got {calls[0]}"
+    assert "biber" in calls[1], f"Second call must be biber, got {calls[1]}"
+    assert "lualatex" in calls[2], f"Third call must be lualatex, got {calls[2]}"
+    assert "lualatex" in calls[3], f"Fourth call must be lualatex, got {calls[3]}"
