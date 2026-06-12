@@ -53,7 +53,8 @@ def _main_tex(article: str, bib: str, chapters: list) -> str:
 
 def _bib_keys(bib_content: str) -> set:
     """Return all BibTeX keys defined in a .bib file."""
-    return {m.group(1).strip() for m in re.finditer(r"@\w+\{([^,\s]+)\s*,", bib_content)}
+    pat = r"@\w+\{([^,\s]+)\s*,"
+    return {m.group(1).strip() for m in re.finditer(pat, bib_content)}
 
 
 def _cite_keys(tex_content: str) -> set:
@@ -66,7 +67,7 @@ def _cite_keys(tex_content: str) -> set:
 
 
 def _remove_missing_cites(tex: str, defined: set) -> tuple:
-    r"""Remove \cite{} calls whose keys are absent from defined. Returns (fixed_tex, removed_keys)."""
+    r"""Remove \cite{} calls absent from defined. Return (fixed_tex, removed_keys)."""
     removed = []
 
     def _fix(raw_keys):

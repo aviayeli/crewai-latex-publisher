@@ -48,9 +48,14 @@ def load_article(name: str, root: Path) -> ArticleData:
     chapters = {}
     for ch in sorted((root / "chapters").glob("*.tex")):
         chapters[ch.name] = ch.read_text(encoding="utf-8")
-    refs = (root / "refs.bib").read_text(encoding="utf-8") if (root / "refs.bib").exists() else ""
+    bib = root / "refs.bib"
+    refs = bib.read_text(encoding="utf-8") if bib.exists() else ""
     log_path = root / "main.log"
-    log = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+    log = (
+        log_path.read_text(encoding="utf-8", errors="replace")
+        if log_path.exists()
+        else ""
+    )
     return ArticleData(name, pdf, main_tex, chapters, refs, log)
 
 
@@ -107,7 +112,7 @@ def test_headers_present(article: ArticleData) -> None:
     for page in article.pdf:
         blocks = page.get_text("blocks")
         # fancyhdr places running head in the topmost region (y < 80 pts)
-        for x0, y0, x1, y1, text, *_ in blocks:
+        for _x0, y0, _x1, _y1, text, *_ in blocks:
             if y0 < 80 and text.strip():
                 pages_with_header += 1
                 break
@@ -126,7 +131,7 @@ def test_footers_present(article: ArticleData) -> None:
     pages_with_footer = 0
     for page in pages:
         blocks = page.get_text("blocks")
-        for x0, y0, x1, y1, text, *_ in blocks:
+        for _x0, _y0, _x1, y1, text, *_ in blocks:
             # Footer region: bottom 60 pts
             if y1 > height - 60 and re.search(r"\d+", text):
                 pages_with_footer += 1
@@ -151,7 +156,8 @@ def test_plain_pagestyle_override_in_preamble(article: ArticleData) -> None:
 
 def test_thepage_wrapped_in_textenglish(article: ArticleData) -> None:
     r"""\\thepage must be redefined to \textenglish{\arabic{page}} for LTR digits."""
-    assert r"\renewcommand{\thepage}{\textenglish{\arabic{page}}}" in article.main_tex, (
+    needle = r"\renewcommand{\thepage}{\textenglish{\arabic{page}}}"
+    assert needle in article.main_tex, (
         f"[{article.name}] \\thepage not wrapped in \\textenglish — "
         "page numbers may render in reversed RTL order"
     )
@@ -163,7 +169,7 @@ def test_page_numbers_are_decimal(article: ArticleData) -> None:
     height = pages[0].rect.height
     bad_pages: list[int] = []
     for i, page in enumerate(pages, start=1):
-        for x0, y0, x1, y1, text, *_ in page.get_text("blocks"):
+        for _x0, _y0, _x1, y1, text, *_ in page.get_text("blocks"):
             if y1 > height - 60:
                 stripped = text.strip()
                 # Must be only digits (possibly surrounded by whitespace)
@@ -179,7 +185,7 @@ def test_page_numbers_are_decimal(article: ArticleData) -> None:
 
 
 def test_section_numbers_use_textenglish(article: ArticleData) -> None:
-    r"""\\thesection / \\thesubsection must use \\textenglish to avoid RTL digit reversal."""
+    r"""\\thesection / \\thesubsection must use \\textenglish for LTR digits."""
     assert r"\renewcommand{\thesection}{\textenglish" in article.main_tex, (
         f"[{article.name}] \\thesection not wrapped in \\textenglish"
     )
@@ -221,7 +227,7 @@ def test_has_python_generated_graph(article: ArticleData) -> None:
     """assets/results_graph.png (matplotlib-generated) must be included in a chapter."""
     ch_text = _all_chapter_text(article)
     assert "results_graph.png" in ch_text, (
-        f"[{article.name}] Python-generated results_graph.png not embedded in any chapter"
+        f"[{article.name}] results_graph.png not embedded in any chapter"
     )
     # The PNG must actually exist on disk
     graph_path = ARTICLES[article.name] / "assets" / "results_graph.png"
@@ -234,7 +240,7 @@ def test_has_architecture_figure(article: ArticleData) -> None:
     """assets/architecture.png (matplotlib-generated) must be included in a chapter."""
     ch_text = _all_chapter_text(article)
     assert "architecture.png" in ch_text, (
-        f"[{article.name}] Python-generated architecture.png not embedded in any chapter"
+        f"[{article.name}] architecture.png not embedded in any chapter"
     )
     graph_path = ARTICLES[article.name] / "assets" / "architecture.png"
     assert graph_path.exists(), (
@@ -283,7 +289,8 @@ def test_no_undefined_citation_in_log(article: ArticleData) -> None:
 
 def test_no_missing_biblatex_entry_in_log(article: ArticleData) -> None:
     """biblatex log must not report missing entries."""
-    bad = re.findall(r"WARN.*entry could not be found|entry could not be found", article.latex_log, re.I)
+    pat = r"WARN.*entry could not be found|entry could not be found"
+    bad = re.findall(pat, article.latex_log, re.I)
     assert not bad, (
         f"[{article.name}] biblatex reported missing entries in log"
     )
@@ -302,7 +309,7 @@ def test_no_overfull_hbox(article: ArticleData) -> None:
 
 
 def test_underfull_hbox_count(article: ArticleData) -> None:
-    """Underfull \\hbox count should be low (≤ 2 is acceptable; > 5 flags spacing issues)."""
+    """Underfull \\hbox count must be ≤ 5 (> 5 flags spacing issues)."""
     matches = re.findall(r"Underfull \\hbox", article.latex_log)
     assert len(matches) <= 5, (
         f"[{article.name}] {len(matches)} Underfull \\hbox entries (threshold: 5)"
@@ -328,8 +335,9 @@ def test_no_duplicate_chapter_inputs(article: ArticleData) -> None:
 
 
 def test_no_tikz_anchor_warnings(article: ArticleData) -> None:
-    """LaTeX log should not warn about unknown TikZ anchor or node positioning issues."""
-    bad = re.findall(r"pgf.*anchor.*not defined|Unknown anchor\|I don't know.*anchor", article.latex_log, re.I)
+    """LaTeX log must not warn about unknown TikZ anchors."""
+    pat = r"pgf.*anchor.*not defined|Unknown anchor|I don't know.*anchor"
+    bad = re.findall(pat, article.latex_log, re.I)
     assert not bad, (
         f"[{article.name}] TikZ anchor/positioning warnings: {bad[:3]}"
     )
@@ -339,10 +347,10 @@ def test_no_tikz_anchor_warnings(article: ArticleData) -> None:
 # Orphan / unused bib entries (informational, non-fatal via xfail)
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(reason="Orphan bib entries are informational, not blocking", strict=False)
+@pytest.mark.xfail(reason="Orphan bib entries: informational only", strict=False)
 def test_no_orphan_bib_entries(article: ArticleData) -> None:
     """Every key in refs.bib should be cited at least once (no orphans)."""
     orphans = _bib_keys(article) - _cite_keys(article)
     assert not orphans, (
-        f"[{article.name}] Orphan bib entries (in refs.bib but never \\cited): {sorted(orphans)}"
+        f"[{article.name}] Orphan bib entries never \\cited: {sorted(orphans)}"
     )
