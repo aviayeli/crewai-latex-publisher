@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from src.config import Settings, settings
+from tests.qa_article_data import ARTICLES, ArticleData, load_article
 
 
 @pytest.fixture(scope="function")
@@ -36,3 +37,10 @@ def mock_llm_creation():
     mock.model = settings.LLM_MODEL
     with patch("crewai.agent.core.create_llm", return_value=mock):
         yield
+
+
+@pytest.fixture(params=list(ARTICLES.keys()))
+def article(request) -> ArticleData:
+    """Parametrised fixture yielding one ArticleData per mass-produced article."""
+    name = request.param
+    return load_article(name, ARTICLES[name])
