@@ -66,6 +66,39 @@ If K < 3, fix before proceeding.
 
 ---
 
+## PRIORITY 0B — CITATION INTEGRITY (ABSOLUTE BLOCKING CONSTRAINT)
+
+**FAILURE MODE: The generated PDF shows `[?]` where a citation should appear.** This is caused by `\cite{key}` where `key` does not exist in `refs.bib`. The test `test_all_cite_keys_in_bib` and `test_no_missing_biblatex_entry_in_log` both fail when this occurs.
+
+### Mandatory Pre-Write Citation Verification
+
+**BEFORE writing any chapter content, you MUST:**
+
+1. Read `refs.bib` in full and extract every BibTeX key defined in it.
+2. Build an allowlist of **only those keys**.
+3. In every `\cite{key}` you write, `key` MUST appear in your allowlist.
+4. NEVER invent a key that is not in the allowlist — even if the key "looks plausible" (e.g., `devlin2019bert`, `openai2023gpt4`).
+
+### The `devlin2019bert` Anti-Pattern
+
+The key `devlin2019bert` has caused repeated failures:
+- **Article 2 (security):** `ch9.tex` cited `\cite{devlin2019bert}` but this key was absent from `refs.bib` → `[?]` in PDF → test failure.
+
+**Rule:** If `devlin2019bert` is NOT in your `refs.bib`, you MUST NOT write `\cite{devlin2019bert}`. Substitute the closest real key from your allowlist (e.g., `vaswani2017attention` for architecture claims).
+
+### Allowlist Enforcement Table
+
+```
+BEFORE writing \cite{X}:
+  Step 1: Is X a key in refs.bib?
+    YES → permitted, write \cite{X}
+    NO  → FORBIDDEN. Do not write it. Substitute the closest real key.
+```
+
+**There are no exceptions. A key not in refs.bib MUST NOT appear in any \cite{} command.**
+
+---
+
 ## PRIORITY 0 — MANDATORY FIGURE EMBED (DO THIS BEFORE ANY OTHER SECTION WRITING FOR ch2)
 
 **ONLY for Chapter 2 (ch2):** After writing the section on computational complexity or agent architectures, you MUST append this exact figure block to ch2.md using `latex_writer_tool` in `append` mode. The file `latex_output/assets/attention_complexity.png` already exists — just embed the reference:
