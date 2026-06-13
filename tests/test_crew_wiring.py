@@ -108,22 +108,22 @@ def test_missing_skill_file_prevents_crew_init():
 def test_kickoff_constructs_hierarchical_crew():
     with (
         patch("src.crew._load_skill", return_value="dummy"),
-        patch("src.crew.Crew") as MockCrew,
+        patch("src.crew.Crew") as mock_crew,
     ):
-        MockCrew.return_value.kickoff.return_value = "result"
+        mock_crew.return_value.kickoff.return_value = "result"
         PublisherCrew().kickoff()
-    assert MockCrew.call_args.kwargs["process"] == Process.hierarchical
+    assert mock_crew.call_args.kwargs["process"] == Process.hierarchical
 
 
 def test_manager_agent_passed_as_kwarg():
     with (
         patch("src.crew._load_skill", return_value="dummy"),
-        patch("src.crew.Crew") as MockCrew,
+        patch("src.crew.Crew") as mock_crew,
     ):
-        MockCrew.return_value.kickoff.return_value = "result"
+        mock_crew.return_value.kickoff.return_value = "result"
         crew = PublisherCrew()
         crew.kickoff()
-    kwargs = MockCrew.call_args.kwargs
+    kwargs = mock_crew.call_args.kwargs
     assert "manager_agent" in kwargs
     assert crew.manager_agent not in kwargs.get("agents", [])
 

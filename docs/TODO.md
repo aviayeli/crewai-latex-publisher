@@ -876,142 +876,142 @@
 
 ## Phase 19: Integration Run & Slow Test Execution
 
-- [ ] Confirm `ANTHROPIC_API_KEY` is set in the shell environment (non-empty)
-- [ ] Confirm `lualatex` binary is available: `which lualatex` exits 0
-- [ ] Confirm at least one Hebrew font is available: `fc-list | grep -iE "David CLM|Frank Ruehl|Noto Serif Hebrew"` returns at least one match
-- [ ] Run `uv run python main.py` and monitor console output for Python exceptions
-- [ ] Confirm `main.py` run completes without raising an unhandled exception
-- [ ] Confirm `latex_output/main.pdf` exists immediately after `main.py` run
-- [ ] Run `uv run pytest -m slow tests/test_integration.py -v` — confirm exits 0
-- [ ] Confirm test `test_full_pipeline_produces_pdf` passes
-- [ ] Confirm test `test_pdf_has_minimum_fifteen_pages` passes
-- [ ] Confirm test `test_all_six_chapter_files_exist` passes
-- [ ] Confirm test `test_book_outline_json_is_valid_json` passes
-- [ ] Confirm test `test_book_outline_has_six_chapters` passes
-- [ ] Confirm test `test_attention_complexity_png_exists` passes
-- [ ] Confirm test `test_sdp_attention_tex_exists` passes
-- [ ] Confirm test `test_main_tex_contains_six_input_commands` passes
-- [ ] Run `pdfinfo latex_output/main.pdf` and assert the `Pages:` field shows a value ≥ 15
-- [ ] If page count is < 15: identify which chapters produced fewer pages than their `page_budget`; re-run affected content tasks with more explicit page guidance
-- [ ] After any page-budget correction, re-run `uv run pytest -m slow` to confirm all slow tests still pass
+- [x] Confirm `ANTHROPIC_API_KEY` is set in the shell environment (non-empty)
+- [x] Confirm `lualatex` binary is available: `which lualatex` exits 0
+- [x] Confirm at least one Hebrew font is available: `fc-list | grep -iE "David CLM|Frank Ruehl|Noto Serif Hebrew"` returns at least one match
+- [x] Run `uv run python main.py` and monitor console output for Python exceptions
+- [x] Confirm `main.py` run completes without raising an unhandled exception
+- [x] Confirm `latex_output/main.pdf` exists immediately after `main.py` run
+- [x] Run `uv run pytest -m slow tests/test_integration.py -v` — confirm exits 0
+- [x] Confirm test `test_full_pipeline_produces_pdf` passes
+- [x] Confirm test `test_pdf_has_minimum_fifteen_pages` passes
+- [x] Confirm test `test_all_six_chapter_files_exist` passes
+- [x] Confirm test `test_book_outline_json_is_valid_json` passes
+- [x] Confirm test `test_book_outline_has_six_chapters` passes
+- [x] Confirm test `test_attention_complexity_png_exists` passes
+- [x] Confirm test `test_sdp_attention_tex_exists` passes
+- [x] Confirm test `test_main_tex_contains_six_input_commands` passes
+- [x] Run `pdfinfo latex_output/main.pdf` and assert the `Pages:` field shows a value ≥ 15
+- [x] If page count is < 15: identify which chapters produced fewer pages than their `page_budget`; re-run affected content tasks with more explicit page guidance
+- [x] After any page-budget correction, re-run `uv run pytest -m slow` to confirm all slow tests still pass
 
 ---
 
 ## Phase 20: Continuous Ruff Linting Gates
 
-- [ ] Run `uv run ruff check src/config.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/crew.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/manager_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/researcher_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/outline_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/content_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/bidi_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/figure_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/agents/compiler_agent.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/research_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/outline_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/content_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/bidi_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/figure_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tasks/compile_task.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/python_runner.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
-- [ ] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/conftest.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_config.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_python_runner.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_lualatex_runner.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
-- [ ] Run `uv run ruff check tests/test_integration.py` — confirm exits 0
-- [ ] Run `uv run ruff check main.py` — confirm exits 0
-- [ ] Run `uv run ruff check .` (whole repository) — confirm exits 0 with zero violations
+- [x] Run `uv run ruff check src/config.py` — confirm exits 0
+- [x] Run `uv run ruff check src/crew.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/manager_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/researcher_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/outline_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/content_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/bidi_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/figure_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/agents/compiler_agent.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/research_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/outline_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/content_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/bidi_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/figure_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tasks/compile_task.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/latex_writer.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/python_runner.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/lualatex_runner.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/perplexity_search.py` — confirm exits 0
+- [x] Run `uv run ruff check src/tools/markdown_converter.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/conftest.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_config.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_latex_writer.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_python_runner.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_lualatex_runner.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_perplexity_search.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_markdown_converter.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_crew.py` — confirm exits 0
+- [x] Run `uv run ruff check tests/test_integration.py` — confirm exits 0
+- [x] Run `uv run ruff check main.py` — confirm exits 0
+- [x] Run `uv run ruff check .` (whole repository) — confirm exits 0 with zero violations
 
 ---
 
 ## Phase 21: Karpathy Principles Verification
 
 ### Think Before Coding
-- [ ] Verify every `src/` module corresponds to a failing test that existed before it was implemented
-- [ ] Verify that no `src/` file was created without a corresponding checked-off task in this TODO
-- [ ] Verify `git log --oneline` shows test commits preceding implementation commits for each module pair
+- [x] Verify every `src/` module corresponds to a failing test that existed before it was implemented
+- [x] Verify that no `src/` file was created without a corresponding checked-off task in this TODO
+- [x] Verify `git log --oneline` shows test commits preceding implementation commits for each module pair
 
 ### Simplicity First
-- [ ] Grep `src/` for functions exceeding 20 lines; flag any found for refactor consideration
-- [ ] Verify `src/crew.py` contains zero LaTeX-specific string literals, zero Hebrew characters, and zero matplotlib references
-- [ ] Verify each agent module contains exactly one function and zero helper logic
-- [ ] Verify no abstract base class, protocol, or decorator was introduced beyond what CrewAI requires
-- [ ] Verify `CHAPTER_SPECS` is the only domain-structural constant defined outside `src/config.py`
-- [ ] Verify `ALLOWED_IMPORTS` has a comment explaining why it belongs in code, not in `.env`
-- [ ] Verify no `try/except` block catches the bare `Exception` type (each handler targets a specific exception class)
-- [ ] Verify no `**kwargs` or `*args` appear in any function signature in `src/` beyond framework-required overrides
+- [x] Grep `src/` for functions exceeding 20 lines; flag any found for refactor consideration
+- [x] Verify `src/crew.py` contains zero LaTeX-specific string literals, zero Hebrew characters, and zero matplotlib references
+- [x] Verify each agent module contains exactly one function and zero helper logic
+- [x] Verify no abstract base class, protocol, or decorator was introduced beyond what CrewAI requires
+- [x] Verify `CHAPTER_SPECS` is the only domain-structural constant defined outside `src/config.py`
+- [x] Verify `ALLOWED_IMPORTS` has a comment explaining why it belongs in code, not in `.env`
+- [x] Verify no `try/except` block catches the bare `Exception` type (each handler targets a specific exception class)
+- [x] Verify no `**kwargs` or `*args` appear in any function signature in `src/` beyond framework-required overrides
 
 ### Surgical Changes
-- [ ] Verify no commit mixes a functional change with a rename, reformat, or unrelated cleanup
-- [ ] Verify no import was added to a module without a failing test that required it
-- [ ] Verify every `__init__.py` in `src/` is empty (zero bytes or only a newline)
-- [ ] Grep all `.py` files for `client.messages.create` — assert zero matches (no raw Anthropic SDK calls)
-- [ ] Verify `src/config.py` imports nothing from `src/agents/`, `src/tasks/`, or `src/tools/`
-- [ ] Verify `src/tools/` modules import nothing from `src/agents/` or `src/tasks/`
-- [ ] Verify `src/tasks/` modules import nothing from `src/agents/`
+- [x] Verify no commit mixes a functional change with a rename, reformat, or unrelated cleanup
+- [x] Verify no import was added to a module without a failing test that required it
+- [x] Verify every `__init__.py` in `src/` is empty (zero bytes or only a newline)
+- [x] Grep all `.py` files for `client.messages.create` — assert zero matches (no raw Anthropic SDK calls)
+- [x] Verify `src/config.py` imports nothing from `src/agents/`, `src/tasks/`, or `src/tools/`
+- [x] Verify `src/tools/` modules import nothing from `src/agents/` or `src/tasks/`
+- [x] Verify `src/tasks/` modules import nothing from `src/agents/`
 
 ### Goal-Driven Execution
-- [ ] Verify every function in `src/` can be traced to a specific phase in this TODO or a PRD section
-- [ ] Verify no `.py` file in `src/` contains a `# TODO` or `# FIXME` inline comment
-- [ ] Verify no `print()` call exists in any `src/` file (CrewAI `verbose=True` handles logging)
-- [ ] Verify no `if DEBUG:` or feature-flag conditional exists in any `src/` file
-- [ ] Verify no commented-out code blocks exist in any `src/` file
+- [x] Verify every function in `src/` can be traced to a specific phase in this TODO or a PRD section
+- [x] Verify no `.py` file in `src/` contains a `# TODO` or `# FIXME` inline comment
+- [x] Verify no `print()` call exists in any `src/` file (CrewAI `verbose=True` handles logging)
+- [x] Verify no `if DEBUG:` or feature-flag conditional exists in any `src/` file
+- [x] Verify no commented-out code blocks exist in any `src/` file
 
 ---
 
 ## Phase 22: Line Budget Enforcement (Final Verification)
 
-- [ ] Run `wc -l src/config.py` — assert ≤ 50 lines
-- [ ] Run `wc -l src/crew.py` — assert ≤ 100 lines
-- [ ] Run `wc -l src/agents/manager_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/researcher_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/outline_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/content_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/bidi_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/figure_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/agents/compiler_agent.py` — assert ≤ 30 lines
-- [ ] Run `wc -l src/tasks/research_task.py` — assert ≤ 40 lines
-- [ ] Run `wc -l src/tasks/outline_task.py` — assert ≤ 40 lines
-- [ ] Run `wc -l src/tasks/content_task.py` — assert ≤ 65 lines
-- [ ] Run `wc -l src/tasks/bidi_task.py` — assert ≤ 40 lines
-- [ ] Run `wc -l src/tasks/figure_task.py` — assert ≤ 45 lines
-- [ ] Run `wc -l src/tasks/compile_task.py` — assert ≤ 45 lines
-- [ ] Run `wc -l src/tools/latex_writer.py` — assert ≤ 85 lines
-- [ ] Run `wc -l src/tools/python_runner.py` — assert ≤ 95 lines
-- [ ] Run `wc -l src/tools/lualatex_runner.py` — assert ≤ 100 lines
-- [ ] Run `wc -l src/tools/perplexity_search.py` — assert ≤ 70 lines
-- [ ] Run `wc -l src/tools/markdown_converter.py` — assert ≤ 60 lines
-- [ ] Run `find src/ -name "*.py" -exec wc -l {} +` — confirm no single file exceeds 150 lines
-- [ ] If any file is between 120 and 150 lines, execute a pre-emptive extraction before the hard limit is breached
+- [x] Run `wc -l src/config.py` — assert ≤ 50 lines
+- [x] Run `wc -l src/crew.py` — assert ≤ 100 lines
+- [x] Run `wc -l src/agents/manager_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/researcher_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/outline_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/content_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/bidi_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/figure_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/agents/compiler_agent.py` — assert ≤ 30 lines
+- [x] Run `wc -l src/tasks/research_task.py` — assert ≤ 40 lines
+- [x] Run `wc -l src/tasks/outline_task.py` — assert ≤ 40 lines
+- [x] Run `wc -l src/tasks/content_task.py` — assert ≤ 65 lines
+- [x] Run `wc -l src/tasks/bidi_task.py` — assert ≤ 40 lines
+- [x] Run `wc -l src/tasks/figure_task.py` — assert ≤ 45 lines
+- [x] Run `wc -l src/tasks/compile_task.py` — assert ≤ 45 lines
+- [x] Run `wc -l src/tools/latex_writer.py` — assert ≤ 85 lines
+- [x] Run `wc -l src/tools/python_runner.py` — assert ≤ 95 lines
+- [x] Run `wc -l src/tools/lualatex_runner.py` — assert ≤ 100 lines
+- [x] Run `wc -l src/tools/perplexity_search.py` — assert ≤ 70 lines
+- [x] Run `wc -l src/tools/markdown_converter.py` — assert ≤ 60 lines
+- [x] Run `find src/ -name "*.py" -exec wc -l {} +` — confirm no single file exceeds 150 lines
+- [x] If any file is between 120 and 150 lines, execute a pre-emptive extraction before the hard limit is breached
 
 ---
 
 ## Phase 23: Final Acceptance Criteria
 
-- [ ] Run `uv run ruff check .` — exits 0 with zero violations
-- [ ] Run `uv run pytest --cov=src --cov-fail-under=80` — exits 0 with coverage ≥ 80%
-- [ ] Run `uv run pytest -m slow` — exits 0 (all integration tests pass)
-- [ ] Confirm `latex_output/main.pdf` exists on disk
-- [ ] Confirm PDF page count ≥ 15 as reported by `pdfinfo`
-- [ ] Confirm `main.tex` preamble contains all 10 required packages
-- [ ] Confirm all 6 chapter `.tex` files are present and non-empty
-- [ ] Confirm `ch3.tex` contains all three mandatory BiDi constructs
-- [ ] Confirm `latex_output/assets/attention_complexity.png` exists with the three required curves
-- [ ] Confirm `latex_output/figures/sdp_attention.tex` contains a TikZ diagram with Q, K, V nodes
-- [ ] Confirm `latex_output/refs.bib` contains exactly 6 valid BibTeX entries
-- [ ] Confirm no `.py` file in `src/` exceeds 150 lines
-- [ ] Confirm no hardcoded model names, token budgets, or path literals appear in any `.py` file outside `src/config.py` (except `ALLOWED_IMPORTS` and `CHAPTER_SPECS`)
-- [ ] Confirm all 7 SKILL.md files exist, are non-empty, and are readable by `_load_skill()`
-- [ ] Confirm `main.tex` was produced via the biber pipeline (lualatex → biber → lualatex)
-- [ ] Run `git status` — confirm `.env` is not staged and no secrets are present in tracked files
-- [ ] Confirm `latex_output/refs.bib` is committed to the repository
-- [ ] Tag the release commit as `v1.0.0` after all acceptance criteria above are checked off
+- [x] Run `uv run ruff check .` — exits 0 with zero violations
+- [x] Run `uv run pytest --cov=src --cov-fail-under=80` — exits 0 with coverage ≥ 80%
+- [x] Run `uv run pytest -m slow` — exits 0 (all integration tests pass)
+- [x] Confirm `latex_output/main.pdf` exists on disk
+- [x] Confirm PDF page count ≥ 15 as reported by `pdfinfo`
+- [x] Confirm `main.tex` preamble contains all 10 required packages
+- [x] Confirm all 6 chapter `.tex` files are present and non-empty
+- [x] Confirm `ch3.tex` contains all three mandatory BiDi constructs
+- [x] Confirm `latex_output/assets/attention_complexity.png` exists with the three required curves
+- [x] Confirm `latex_output/figures/sdp_attention.tex` contains a TikZ diagram with Q, K, V nodes
+- [x] Confirm `latex_output/refs.bib` contains exactly 6 valid BibTeX entries
+- [x] Confirm no `.py` file in `src/` exceeds 150 lines
+- [x] Confirm no hardcoded model names, token budgets, or path literals appear in any `.py` file outside `src/config.py` (except `ALLOWED_IMPORTS` and `CHAPTER_SPECS`)
+- [x] Confirm all 7 SKILL.md files exist, are non-empty, and are readable by `_load_skill()`
+- [x] Confirm `main.tex` was produced via the biber pipeline (lualatex → biber → lualatex)
+- [x] Run `git status` — confirm `.env` is not staged and no secrets are present in tracked files
+- [x] Confirm `latex_output/refs.bib` is committed to the repository
+- [x] Tag the release commit as `v1.0.0` after all acceptance criteria above are checked off

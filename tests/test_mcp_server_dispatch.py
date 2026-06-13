@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 def _import_server():
     from src.tools.mcp_latex_server import (  # noqa: PLC0415
-        MCPLatexServer,
+        MCPLatexServer,  # noqa: N806
         mcp_latex_server,
     )
 
@@ -106,5 +106,5 @@ def test_dict_input_is_accepted_without_json_parsing():
 
 
 def test_mcp_latex_server_singleton_is_mcp_latex_server_instance():
-    MCPLatexServer, mcp_latex_server = _import_server()
-    assert isinstance(mcp_latex_server, MCPLatexServer)
+    mcp_latex_server_class, mcp_latex_server = _import_server()
+    assert isinstance(mcp_latex_server, mcp_latex_server_class)

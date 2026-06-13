@@ -19,18 +19,18 @@ def test_hitl_enabled_default_is_true(monkeypatch):
 
 def test_build_llm_fast_uses_fast_model(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_fast()
-    assert MockLLM.call_args.kwargs["model"] == settings.LLM_MODEL_FAST
+    assert mock_llm.call_args.kwargs["model"] == settings.LLM_MODEL_FAST
 
 
 def test_build_llm_smart_uses_smart_model(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_smart()
-    assert MockLLM.call_args.kwargs["model"] == settings.LLM_MODEL_SMART
+    assert mock_llm.call_args.kwargs["model"] == settings.LLM_MODEL_SMART
 
 
 def test_prompt_caching_can_be_disabled_via_env(monkeypatch):
@@ -40,20 +40,20 @@ def test_prompt_caching_can_be_disabled_via_env(monkeypatch):
 
 def test_build_llm_passes_cache_header_when_enabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", True)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm()
-    extra = MockLLM.call_args.kwargs.get("additional_params", {})
+    extra = mock_llm.call_args.kwargs.get("additional_params", {})
     header = extra.get("extra_headers", {}).get("anthropic-beta", "")
     assert "prompt-caching" in header
 
 
 def test_build_llm_omits_cache_params_when_disabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm()
-    assert "additional_params" not in MockLLM.call_args.kwargs
+    assert "additional_params" not in mock_llm.call_args.kwargs
 
 
 # ── Cache boundary: all three LLM tiers must propagate the header ────────────
@@ -61,38 +61,38 @@ def test_build_llm_omits_cache_params_when_disabled(monkeypatch):
 
 def test_build_llm_fast_passes_cache_header_when_enabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", True)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_fast()
-    extra = MockLLM.call_args.kwargs.get("additional_params", {})
+    extra = mock_llm.call_args.kwargs.get("additional_params", {})
     header = extra.get("extra_headers", {}).get("anthropic-beta", "")
     assert "prompt-caching" in header
 
 
 def test_build_llm_smart_passes_cache_header_when_enabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", True)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_smart()
-    extra = MockLLM.call_args.kwargs.get("additional_params", {})
+    extra = mock_llm.call_args.kwargs.get("additional_params", {})
     header = extra.get("extra_headers", {}).get("anthropic-beta", "")
     assert "prompt-caching" in header
 
 
 def test_build_llm_fast_omits_cache_params_when_disabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_fast()
-    assert "additional_params" not in MockLLM.call_args.kwargs
+    assert "additional_params" not in mock_llm.call_args.kwargs
 
 
 def test_build_llm_smart_omits_cache_params_when_disabled(monkeypatch):
     monkeypatch.setattr(settings, "PROMPT_CACHING_ENABLED", False)
-    with patch("crewai.LLM") as MockLLM:
-        MockLLM.return_value = MagicMock()
+    with patch("crewai.LLM") as mock_llm:
+        mock_llm.return_value = MagicMock()
         build_llm_smart()
-    assert "additional_params" not in MockLLM.call_args.kwargs
+    assert "additional_params" not in mock_llm.call_args.kwargs
 
 
 # ── __version__ ───────────────────────────────────────────────────────────────

@@ -19,9 +19,9 @@ def test_cli_run_calls_select_topic(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["latex-publisher", "run"])
     with (
         patch("src.cli.select_topic", return_value=_TOPIC_15) as mock_sel,
-        patch("src.cli.LatexPublisherSDK") as MockSDK,
+        patch("src.cli.LatexPublisherSDK") as mock_sdk,
     ):
-        MockSDK.return_value.run.return_value = "done"
+        mock_sdk.return_value.run.return_value = "done"
         main()
     mock_sel.assert_called_once()
 
@@ -30,11 +30,11 @@ def test_cli_run_passes_title_and_focus_to_sdk(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["latex-publisher", "run"])
     with (
         patch("src.cli.select_topic", return_value=_TOPIC_15),
-        patch("src.cli.LatexPublisherSDK") as MockSDK,
+        patch("src.cli.LatexPublisherSDK") as mock_sdk,
     ):
-        MockSDK.return_value.run.return_value = "done"
+        mock_sdk.return_value.run.return_value = "done"
         main()
-    MockSDK.return_value.run.assert_called_once_with(
+    mock_sdk.return_value.run.assert_called_once_with(
         topic=_TOPIC_15.title,
         research_focus=_TOPIC_15.research_focus,
     )
@@ -44,12 +44,12 @@ def test_cli_run_no_args_also_calls_select_topic(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["latex-publisher"])
     with (
         patch("src.cli.select_topic", return_value=_TOPIC_16) as mock_sel,
-        patch("src.cli.LatexPublisherSDK") as MockSDK,
+        patch("src.cli.LatexPublisherSDK") as mock_sdk,
     ):
-        MockSDK.return_value.run.return_value = "done"
+        mock_sdk.return_value.run.return_value = "done"
         main()
     mock_sel.assert_called_once()
-    MockSDK.return_value.run.assert_called_once_with(
+    mock_sdk.return_value.run.assert_called_once_with(
         topic=_TOPIC_16.title,
         research_focus=_TOPIC_16.research_focus,
     )
@@ -61,10 +61,10 @@ def test_cli_run_no_args_also_calls_select_topic(monkeypatch):
 def test_cli_version_does_not_call_select_topic(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["latex-publisher", "--version"])
     with (
-        patch("src.cli.LatexPublisherSDK") as MockSDK,
+        patch("src.cli.LatexPublisherSDK") as mock_sdk,
         patch("src.cli.select_topic") as mock_sel,
     ):
-        MockSDK.return_value.version = "0.1.0"
+        mock_sdk.return_value.version = "0.1.0"
         main()
     mock_sel.assert_not_called()
 

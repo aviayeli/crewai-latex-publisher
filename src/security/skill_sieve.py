@@ -11,7 +11,7 @@ scan that catches the documented ClawHavoc injection taxonomy.
 import re
 
 
-class SkillSieveViolation(Exception):
+class SkillSieveViolationError(Exception):
     """Raised when a skill file fails the security scan."""
 
 
@@ -39,7 +39,7 @@ class SkillSieve:
     """
 
     def validate(self, skill_name: str, content: str) -> None:
-        """Raise :exc:`SkillSieveViolation` if *content* contains an injection.
+        """Raise :exc:`SkillSieveViolationError` if *content* contains an injection.
 
         Args:
             skill_name: Used in error messages to identify the offending file.
@@ -47,7 +47,7 @@ class SkillSieve:
         """
         for pattern in _PATTERNS:
             if pattern.search(content):
-                raise SkillSieveViolation(
+                raise SkillSieveViolationError(
                     f"SkillSieve blocked '{skill_name}': "
                     f"detected injection pattern /{pattern.pattern}/"
                 )
