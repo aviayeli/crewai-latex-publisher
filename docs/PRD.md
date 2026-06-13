@@ -63,7 +63,10 @@ main.py
         │     ├── python_runner.py       — executes graph-generation scripts in sandbox
         │     ├── markdown_converter.py  — pandoc Markdown → LaTeX fragment conversion
         │     └── lualatex_runner.py     — shells out to lualatex, captures log
-        └── config.py                   — pydantic-settings Settings, reads from .env
+        ├── utils/
+        │     ├── mixins.py              — FinOpsMixin: token/call tracking mixin (OOP)
+        │     └── api_gatekeeper.py     — ApiGatekeeper: rate limiting + FinOps for LLM calls
+        └── config.py                   — pydantic-settings Settings; exposes `gatekeeper` singleton
 ```
 
 ### 4.1 Data Flow
@@ -91,6 +94,25 @@ research_task  →  [raw/research_raw.md]
 ```
 
 All intermediate artifacts are plain files under `latex_output/`. Agents communicate **only through files** — no in-memory object passing between CrewAI tasks. This makes every step independently debuggable and re-runnable.
+
+### 4.2 API Gatekeeper (שומר סף) — Mandatory V3 Pattern
+
+All external LLM factory calls (`build_llm`, `build_llm_fast`, `build_llm_smart`) are routed through a single `ApiGatekeeper` singleton (`src/config.py::gatekeeper`). The gatekeeper:
+
+- **Rate limiting**: enforces `GATEKEEPER_RPM` (calls per 60-second window) via a thread-safe token counter; raises `RateLimitExceededError` when exceeded.
+- **FinOps tracking**: inherits `FinOpsMixin` to count guarded calls and accumulate token usage across the pipeline lifetime.
+- **Single choke point**: no code may call `_make_llm()` directly — all paths go through `gatekeeper.guard(lambda: _make_llm(...))`.
+
+### 4.3 Mixin OOP Pattern — Mandatory V3 Pattern
+
+`FinOpsMixin` (`src/utils/mixins.py`) is a reusable mixin that adds token and call-count tracking to any class without requiring inheritance from a heavy base class.
+
+| Class | Inherits FinOpsMixin? | Purpose |
+|-------|-----------------------|---------|
+| `ApiGatekeeper` | ✓ | Tracks how many LLM factory calls were guarded |
+| `LatexPublisherSDK` | ✓ | Exposes per-run token recording for callers |
+
+The mixin follows the Python cooperative multiple-inheritance convention: subclasses call `self._init_finops()` in their `__init__` to initialise counters.
 
 ---
 

@@ -4,6 +4,8 @@ from typing import Any
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.utils.api_gatekeeper import ApiGatekeeper
+
 _PERPLEXITY_DEFAULT_URL = "https://api.perplexity.ai/chat/completions"
 
 
@@ -48,9 +50,13 @@ class Settings(BaseSettings):
     HITL_ENABLED: bool = True
     # Passes anthropic-beta prompt-caching header via LiteLLM additional_params
     PROMPT_CACHING_ENABLED: bool = True
+    # Maximum LLM factory calls per 60-second window enforced by ApiGatekeeper.
+    # High default so local/CI runs are not throttled; lower via .env in production.
+    GATEKEEPER_RPM: int = 10000
 
 
 settings = Settings(_env_file=".env")
+gatekeeper = ApiGatekeeper(calls_per_minute=settings.GATEKEEPER_RPM)
 
 
 def _make_llm(model: str) -> Any:
@@ -76,14 +82,14 @@ def _make_llm(model: str) -> Any:
 
 def build_llm() -> Any:
     """Default LLM — backward-compatible entry point."""
-    return _make_llm(settings.LLM_MODEL)
+    return gatekeeper.guard(lambda: _make_llm(settings.LLM_MODEL))
 
 
 def build_llm_fast() -> Any:
     """Tier-1 LLM (Haiku) for structural agents: outline, compiler, manager."""
-    return _make_llm(settings.LLM_MODEL_FAST)
+    return gatekeeper.guard(lambda: _make_llm(settings.LLM_MODEL_FAST))
 
 
 def build_llm_smart() -> Any:
     """Tier-2 LLM (Sonnet) for reasoning agents: content writer, BiDi validator."""
-    return _make_llm(settings.LLM_MODEL_SMART)
+    return gatekeeper.guard(lambda: _make_llm(settings.LLM_MODEL_SMART))

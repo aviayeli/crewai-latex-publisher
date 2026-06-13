@@ -12,13 +12,14 @@ from src import __version__
 from src.config import settings
 from src.crew import PublisherCrew
 from src.security.skill_sieve import skill_sieve
+from src.utils.mixins import FinOpsMixin
 from src.watchdog.agent_watchdog import watch
 
 # Skills loaded progressively for every topic (always relevant for Hebrew LaTeX output)
 _PROGRESSIVE_SKILLS = ("hebrew_nlp_expert", "latex_bidi_expert")
 
 
-class LatexPublisherSDK:
+class LatexPublisherSDK(FinOpsMixin):
     """Façade over the CrewAI publisher pipeline.
 
     The crew is created lazily on the first `run()` call and reused on
@@ -27,6 +28,7 @@ class LatexPublisherSDK:
     """
 
     def __init__(self) -> None:
+        self._init_finops()
         self._crew: PublisherCrew | None = None
 
     @property
