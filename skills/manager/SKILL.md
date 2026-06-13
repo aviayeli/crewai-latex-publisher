@@ -36,7 +36,7 @@ Assign each task to the sub-agent whose `role` and `tools` best match the task r
 | `content_agent` | Hebrew Academic Writer | `latex_writer_tool`, `markdown_converter_tool` | Write each of the 6 chapter `.md` files and convert them to `.tex` via pandoc |
 | `bidi_agent` | LaTeX BiDi Typesetting Specialist | `latex_writer_tool` | Validate and enforce RTL/LTR correctness across all 6 chapters; insert any missing BiDi constructs in `ch3.tex` |
 | `figure_agent` | Scientific Figure Generator | `python_runner_tool`, `latex_writer_tool` | Execute the matplotlib script for `attention_complexity.png`; write the TikZ SDP attention diagram |
-| `compiler_agent` | LaTeX Build Engineer | `lualatex_runner_tool` | Assemble `main.tex` preamble; run the three-step biber pipeline (lualatex → biber → lualatex); deliver `main.pdf` |
+| `compiler_agent` | LaTeX Build Engineer | `lualatex_runner_tool` | Assemble `main.tex` preamble; run the four-step compilation pipeline (lualatex → biber → lualatex → log parse); deliver `main.pdf` |
 
 The Manager Agent itself has `tools=[]`. It must never appear in the worker `agents=[]` list passed to `Crew(...)`.
 

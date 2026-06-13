@@ -22,19 +22,21 @@ Every action must trace back to a specific task in `docs/TODO.md` or an explicit
 
 ## Part II: Project-Specific Constraints
 
-### 5. All API Calls Must Route Through `ApiGatekeeper`
-No agent or module may call `client.messages.create()` directly. Every Anthropic API call must go through `gatekeeper.call()` as implemented in `src/debate/agents/base.py`. This enforces rate limiting, retry with exponential backoff, and circuit-breaker protection.
+### 5. All LLM Calls Must Route Through CrewAI Agent Framework
+No module may instantiate `anthropic.Anthropic()` and call `.messages.create()` directly. Every LLM call must go through a CrewAI `Agent` whose `llm=` parameter is set from `src/config.py` via `make_llm()`, `make_llm_fast()`, or `make_llm_smart()`. This enforces centralized model selection, rate-limit handling, and the circuit-breaker retry policy defined in `MAX_AGENT_RETRIES`.
 
 **Violation pattern to avoid:**
 ```python
 # FORBIDDEN — direct SDK call
+client = anthropic.Anthropic()
 response = client.messages.create(model=..., messages=...)
 ```
 
 **Required pattern:**
 ```python
-# CORRECT — routed through gatekeeper
-msg = gatekeeper.call(model=..., messages=...)
+# CORRECT — LLM configured via settings, passed to CrewAI Agent
+from src.config import make_llm
+agent = Agent(role=..., llm=make_llm(), ...)
 ```
 
 ### 6. Hard 150-Line Limit Per File
@@ -50,24 +52,25 @@ No implementation code may be written before a failing test exists for it. The w
 Committing implementation code without a corresponding test is a contract violation.
 
 ### 8. No Hardcoded Hyperparameters in Python Files
-All tuneable values (token budgets, round counts, cost coefficients, rate limits, model IDs) must be sourced from `.env` via `src/debate/config.py` (pydantic-settings `Settings` class) or from JSON config files under `config/`. Embedding a magic number directly in a `.py` file is forbidden.
+All tuneable values (token budgets, iteration limits, model IDs, binary paths, output directories) must be sourced from `.env` via `src/config.py` (pydantic-settings `Settings` class). Embedding a magic number directly in a `.py` file is forbidden.
 
 **Violation pattern to avoid:**
 ```python
 # FORBIDDEN — hardcoded hyperparameter
-MAX_ROUNDS = 10
-COST_PER_TOKEN = 3e-6
+MAX_ITER = 15
+LUALATEX_BIN = "lualatex"
 ```
 
 **Required pattern:**
 ```python
-# CORRECT — loaded from settings or config/
-from debate.config import settings
-max_rounds = settings.MAX_ROUNDS
+# CORRECT — loaded from settings
+from src.config import settings
+max_iter = settings.MAX_ITER
+lualatex_bin = settings.LUALATEX_BIN
 ```
 
-### 9. LEDGER_WINDOW Context Truncation Protocol
-Agents must never pass full conversation history to the LLM. Context sent per round is strictly bounded to the last `settings.LEDGER_WINDOW` entries from the opponent's ledger, retrieved via `agent.get_windowed_ledger(settings.LEDGER_WINDOW)` as implemented in `src/debate/engine/pipeline.py`. This prevents O(n²) token growth across rounds and keeps costs deterministic. Do not increase or bypass this window without updating `docs/PRD.md` and adding a sensitivity test.
+### 9. One-Artifact-Per-Task Scope
+Each CrewAI task must produce exactly one discrete output artifact (one chapter `.tex` file, one `book_outline.json`, one compiled `main.pdf`). If a downstream agent needs a prior artifact, it reads from `latex_output/` on disk — it must not reconstruct it from context. This keeps per-task context growth bounded and makes every pipeline step independently re-runnable from its checkpoint file.
 
 ---
 
@@ -77,7 +80,7 @@ Before any commit:
 ```bash
 uv run ruff check .          # must exit 0
 uv run pytest --cov=src      # must exit 0, coverage must not decrease
-wc -l src/debate/**/*.py     # no file may exceed 150 lines
+wc -l src/**/*.py            # no file may exceed 150 lines
 ```
 
 These gates are also enforced by GitHub Actions CI on every push.

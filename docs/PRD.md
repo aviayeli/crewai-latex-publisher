@@ -20,7 +20,7 @@ The core challenge is **coordination**: content agents, formatting agents, and a
 
 | # | Goal | Measure of Success |
 |---|------|--------------------|
-| G1 | Compilable LaTeX output | `lualatex main.tex` exits 0 with no errors on first pass (two-pass for TOC/refs) |
+| G1 | Compilable LaTeX output | `lualatex main.tex` exits 0 with no errors; 4-step pipeline (lualatex → biber → lualatex → log parse) resolves TOC, citations, and cross-references |
 | G2 | Hebrew academic prose | At least 13 of 15 pages contain Hebrew body text |
 | G3 | Valid BiDi mixing | At least one full chapter mixes Hebrew paragraphs with inline English terms, code identifiers, and formulas without bidi warnings |
 | G4 | All required LaTeX elements | Cover, Headers/Footers, TOC, ≥1 Table, ≥1 Image, ≥1 Math formula, ≥1 Python-generated graph, BibTeX bibliography |
@@ -155,7 +155,7 @@ This must be typeset in LaTeX as a numbered `equation` environment.
 | Field | Value |
 |-------|-------|
 | **Role** | LaTeX Build Engineer |
-| **Goal** | Assemble all fragments into `latex_output/main.tex`, run `lualatex` twice (for TOC and cross-references), and confirm `main.pdf` is produced with no errors |
+| **Goal** | Assemble all fragments into `latex_output/main.tex`, run the 4-step LuaLaTeX + Biber pipeline (lualatex → biber → lualatex → log parse), and confirm `main.pdf` is produced with no errors |
 | **Skill** | `skills/lualatex-build/SKILL.md` |
 | **Tools** | `lualatex_runner` |
 | **Output** | `latex_output/main.pdf` |
@@ -225,7 +225,7 @@ Skills are Markdown files under `skills/<name>/SKILL.md`. At crew construction t
 | `skills/hebrew-academic-writing/SKILL.md` | ContentAgent | Hebrew academic register, `\textenglish{}` macro usage, RTL paragraph structure |
 | `skills/lualatex-bidi/SKILL.md` | BidiAgent | LuaLaTeX bidi package rules, common RTL/LTR pitfalls, validation checklist |
 | `skills/matplotlib-tikz/SKILL.md` | FigureAgent | matplotlib best practices (save as PNG 300dpi), TikZ syntax for formula diagrams |
-| `skills/lualatex-build/SKILL.md` | CompilerAgent | `lualatex` CLI flags, two-pass strategy, log parsing, preamble assembly rules |
+| `skills/lualatex-build/SKILL.md` | CompilerAgent | `lualatex` CLI flags, 4-step pipeline strategy, log parsing, preamble assembly rules |
 
 ### 7.2 Skill Loading Contract
 
@@ -266,7 +266,7 @@ Agent(
 
 ### 8.3 `lualatex_runner`
 
-- **Input:** `tex_file: str` (path to `.tex` file), `passes: int = 2`
+- **Input:** `tex_file: str` (path to `.tex` file), `passes: int = 4`
 - **Behavior:** Runs `lualatex --interaction=nonstopmode --output-directory=latex_output <tex_file>` N times. Parses `.log` for `! LaTeX Error` and raises `CompilationError` if found.
 - **Returns:** `{"success": bool, "pdf_path": str, "log_tail": str}`
 
@@ -278,9 +278,9 @@ All tuneable values must be in `.env` and loaded via `src/config.py` (pydantic-s
 
 | Setting | Type | Default | Purpose |
 |---------|------|---------|---------|
-| `LLM_MODEL` | str | `claude-sonnet-4-6` | CrewAI agent LLM |
+| `LLM_MODEL` | str | `anthropic/claude-haiku-4-5-20251001` | CrewAI agent LLM (default); `LLM_MODEL_SMART` uses `anthropic/claude-sonnet-4-6` |
 | `ANTHROPIC_API_KEY` | str | — | API key (never committed) |
-| `MAX_AGENT_RETRIES` | int | 3 | Retry budget per agent task |
+| `MAX_AGENT_RETRIES` | int | 2 | Retry budget per agent task |
 | `PYTHON_RUNNER_TIMEOUT_S` | int | 60 | Timeout for graph generation subprocess |
 | `LUALATEX_BIN` | str | `lualatex` | Path to lualatex binary |
 | `OUTPUT_DIR` | str | `latex_output` | Root output directory |
@@ -369,7 +369,7 @@ No Python source file in `src/` may exceed **150 lines**. If a module approaches
 
 ### 11.3 LaTeX Compilation
 
-- [ ] Two-pass `lualatex` run produces no `! LaTeX Error` lines.
+- [ ] 4-step LuaLaTeX + Biber run produces no `! LaTeX Error` lines.
 - [ ] `\tableofcontents` resolves all chapter entries correctly.
 - [ ] `hyperref` produces working internal links (TOC → chapter, citation → bibliography).
 

@@ -175,7 +175,7 @@ Any such line is extracted and raised as `CompilationError`. Warnings
 When `settings.HITL_ENABLED=True`, the operator is prompted before Step 1:
 
 ```
-[HITL] Press Y to execute the N-step PDF compilation for '<file>' [Y/n]:
+[HITL] The .tex templates are ready. Proceed with LuaLaTeX compilation? (Y/N):
 ```
 
 Entering anything other than `Y` raises `RuntimeError` and aborts compilation.
@@ -241,7 +241,7 @@ Key settings:
 | Variable | Default | Purpose |
 |---|---|---|
 | `LLM_MODEL` | `anthropic/claude-haiku-4-5-20251001` | Model for all agents |
-| `MAX_AGENT_RETRIES` | `3` | Hard circuit breaker (3 strikes = halt) |
+| `MAX_AGENT_RETRIES` | `2` | Hard circuit breaker (3rd attempt = halt) |
 | `MAX_ITER` | `15` | Max tool-call iterations per agent turn |
 | `MAX_TOKENS` | `4096` | Hard output cap per LLM call |
 | `LUALATEX_BIN` | `lualatex` | LuaLaTeX binary path |
