@@ -388,9 +388,12 @@ crewai-latex-publisher/
 │   └── cost_optimization.png     # FinOps architecture diagram
 ├── docs/                         # Design documents
 │   ├── PRD.md                    # Product requirements
+│   ├── PRD_latex_pipeline.md     # LaTeX pipeline product requirements
+│   ├── PLAN.md                   # Implementation plan
 │   └── TODO.md                   # Task backlog
 ├── reports/                      # Generated analysis reports
-│   └── token_economics_analysis.md  # Detailed FinOps analysis
+│   ├── token_economics_analysis.md  # Detailed FinOps analysis
+│   └── QA_Sweep_Report.md        # Quality assurance sweep findings
 ├── tests/                        # 289 tests · 97% coverage
 ├── build_articles.py             # Mass production: assemble + compile 4 articles
 ├── main.py                       # Interactive single-topic pipeline entry point
@@ -580,7 +583,8 @@ No Python source file in `src/` may exceed 150 lines. Verified on every CI push.
 |---|---|---|
 | `src/tools/lualatex_runner.py` | 143 | LaTeX compilation + log parsing |
 | `src/tools/markdown_converter.py` | 109 | Pandoc Markdown → LaTeX |
-| `src/crew.py` | 93 | Agent + task wiring |
+| `src/crew.py` | 100 | Agent + task wiring |
+| `src/config.py` | 89 | pydantic-settings Settings class |
 | `src/tasks/content_task.py` | 59 | 6-chapter content task factory |
 | `src/tasks/figure_embed_task.py` | 51 | Figure embed (post-bidi) |
 | `src/tasks/abstract_task.py` | 42 | Abstract prepend (post-bidi) |
