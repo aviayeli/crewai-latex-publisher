@@ -41,22 +41,27 @@ The core challenge is **coordination**: content agents, formatting agents, and a
 
 ```
 main.py
-  └── PublisherCrew (src/crew.py)
+  └── PublisherCrew (src/crew.py)  — hierarchical process, manager_agent orchestrates
         ├── agents/
-        │     ├── outline_agent.py       — plans chapter structure
-        │     ├── content_agent.py       — writes Hebrew prose per chapter
-        │     ├── bidi_agent.py          — enforces BiDi correctness in LaTeX
-        │     ├── figure_agent.py        — generates Python graph + TikZ math figure
-        │     └── compiler_agent.py      — assembles final .tex, runs lualatex
+        │     ├── manager_agent.py      — Project Manager; orchestrates all workers
+        │     ├── researcher_agent.py   — Perplexity research; produces raw research notes
+        │     ├── outline_agent.py      — plans chapter structure from research
+        │     ├── content_agent.py      — writes Hebrew prose per chapter
+        │     ├── bidi_agent.py         — enforces BiDi correctness in LaTeX
+        │     ├── figure_agent.py       — generates Python graph + TikZ math figure
+        │     └── compiler_agent.py     — assembles final .tex, runs lualatex
         ├── tasks/
+        │     ├── research_task.py
         │     ├── outline_task.py
         │     ├── content_task.py
         │     ├── bidi_task.py
         │     ├── figure_task.py
+        │     ├── figure_embed_task.py
         │     └── compile_task.py
         ├── tools/
         │     ├── latex_writer.py        — writes/appends .tex fragment files
         │     ├── python_runner.py       — executes graph-generation scripts in sandbox
+        │     ├── markdown_converter.py  — pandoc Markdown → LaTeX fragment conversion
         │     └── lualatex_runner.py     — shells out to lualatex, captures log
         └── config.py                   — pydantic-settings Settings, reads from .env
 ```
@@ -64,17 +69,21 @@ main.py
 ### 4.1 Data Flow
 
 ```
-outline_task  →  [book_outline.json]
+research_task  →  [raw/research_raw.md]
+                         │
+                   outline_task  →  [book_outline.json]
                          │
               ┌──────────┴──────────┐
          content_task           figure_task
               │                      │
-   [chapters/*.tex]           [assets/graph.png]
+   [chapters/*.md → *.tex]    [assets/graph.png]
               │                      │
               └──────────┬──────────┘
                     bidi_task
                          │
               [chapters/*.tex  (bidi-validated)]
+                         │
+                figure_embed_task
                          │
                    compile_task
                          │
@@ -89,7 +98,31 @@ All intermediate artifacts are plain files under `latex_output/`. Agents communi
 
 Each agent must load its domain expertise from the corresponding `SKILL.md` file. The skill content is injected as the agent's `backstory` at crew construction time (see §7).
 
-### 5.1 OutlineAgent
+The pipeline uses **7 agents** under a hierarchical CrewAI process: one manager agent that delegates, and six worker agents.
+
+### 5.0 ManagerAgent
+
+| Field | Value |
+|-------|-------|
+| **Role** | Project Manager |
+| **Goal** | Orchestrate the full pipeline: delegate research → outline → content → bidi → figure → compile in the correct dependency order; escalate if any worker trips the circuit breaker |
+| **Skill** | `skills/manager/SKILL.md` |
+| **Tools** | None (manager agent; delegation only) |
+| **Output** | Coordination only — no file artifacts |
+
+The ManagerAgent uses the CrewAI `hierarchical` process mode. All other agents are workers that receive delegated tasks from the manager.
+
+### 5.1 ResearcherAgent
+
+| Field | Value |
+|-------|-------|
+| **Role** | Academic Researcher |
+| **Goal** | Query Perplexity for academic sources on the article topic; write a structured research-notes Markdown file that downstream agents use to ground the generated content |
+| **Skill** | `skills/perplexity-research/SKILL.md` |
+| **Tools** | `perplexity_search`, `latex_writer` |
+| **Output** | `latex_output/raw/research_raw.md` |
+
+### 5.2 OutlineAgent
 
 | Field | Value |
 |-------|-------|
@@ -110,7 +143,7 @@ Each agent must load its domain expertise from the corresponding `SKILL.md` file
 | 5 | מודלי שפה גדולים (LLMs) | GPT-3/4, scaling laws, emergent abilities | 2.5 |
 | 6 | סיכום ומבט לעתיד | Open problems, future directions | 2 |
 
-### 5.2 ContentAgent
+### 5.3 ContentAgent
 
 | Field | Value |
 |-------|-------|
@@ -122,7 +155,7 @@ Each agent must load its domain expertise from the corresponding `SKILL.md` file
 
 The agent receives one chapter spec at a time from `book_outline.json` and writes its `.tex` fragment. It must not include `\begin{document}` — fragments are assembled by the compiler agent.
 
-### 5.3 BidiAgent
+### 5.4 BidiAgent
 
 | Field | Value |
 |-------|-------|
@@ -134,7 +167,7 @@ The agent receives one chapter spec at a time from `book_outline.json` and write
 
 Chapter 3 is designated the **primary BiDi showcase chapter**. The `bidi_task` must verify it contains at least 3 distinct BiDi constructs (mixed paragraph, inline English, LTR math block).
 
-### 5.4 FigureAgent
+### 5.5 FigureAgent
 
 | Field | Value |
 |-------|-------|
@@ -150,7 +183,7 @@ $$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}
 
 This must be typeset in LaTeX as a numbered `equation` environment.
 
-### 5.5 CompilerAgent
+### 5.6 CompilerAgent
 
 | Field | Value |
 |-------|-------|
@@ -221,6 +254,8 @@ Skills are Markdown files under `skills/<name>/SKILL.md`. At crew construction t
 
 | Skill Name | Injected Into | Purpose |
 |------------|---------------|---------|
+| `skills/manager/SKILL.md` | ManagerAgent | Delegation protocol, circuit-breaker escalation rules, hierarchical task ordering |
+| `skills/perplexity-research/SKILL.md` | ResearcherAgent | Perplexity query strategies, citation extraction, research-notes Markdown format |
 | `skills/academic-outline/SKILL.md` | OutlineAgent | Chapter planning conventions, JSON schema for outline |
 | `skills/hebrew-academic-writing/SKILL.md` | ContentAgent | Hebrew academic register, `\textenglish{}` macro usage, RTL paragraph structure |
 | `skills/lualatex-bidi/SKILL.md` | BidiAgent | LuaLaTeX bidi package rules, common RTL/LTR pitfalls, validation checklist |
@@ -404,9 +439,9 @@ The following are explicitly deferred to future work and must not be implemented
 2. `src/tools/latex_writer.py` + `tests/test_latex_writer.py`
 3. `src/tools/python_runner.py` + `tests/test_python_runner.py`
 4. `src/tools/lualatex_runner.py` + `tests/test_lualatex_runner.py`
-5. All five `SKILL.md` files under `skills/`
-6. All five agent modules + `src/crew.py` + `tests/test_crew.py`
-7. All five task modules
+5. All seven `SKILL.md` files under `skills/`
+6. All seven agent modules + `src/crew.py` + `tests/test_crew.py`
+7. All task modules (`research_task`, `outline_task`, `content_task`, `bidi_task`, `figure_task`, `figure_embed_task`, `compile_task`)
 8. `latex_output/refs.bib`
 9. End-to-end `tests/test_integration.py` (marked `slow`)
 10. `main.py` wired to `PublisherCrew().kickoff()`

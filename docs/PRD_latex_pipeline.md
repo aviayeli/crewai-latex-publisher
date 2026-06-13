@@ -185,35 +185,61 @@ Enable via `HITL_ENABLED=true` in `.env`.
 
 ## 6. `main.tex` Document Class and Preamble
 
-```latex
-\documentclass[17pt,a4paper]{extarticle}
+The production preamble lives at `templates/preamble.tex`. It is READ-ONLY during compilation — see `skills/lualatex-build/SKILL.md` for the immutability contract.
 
+```latex
+\documentclass[12pt,a4paper]{report}
 \usepackage{fontspec}
 \usepackage{polyglossia}
-\setmainlanguage{hebrew}
-\setotherlanguage{english}
-
-\usepackage[backend=biber,style=authoryear]{biblatex}
-\addbibresource{refs.bib}
-
-\usepackage{geometry}
+\usepackage[backend=biber,style=numeric,language=english]{biblatex}
+\DeclareLanguageMapping{hebrew}{english}
+\DefineBibliographyStrings{hebrew}{bibliography={ביבליוגרפיה}}
+\usepackage[a4paper,margin=2.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{hyperref}
-\usepackage{tikz}
+\usepackage{float}
 \usepackage{booktabs}
+\setlength{\emergencystretch}{3em}
 \usepackage{xcolor}
-
-\newfontfamily\hebrewfont[Script=Hebrew]{David CLM}
-\setmonofont{Courier New}
-\setsansfont{Arial}
+\usepackage{etoolbox}
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\AfterEndPreamble{%
+  \setlength{\headheight}{15pt}%
+  \pagestyle{fancy}%
+  \fancyhf{}%
+  \fancyhead[L]{\leftmark}%
+  \fancyfoot[C]{\thepage}%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[L]{\leftmark}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+  }%
+}
+\setmainlanguage{hebrew}
+\setotherlanguage{english}
+\setmainfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,ItalicFont=ariali,BoldItalicFont=arialbi,
+  Script=Hebrew,Ligatures=TeX]{Arial}
+\newfontfamily\hebrewfont[Path=/mnt/c/Windows/Fonts/,Extension=.ttf,
+  UprightFont=arial,BoldFont=arialbd,Script=Hebrew,Ligatures=TeX]{Arial}
+\addbibresource{refs.bib}
+\renewcommand{\thesection}{\textenglish{\arabic{chapter}.\arabic{section}}}
+\renewcommand{\thesubsection}{\textenglish{\arabic{chapter}.\arabic{section}.\arabic{subsection}}}
+\renewcommand{\thepage}{\textenglish{\arabic{page}}}
 ```
 
-**Why `extarticle`:** The 17pt font size option is not available in the standard
-`article` class; `extarticle` extends the size range.
+**Why `report` at `12pt`:** The pipeline produces multi-chapter academic documents. The `report` class provides the `\chapter{}` command, a cover-page titlepage environment, and correct chapter-level TOC entries. `extarticle` and `article` lack `\chapter{}` and are incompatible with chapter-based content. `12pt` is the correct body size for A4 academic output.
 
-**Why `polyglossia` not `babel`:** `polyglossia` integrates with LuaLaTeX's
-font renderer for proper RTL shaping. `babel` does not support LuaLaTeX RTL.
+**Why `polyglossia` not `babel`:** `polyglossia` integrates with LuaLaTeX's font renderer for proper RTL shaping. `babel` does not support LuaLaTeX RTL.
+
+**Why `\AfterEndPreamble` for fancyhdr:** `\AtBeginDocument` is forbidden — `polyglossia` resets `\pagestyle` after that hook fires, wiping the fancy header setup. `\AfterEndPreamble` (etoolbox) fires after all package hooks complete, so the fancyhdr configuration survives.
+
+**Why `style=numeric` not `authoryear`:** The Hebrew RTL renderer reverses `(Author, Year)` inline citation text. Numeric citations (`[1]`, `[2]`) are direction-neutral and render correctly in both RTL and LTR paragraphs.
 
 ---
 
