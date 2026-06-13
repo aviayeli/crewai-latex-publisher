@@ -287,6 +287,7 @@ of CLAUDE.md §11.
 | `MAX_AGENT_RETRIES` | `2` | `2` | circuit breaker threshold |
 | `PROMPT_CACHING_ENABLED` | *(not set — uses default)* | `True` | backstory cache active |
 | `WATCHDOG_TIMEOUT` | `3600` | `3600` | hard kill timeout (seconds) |
+| `GATEKEEPER_RPM` | *(not set — uses default)* | `60` | sliding-window rate limiter cap on LLM factory calls per minute |
 
 ---
 
@@ -312,6 +313,7 @@ cp .env.example .env
 | `PROMPT_CACHING_ENABLED` | | `True` | Anthropic prompt-caching header |
 | `PYTHON_RUNNER_TIMEOUT_S` | | `60` | Sandbox timeout for agent Python scripts |
 | `WATCHDOG_TIMEOUT` | | `3600` | Hard kill timeout per agent callable |
+| `GATEKEEPER_RPM` | | `60` | API rate limit (calls per minute) enforced by `ApiGatekeeper` on all LLM factories |
 | `LUALATEX_BIN` | | `lualatex` | LuaLaTeX binary path |
 | `BIBER_BIN` | | `biber` | Biber binary path |
 | `PANDOC_BIN` | | `pandoc` | Pandoc binary path |
@@ -510,6 +512,13 @@ def my_agent_fn(...): ...
 Default timeout: `WATCHDOG_TIMEOUT=3600` seconds (sourced from `settings`).
 Raised from 300s to prevent ch4–ch6 timeout truncation.
 
+**Dual-layer enforcement:** the watchdog is applied at two independent layers so a runaway agent cannot escape even if the outer layer is bypassed:
+
+| Layer | Location | Call |
+|---|---|---|
+| Crew layer | `src/crew.py` — `PublisherCrew.kickoff()` | `watch(crew.kickoff, timeout=settings.WATCHDOG_TIMEOUT)` |
+| SDK layer | `src/sdk/latex_publisher_sdk.py` — `LatexPublisherSDK.run()` | `watch(self._crew.kickoff, timeout=settings.WATCHDOG_TIMEOUT)` |
+
 ### SkillSieve — Injection Blocker
 
 Before any `SKILL.md` content is injected as an agent backstory,
@@ -583,8 +592,8 @@ No Python source file in `src/` may exceed 150 lines. Verified on every CI push.
 |---|---|---|
 | `src/tools/lualatex_runner.py` | 143 | LaTeX compilation + log parsing |
 | `src/tools/markdown_converter.py` | 109 | Pandoc Markdown → LaTeX |
-| `src/crew.py` | 100 | Agent + task wiring |
-| `src/config.py` | 89 | pydantic-settings Settings class |
+| `src/crew.py` | 102 | Agent + task wiring |
+| `src/config.py` | 95 | pydantic-settings Settings class |
 | `src/tasks/content_task.py` | 59 | 6-chapter content task factory |
 | `src/tasks/figure_embed_task.py` | 51 | Figure embed (post-bidi) |
 | `src/tasks/abstract_task.py` | 42 | Abstract prepend (post-bidi) |
