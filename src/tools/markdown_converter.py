@@ -78,6 +78,8 @@ class MarkdownConverterTool(BaseTool):
         text = "\n".join(lines) + "\n"
         for pattern, replacement in self._TEXTENGLISH_PATTERNS:
             text = pattern.sub(replacement, text)
+        # Ensure fancyhdr running headers reset cleanly at each chapter boundary.
+        text = re.sub(r"(?m)^\\chapter\{", r"\\clearpage\n\\chapter{", text)
         tex_path.write_text(text, encoding="utf-8")
 
     def _run(self, md_path: str, tex_path: str) -> str:
