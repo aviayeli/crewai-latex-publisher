@@ -364,8 +364,8 @@ crewai-latex-publisher/
 │   │   └── a2a_protocol.py       # Agent-to-agent protocol
 │   ├── sdk/
 │   │   └── latex_publisher_sdk.py # Public SDK entry point
-│   ├── config.py                 # pydantic-settings Settings class (87 lines)
-│   ├── crew.py                   # Agent + task wiring; kickoff() (93 lines)
+│   ├── config.py                 # pydantic-settings Settings class (89 lines)
+│   ├── crew.py                   # Agent + task wiring; kickoff() (100 lines)
 │   └── topics.py                 # Pre-defined topic registry
 ├── templates/                    # Article blueprints (committed to git)
 │   ├── preamble.tex              # Shared LuaLaTeX preamble — BiDi fix lives here
