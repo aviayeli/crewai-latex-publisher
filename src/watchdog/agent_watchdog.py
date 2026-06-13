@@ -38,25 +38,26 @@ def _run_with_timeout(fn: Callable, args: tuple, kwargs: dict,
         except Exception as e:  # noqa: BLE001
             exc.append(e)
 
+    fn_name = getattr(fn, '__qualname__', None) or getattr(fn, '__name__', repr(fn))
     thread = threading.Thread(target=_target, daemon=True)
-    _log.info("AGENT_START fn=%s timeout=%ds", fn.__qualname__, timeout)
+    _log.info("AGENT_START fn=%s timeout=%ds", fn_name, timeout)
     t0 = time.monotonic()
     thread.start()
     thread.join(timeout=timeout)
 
     elapsed = time.monotonic() - t0
     if thread.is_alive():
-        _log.error("AGENT_TIMEOUT fn=%s elapsed=%.1fs", fn.__qualname__, elapsed)
+        _log.error("AGENT_TIMEOUT fn=%s elapsed=%.1fs", fn_name, elapsed)
         raise WatchdogTimeoutError(
-            f"{fn.__qualname__} exceeded {timeout}s timeout."
+            f"{fn_name} exceeded {timeout}s timeout."
         )
 
     if exc:
         _log.error("AGENT_ERROR fn=%s error=%r elapsed=%.1fs",
-                   fn.__qualname__, exc[0], elapsed)
+                   fn_name, exc[0], elapsed)
         raise exc[0]
 
-    _log.info("AGENT_DONE fn=%s elapsed=%.1fs", fn.__qualname__, elapsed)
+    _log.info("AGENT_DONE fn=%s elapsed=%.1fs", fn_name, elapsed)
     return result[0] if result else None
 
 
