@@ -31,3 +31,7 @@ htmlcov/
 
 # uv
 .uv/
+
+# Generated artifacts — never track
+latex_output/
+WINNING-ex03.pdf
