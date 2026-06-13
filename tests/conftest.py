@@ -35,7 +35,12 @@ def mock_settings() -> Settings:
 def mock_llm_creation():
     mock = MagicMock()
     mock.model = settings.LLM_MODEL
-    with patch("crewai.agent.core.create_llm", return_value=mock):
+    # Bypass the rate-limit check so that test suites with many PublisherCrew()
+    # instantiations don't exhaust the realistic 60-RPM production limit.
+    with (
+        patch("crewai.agent.core.create_llm", return_value=mock),
+        patch("src.config.gatekeeper.guard", side_effect=lambda fn: fn()),
+    ):
         yield
 
 

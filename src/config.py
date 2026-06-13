@@ -51,8 +51,8 @@ class Settings(BaseSettings):
     # Passes anthropic-beta prompt-caching header via LiteLLM additional_params
     PROMPT_CACHING_ENABLED: bool = True
     # Maximum LLM factory calls per 60-second window enforced by ApiGatekeeper.
-    # High default so local/CI runs are not throttled; lower via .env in production.
-    GATEKEEPER_RPM: int = 10000
+    # 60 RPM matches Anthropic Tier-1 limits; override via .env for higher tiers.
+    GATEKEEPER_RPM: int = 60
 
 
 settings = Settings(_env_file=".env")

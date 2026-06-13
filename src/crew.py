@@ -11,6 +11,7 @@ from src.agents.figure_agent import build_figure_agent
 from src.agents.manager_agent import build_manager_agent
 from src.agents.outline_agent import build_outline_agent
 from src.agents.researcher_agent import build_researcher_agent
+from src.config import settings
 from src.security.skill_sieve import skill_sieve
 from src.tasks.abstract_task import build_abstract_task
 from src.tasks.bidi_task import build_bidi_task
@@ -20,6 +21,7 @@ from src.tasks.figure_embed_task import build_figure_embed_task
 from src.tasks.figure_task import build_figure_task
 from src.tasks.outline_task import build_outline_task
 from src.tasks.research_task import build_research_task
+from src.watchdog.agent_watchdog import watch
 
 
 def _load_skill(name: str) -> str:
@@ -97,4 +99,4 @@ class PublisherCrew:
             process=Process.hierarchical,
             verbose=True,
         )
-        return crew.kickoff()
+        return watch(crew.kickoff, timeout=settings.WATCHDOG_TIMEOUT)
