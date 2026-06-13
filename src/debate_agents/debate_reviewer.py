@@ -37,7 +37,7 @@ def _call(system: str, user: str) -> str:
     from src.agents.base import gatekeeper  # lazy: avoids import at module load
     msg = gatekeeper.call(
         model=settings.MODEL_NAME,
-        max_tokens=512,
+        max_tokens=settings.MAX_TOKENS,
         system=system,
         messages=[{"role": "user", "content": user}],
     )
