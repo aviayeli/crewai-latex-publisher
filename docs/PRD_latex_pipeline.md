@@ -268,7 +268,7 @@ Key settings:
 |---|---|---|
 | `LLM_MODEL` | `anthropic/claude-haiku-4-5-20251001` | Model for all agents |
 | `MAX_AGENT_RETRIES` | `2` | Hard circuit breaker (3rd attempt = halt) |
-| `MAX_ITER` | `15` | Max tool-call iterations per agent turn |
+| `MAX_ITER` | `80` | Max tool-call iterations per agent turn |
 | `MAX_TOKENS` | `4096` | Hard output cap per LLM call |
 | `LUALATEX_BIN` | `lualatex` | LuaLaTeX binary path |
 | `BIBER_BIN` | `biber` | Biber binary path |

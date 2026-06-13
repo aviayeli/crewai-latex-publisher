@@ -25,7 +25,7 @@ The core challenge is **coordination**: content agents, formatting agents, and a
 | G3 | Valid BiDi mixing | At least one full chapter mixes Hebrew paragraphs with inline English terms, code identifiers, and formulas without bidi warnings |
 | G4 | All required LaTeX elements | Cover, Headers/Footers, TOC, ≥1 Table, ≥1 Image, ≥1 Math formula, ≥1 Python-generated graph, BibTeX bibliography |
 | G5 | Skills pattern enforced | Every agent's LaTeX/BiDi expertise is injected via a `SKILL.md` file, not baked into the agent backstory string |
-| G6 | All CLAUDE.md constraints satisfied | 150-line cap, TDD, no hardcoded hyperparameters, all API calls via `ApiGatekeeper` |
+| G6 | All CLAUDE.md constraints satisfied | 150-line cap, TDD, no hardcoded hyperparameters, all LLM calls routed through CrewAI Agent framework |
 
 ## 3. Non-Goals
 
@@ -204,20 +204,19 @@ The compiler agent owns the **preamble** (see §6.1). It must not modify chapter
 The `main.tex` preamble must include at minimum:
 
 ```latex
-\documentclass[12pt, a4paper]{book}
+\documentclass[12pt,a4paper]{report}
+\usepackage{fontspec}
 \usepackage{polyglossia}
 \setmainlanguage{hebrew}
 \setotherlanguage{english}
-\usepackage{fontspec}
-\setmainfont{David CLM}           % or Frank Ruehl CLM
-\usepackage{bidi}
+\setmainfont[Script=Hebrew,Ligatures=TeX]{Arial}
 \usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{amsmath, amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{hyperref}
-\usepackage{biblatex}
+\usepackage[backend=biber,style=numeric,language=english]{biblatex}
 \addbibresource{refs.bib}
 ```
 
@@ -336,23 +335,31 @@ crewai-latex-publisher/
 ├── src/
 │   ├── config.py                 # pydantic-settings Settings
 │   ├── crew.py                   # CrewAI Crew definition, skill loading
-│   ├── agents/
+│   ├── agents/                   # 7 agents: 1 manager + 1 researcher + 5 workers
+│   │   ├── manager_agent.py
+│   │   ├── researcher_agent.py
 │   │   ├── outline_agent.py
 │   │   ├── content_agent.py
 │   │   ├── bidi_agent.py
 │   │   ├── figure_agent.py
 │   │   └── compiler_agent.py
-│   ├── tasks/
+│   ├── tasks/                    # 8 modules; content_task spawns 6 → 13 total at runtime
+│   │   ├── abstract_task.py
+│   │   ├── research_task.py
 │   │   ├── outline_task.py
 │   │   ├── content_task.py
 │   │   ├── bidi_task.py
 │   │   ├── figure_task.py
+│   │   ├── figure_embed_task.py
 │   │   └── compile_task.py
 │   └── tools/
 │       ├── latex_writer.py
 │       ├── python_runner.py
+│       ├── markdown_converter.py
 │       └── lualatex_runner.py
 ├── skills/
+│   ├── manager/SKILL.md
+│   ├── perplexity-research/SKILL.md
 │   ├── academic-outline/SKILL.md
 │   ├── hebrew-academic-writing/SKILL.md
 │   ├── lualatex-bidi/SKILL.md

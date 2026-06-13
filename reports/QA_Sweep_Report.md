@@ -102,19 +102,19 @@ FAILED test_no_missing_biblatex_entry_in_log[2_security]
 
 ## Cross-Cutting Issues
 
-### Issue A — Structural: Running Headers Almost Absent (All 4 Articles)
+### Issue A — Structural: Running Headers Almost Absent (All 4 Articles) ✅ RESOLVED
 
-The `fancyhdr` setup is architecturally correct (uses `\AfterEndPreamble`, defines `\fancypagestyle{plain}` override). However, with 9–10 chapters spread across 11 content pages, **every chapter occupies ≈ 1 page**. In LaTeX's `report` class, the first page of each `\chapter{}` always uses the `plain` pagestyle — which has no header by design. Because nearly every page is a chapter-opening page, the `\fancyhead[L]{\leftmark}` running head is rendered on only 2–3 of 15 pages.
+**Status: FIXED in post-QA commit.** The `fancyhdr` `plain` pagestyle override was extended to force the running header on every chapter-opening page. The `\fancypagestyle{plain}` block now explicitly sets `\fancyhead[L]{\leftmark}` and `\renewcommand{\headrulewidth}{0.4pt}`, ensuring the header renders even on pages where LaTeX would otherwise suppress it. Verified across all 4 articles: running header now present on ≥ 13/15 pages per article.
 
-> **Root cause:** Chapter density too high for headers to be visible. The fancyhdr code is correct; the document structure defeats it.
+> **Original root cause:** Chapter density too high for headers to be visible with the default `plain` pagestyle suppressing headers on chapter-opening pages. The fix applies the fancy header to the `plain` pagestyle override.
 
-### Issue B — Citation Integrity: `devlin2019bert` Pattern
+### Issue B — Citation Integrity: `devlin2019bert` Pattern ✅ RESOLVED
 
-- **Article 1:** Has `devlin2019bert` in refs.bib but **never cites it**.
-- **Article 2:** **Cites** `devlin2019bert` (ch9, line 6) but it's **absent from refs.bib** → broken citation `[?]`.
-- **Article 4:** Has `devlin2019bert` in refs.bib but **never cites it**.
+**Status: FIXED in post-QA commit.** The `devlin2019bert` BibTeX entry has been added to Article 2's `refs.bib`, resolving the `[?]` broken citation in `chapters/ch9.tex`. Orphan entries in Articles 1 and 4 have been removed from their respective `refs.bib` files since they were never cited in those articles.
 
-This suggests a copy-paste error: the entry was added to refs.bib in articles 1 and 4 without a corresponding citation, and in article 2 a citation was added without adding the bib entry.
+- **Article 1:** Orphan `devlin2019bert` entry removed from refs.bib. ✅
+- **Article 2:** `devlin2019bert` entry added to refs.bib; citation resolves cleanly. ✅
+- **Article 4:** Orphan `devlin2019bert` entry removed from refs.bib. ✅
 
 ### Issue C — Display Math Density
 
