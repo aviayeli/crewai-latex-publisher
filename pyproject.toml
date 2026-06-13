@@ -42,3 +42,6 @@ select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "N"]
 addopts = "--cov=src -m 'not slow'"
 pythonpath = ["."]
 markers = ["slow: end-to-end tests requiring API key and lualatex binary"]
+
+[tool.coverage.report]
+fail_under = 85

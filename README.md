@@ -12,10 +12,10 @@
 
 A multi-agent CrewAI pipeline that autonomously researches, writes, and compiles a
 typeset Hebrew–English bilingual academic paper — from Perplexity research to a
-19-page LuaLaTeX PDF — with production-grade FinOps, agent safety, and strict
+15-page LuaLaTeX PDF — with production-grade FinOps, agent safety, and strict
 architectural constraints enforced at every layer.
 
-> **Production status:** 289/289 tests · 97% coverage · ruff clean · 19 pages · 0 biber errors
+> **Production status:** 289/289 tests · 97% coverage · ruff clean · 15 pages · 0 biber errors
 
 **Student:** אבי איילי · ID: 300228160 · avi.ayeli@gmail.com
 
@@ -83,7 +83,7 @@ uv run python build_articles.py   # assemble + compile all 4 articles → result
 Perplexity Research → JSON Outline → Markdown Chapters (×6)
     → Figure Generation → BiDi Validation
     → Abstract Prepend → Figure Embed
-    → LuaLaTeX + Biber (3-pass) → 19-page PDF
+    → LuaLaTeX + Biber (4-pass) → 15-page PDF
 ```
 
 ### Task Dependency Graph (13 tasks)
@@ -220,7 +220,7 @@ guaranteeing the header survives.
 
 ![Cost optimization architecture](assets/cost_optimization.png)
 
-> Full analysis: [`docs/token_economics_analysis.md`](docs/token_economics_analysis.md)
+> Full analysis: [`reports/token_economics_analysis.md`](reports/token_economics_analysis.md)
 
 ### Adaptive Model Routing
 
@@ -388,7 +388,8 @@ crewai-latex-publisher/
 │   └── cost_optimization.png     # FinOps architecture diagram
 ├── docs/                         # Design documents
 │   ├── PRD.md                    # Product requirements
-│   ├── TODO.md                   # Task backlog
+│   └── TODO.md                   # Task backlog
+├── reports/                      # Generated analysis reports
 │   └── token_economics_analysis.md  # Detailed FinOps analysis
 ├── tests/                        # 289 tests · 97% coverage
 ├── build_articles.py             # Mass production: assemble + compile 4 articles
@@ -565,7 +566,7 @@ Every push triggers `.github/workflows/ci.yml`:
 | Gate | Command | Requirement |
 |---|---|---|
 | Zero lint violations | `uv run ruff check .` | exit 0 |
-| Coverage threshold | `uv run pytest --cov=src --cov-fail-under=85` | ≥ 85% (current: 97%) |
+| Coverage threshold | `uv run pytest --cov=src --cov-fail-under=85` | ≥ 85% on full suite (including `--slow` integration tests; current: 97%) |
 | 150-line budget | `find src tests -name "*.py" \| xargs wc -l` | no file > 150 lines |
 | PDF artifact | `pdfinfo results/*/main.pdf` → `upload-artifact@v4` | warn if absent |
 
@@ -591,9 +592,9 @@ No Python source file in `src/` may exceed 150 lines. Verified on every CI push.
 ## Testing
 
 ```bash
-uv run ruff check .                          # lint — must exit 0
-uv run pytest --cov=src --cov-fail-under=85  # ≥ 85% coverage (currently 97%)
-find src tests -name "*.py" | xargs wc -l   # no file may exceed 150 lines
+uv run ruff check .                                              # lint — must exit 0
+uv run pytest --cov=src --cov-fail-under=85                     # ≥ 85% (enforced on full suite; add -m slow for integration tests)
+find src tests -name "*.py" | xargs wc -l                       # no file may exceed 150 lines
 ```
 
 ---
@@ -605,7 +606,7 @@ find src tests -name "*.py" | xargs wc -l   # no file may exceed 150 lines
 │                                                 │
 │   crewai-latex-publisher · Production Release  │
 │                                                 │
-│   ✅ PDF compiled          19 pages             │
+│   ✅ PDF compiled          15 pages             │
 │   ✅ Hebrew abstract        ~160 words          │
 │   ✅ 6 chapters             all BiDi-valid      │
 │   ✅ Citations              10 keys, 0 errors   │
