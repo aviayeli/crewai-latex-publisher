@@ -23,7 +23,14 @@ from src.tasks.research_task import build_research_task
 
 
 def _load_skill(name: str) -> str:
-    content = (Path("skills") / name / "SKILL.md").read_text(encoding="utf-8")
+    skill_path = Path("skills") / name / "SKILL.md"
+    try:
+        content = skill_path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(
+            f"Skill file not found: {skill_path}. "
+            f"Ensure 'skills/{name}/SKILL.md' exists relative to the working directory."
+        ) from exc
     return skill_sieve.validate_and_return(name, content)
 
 

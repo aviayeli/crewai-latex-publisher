@@ -126,7 +126,7 @@ class LualatexRunnerTool(BaseTool):
         _latex(tex_file)
 
         if run_biber:
-            stem = f"{settings.OUTPUT_DIR}/{Path(tex_file).stem}"
+            stem = str(Path(settings.OUTPUT_DIR) / Path(tex_file).stem)
             subprocess.run(self._build_biber_cmd(stem), check=True)
 
         for _ in range(passes - 1):

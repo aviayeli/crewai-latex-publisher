@@ -51,15 +51,20 @@ class LatexWriterTool(BaseTool):
     def _run(self, path: str, content: str, mode: str) -> str:
         """Write, append, or prepend *content* to *path*; return confirmation."""
         resolved = self._validate_path(path)
-        resolved.parent.mkdir(parents=True, exist_ok=True)
-        if mode == "prepend":
-            existing = resolved.read_text(encoding="utf-8") if resolved.exists() else ""
-            with open(resolved, "w", encoding="utf-8") as fh:
-                fh.write(content + existing)
-        else:
-            file_mode = "w" if mode == "write" else "a"
-            with open(resolved, file_mode, encoding="utf-8") as fh:
-                fh.write(content)
+        try:
+            resolved.parent.mkdir(parents=True, exist_ok=True)
+            if mode == "prepend":
+                existing = (
+                    resolved.read_text(encoding="utf-8") if resolved.exists() else ""
+                )
+                with open(resolved, "w", encoding="utf-8") as fh:
+                    fh.write(content + existing)
+            else:
+                file_mode = "w" if mode == "write" else "a"
+                with open(resolved, file_mode, encoding="utf-8") as fh:
+                    fh.write(content)
+        except OSError as exc:
+            raise OSError(f"Failed to write '{resolved}': {exc}") from exc
         return f"Written: {resolved}"
 
 

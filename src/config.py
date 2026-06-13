@@ -1,5 +1,7 @@
 """Centralised configuration loaded from environment / .env via pydantic-settings."""
 
+from typing import Any
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _PERPLEXITY_DEFAULT_URL = "https://api.perplexity.ai/chat/completions"
@@ -51,7 +53,7 @@ class Settings(BaseSettings):
 settings = Settings(_env_file=".env")
 
 
-def _make_llm(model: str):
+def _make_llm(model: str) -> Any:
     """Shared LLM factory; injects prompt-caching header when enabled.
 
     Cache boundary: the Anthropic system message (static cacheable prefix)
@@ -72,16 +74,16 @@ def _make_llm(model: str):
     return LLM(**kwargs)
 
 
-def build_llm():
+def build_llm() -> Any:
     """Default LLM — backward-compatible entry point."""
     return _make_llm(settings.LLM_MODEL)
 
 
-def build_llm_fast():
+def build_llm_fast() -> Any:
     """Tier-1 LLM (Haiku) for structural agents: outline, compiler, manager."""
     return _make_llm(settings.LLM_MODEL_FAST)
 
 
-def build_llm_smart():
+def build_llm_smart() -> Any:
     """Tier-2 LLM (Sonnet) for reasoning agents: content writer, BiDi validator."""
     return _make_llm(settings.LLM_MODEL_SMART)

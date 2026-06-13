@@ -67,7 +67,7 @@ def watch(fn: Callable, *args: Any, timeout: int = TIMEOUT_SECONDS,
     return _run_with_timeout(fn, args, kwargs, timeout)
 
 
-def guarded(timeout: int = TIMEOUT_SECONDS):
+def guarded(timeout: int = TIMEOUT_SECONDS) -> Callable[[Callable], Callable]:
     """Decorator: wrap any agent callable with Watchdog protection."""
     def decorator(fn: Callable) -> Callable:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
