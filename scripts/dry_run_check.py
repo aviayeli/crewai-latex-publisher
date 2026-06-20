@@ -95,7 +95,8 @@ def main() -> None:
     # ── 7. active_context shrinks overflow ───────────────────────
     active = c.active_context(sections + ["Chapter 4: Current chapter"], window=1)
     _check(
-        f"active_context(4 sections, window=1) → {len(active)} elements (1 summary + 1)",
+        f"active_context(4 sections, window=1) → {len(active)} elements"
+        " (1 summary + 1)",
         len(active) == 2 and active[-1] == "Chapter 4: Current chapter",
     )
 
