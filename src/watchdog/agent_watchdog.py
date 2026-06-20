@@ -20,8 +20,6 @@ logging.basicConfig(
 )
 _log = logging.getLogger("watchdog")
 
-TIMEOUT_SECONDS: int = getattr(settings, "WATCHDOG_TIMEOUT", 300)
-
 
 class WatchdogTimeoutError(RuntimeError):
     pass
@@ -61,13 +59,15 @@ def _run_with_timeout(fn: Callable, args: tuple, kwargs: dict,
     return result[0] if result else None
 
 
-def watch(fn: Callable, *args: Any, timeout: int = TIMEOUT_SECONDS,
+def watch(fn: Callable, *args: Any, timeout: int | None = None,
           **kwargs: Any) -> Any:
     """Run *fn* with a hard timeout; log all decisions to agent_trace.log."""
+    if timeout is None:
+        timeout = getattr(settings, "WATCHDOG_TIMEOUT", 300)
     return _run_with_timeout(fn, args, kwargs, timeout)
 
 
-def guarded(timeout: int = TIMEOUT_SECONDS) -> Callable[[Callable], Callable]:
+def guarded(timeout: int | None = None) -> Callable[[Callable], Callable]:
     """Decorator: wrap any agent callable with Watchdog protection."""
     def decorator(fn: Callable) -> Callable:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
