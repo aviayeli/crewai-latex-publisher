@@ -34,4 +34,5 @@ htmlcov/
 
 # Generated artifacts — never track
 latex_output/
+results/
 WINNING-ex03.pdf

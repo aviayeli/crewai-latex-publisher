@@ -1,5 +1,6 @@
 """Centralised configuration loaded from environment / .env via pydantic-settings."""
 
+import contextlib
 from typing import Any
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -58,8 +59,56 @@ class Settings(BaseSettings):
     DRY_RUN: bool = False
 
 
-settings = Settings(_env_file=".env")
-gatekeeper = ApiGatekeeper(calls_per_minute=settings.GATEKEEPER_RPM)
+# ── Lazy singletons ──────────────────────────────────────────────────────────
+
+_settings_obj: "Settings | None" = None
+_gatekeeper_obj: "ApiGatekeeper | None" = None
+
+
+def get_settings() -> Settings:
+    """Return (and lazily construct) the Settings singleton."""
+    global _settings_obj
+    if _settings_obj is None:
+        _settings_obj = Settings(_env_file=".env")
+    return _settings_obj
+
+
+class _Lazy:
+    """Defers singleton construction; caches attrs for mock.patch compatibility."""
+
+    def __init__(self, factory: Any) -> None:
+        object.__setattr__(self, "_f", factory)
+
+    @property
+    def __class__(self) -> type:  # type: ignore[override]
+        return type(object.__getattribute__(self, "_f")())
+
+    def __getattr__(self, name: str) -> Any:
+        value = getattr(object.__getattribute__(self, "_f")(), name)
+        object.__setattr__(self, name, value)  # cache → is_local=True for mock.patch
+        return value
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        object.__setattr__(self, name, value)  # update local cache
+        setattr(object.__getattribute__(self, "_f")(), name, value)
+
+    def __delattr__(self, name: str) -> None:
+        for obj in (self, object.__getattribute__(self, "_f")()):
+            with contextlib.suppress(AttributeError):
+                object.__delattr__(obj, name)
+
+
+def _get_gatekeeper() -> ApiGatekeeper:
+    global _gatekeeper_obj
+    if _gatekeeper_obj is None:
+        _gatekeeper_obj = ApiGatekeeper(
+            calls_per_minute=get_settings().GATEKEEPER_RPM
+        )
+    return _gatekeeper_obj
+
+
+settings: Any = _Lazy(get_settings)
+gatekeeper: Any = _Lazy(_get_gatekeeper)
 
 
 def _make_llm(model: str) -> Any:

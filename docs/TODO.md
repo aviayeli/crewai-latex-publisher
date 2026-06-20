@@ -1015,3 +1015,4 @@
 - [x] Run `git status` — confirm `.env` is not staged and no secrets are present in tracked files
 - [x] Confirm `latex_output/refs.bib` is committed to the repository
 - [x] Tag the release commit as `v1.0.0` after all acceptance criteria above are checked off
+- [x] Confirm cover page shows ילייא יבא
