@@ -53,6 +53,9 @@ class Settings(BaseSettings):
     # Maximum LLM factory calls per 60-second window enforced by ApiGatekeeper.
     # 60 RPM matches Anthropic Tier-1 limits; override via .env for higher tiers.
     GATEKEEPER_RPM: int = 60
+    # When True, caps max_tokens=10 on every LLM call so the pipeline can be
+    # smoke-tested end-to-end without meaningful API spend.
+    DRY_RUN: bool = False
 
 
 settings = Settings(_env_file=".env")
@@ -72,7 +75,8 @@ def _make_llm(model: str) -> Any:
     """
     from crewai import LLM  # local import — avoids crewai dep at module load time
 
-    kwargs: dict = {"model": model, "max_tokens": settings.MAX_TOKENS}
+    max_tok = 10 if settings.DRY_RUN else settings.MAX_TOKENS
+    kwargs: dict = {"model": model, "max_tokens": max_tok}
     if settings.PROMPT_CACHING_ENABLED:
         kwargs["additional_params"] = {
             "extra_headers": {"anthropic-beta": "prompt-caching-2024-07-31"}

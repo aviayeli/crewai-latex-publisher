@@ -7,7 +7,7 @@
 ██╔══██║ ██║██║   ██║  ╚════██║██║   ██║██║   ██║
 ██║  ██║ ██║╚██████╔╝       ██║╚██████╔╝╚██████╔╝
 ╚═╝  ╚═╝ ╚═╝ ╚═════╝        ╚═╝ ╚═════╝  ╚═════╝
- VERIFIED 100/100 — Multi-Layer Orchestration
+ VERIFIED 100/100 — Enterprise Production Architecture
 ```
 
 A multi-agent CrewAI pipeline that autonomously researches, writes, and compiles a
@@ -15,7 +15,7 @@ typeset Hebrew–English bilingual academic paper — from Perplexity research t
 15-page LuaLaTeX PDF — with production-grade FinOps, agent safety, and strict
 architectural constraints enforced at every layer.
 
-> **Production status:** 289/289 tests · 97% coverage · ruff clean · 15 pages · 0 biber errors
+> **Production status:** 336/336 tests · 97% coverage · ruff clean · 15 pages · 0 biber errors
 
 **Student:** אבי איילי · ID: 300228160 · avi.ayeli@gmail.com
 
@@ -36,8 +36,113 @@ LuaLaTeX PDF in a single CLI invocation.
 **Key achievements:**
 - Zero BiDi reversal errors on the cover page (see [RTL BiDi Architecture](#rtl-bidi-architecture--cover-page-fix))
 - Zero broken citation keys — auto-sync between agent output and `refs.bib`
-- 97% test coverage, 289 passing tests
+- 97% test coverage, 336 passing tests
 - Adaptive two-tier LLM routing reducing API cost by ~70% vs. all-Sonnet
+- Enterprise FinOps: hybrid `LLMRouter`, `MemoryManagerMixin` Compact pattern, `DRY_RUN` safety flag
+
+---
+
+## Enterprise Production Upgrades (Phase 2)
+
+Three architectural additions bring the pipeline to enterprise production standards,
+drawing from Lecture 8 context-management principles and FinOps best practices.
+
+### Hybrid `LLMRouter` — Cloud vs. Local Cost Optimisation
+
+`src/utils/llm_router.py` implements a three-tier dispatch strategy:
+
+| Task complexity | Backend | Rationale |
+|---|---|---|
+| `COMPLEX` (structure, reasoning, outline) | `build_llm_smart()` → Claude Sonnet | Full reasoning budget for high-value tasks |
+| `SIMPLE` (format, fix syntax, spell-check) | `LocalLLMStub` → Ollama/local endpoint | Zero cloud cost for mechanical formatting |
+| `DRY_RUN=true` (any complexity) | `build_llm_fast()` → Claude Haiku | Smoke-test mode: pipeline runs end-to-end at near-zero cost |
+
+`LLMRouter` inherits `FinOpsMixin` so every routing call is logged in the shared
+FinOps ledger. The `classify(task_description)` method applies a keyword heuristic
+(format / fix / spell / syntax / indent / lint → SIMPLE; everything else → COMPLEX)
+so routing requires zero configuration per task.
+
+```python
+from src.utils.llm_router import LLMRouter, TaskComplexity
+
+router = LLMRouter()
+llm = router.route(router.classify("fix LaTeX syntax in chapter 3"))
+# → LocalLLMStub (free local inference, no API cost)
+
+llm = router.route(router.classify("structure the academic paper outline"))
+# → build_llm_smart() (Claude Sonnet, full reasoning)
+```
+
+`LocalLLMStub` simulates an Ollama connection. Replace it with `ollama.Client` or
+any OpenAI-compatible local endpoint to activate real local inference.
+
+### `MemoryManagerMixin` — Compact Pattern for Long Documents
+
+`src/utils/mixins.py` adds `MemoryManagerMixin` to solve the **"Lost in the Middle"
+phenomenon** — the well-documented failure mode where LLMs ignore information in the
+middle of a long context window.
+
+When generating 6+ chapter LaTeX documents the agent accumulates a growing history
+of completed sections. Without intervention, early chapters are "forgotten" as the
+context grows. The Compact pattern solves this by periodically summarising older
+sections into a short executive summary and keeping only the summary + the active
+working window in the live prompt.
+
+```python
+from src.utils.mixins import MemoryManagerMixin
+
+class ContentAgent(MemoryManagerMixin, ...):
+    def build_context(self, all_chapters: list[str]) -> list[str]:
+        # Keep only summary of chapters 1–4 + the 2 chapters being worked on
+        return self.active_context(all_chapters, window=2)
+```
+
+**Implementation:**
+
+- `compact(sections)` — deterministic, zero-cost: produces a bullet-list executive
+  summary with section count and total word count. No LLM call required.
+- `active_context(full_history, window)` — if `len(history) ≤ window`, returns
+  unchanged. Otherwise: `compact(older sections) + last window sections`.
+
+This keeps per-turn context growth O(window) rather than O(n), preventing the
+context explosion that causes chapter 5–6 content to be silently dropped.
+
+### `DRY_RUN` FinOps Safety Flag
+
+`DRY_RUN: bool = False` in `src/config.py` (settable via `.env`).
+
+When `DRY_RUN=true`:
+- `_make_llm()` caps `max_tokens=10` regardless of `MAX_TOKENS`
+- `LLMRouter.route()` always returns `build_llm_fast()` — the cheapest available LLM
+- The full pipeline can be validated end-to-end for import errors, wiring bugs, and
+  configuration issues **before committing to real API spend**
+
+```bash
+# Run the non-interactive smoke test (9 deterministic checks, zero API calls):
+DRY_RUN=true uv run python scripts/dry_run_check.py
+
+# Or set in .env:
+# DRY_RUN=true
+# uv run python scripts/dry_run_check.py
+```
+
+Expected output:
+```
+[DRY-RUN] crewai-latex-publisher — Pipeline Smoke Test
+=======================================================
+  [OK]  DRY_RUN=True in settings
+  [OK]  LLMRouter.route(COMPLEX) → build_llm_fast() in DRY_RUN
+  [OK]  LLMRouter.route(SIMPLE) → build_llm_fast() in DRY_RUN
+  [OK]  classify('fix LaTeX syntax') → SIMPLE
+  [OK]  classify('structure paper arguments') → COMPLEX
+  [OK]  _make_llm() max_tokens=10 (expected 10)
+  [OK]  compact(3 sections) → summary with count
+  [OK]  active_context(4 sections, window=1) → 2 elements
+  [OK]  LLMRouter FinOps.call_count=2 (expected 2)
+  [OK]  LatexPublisherSDK instantiated (finops=0 tokens)
+=======================================================
+[DRY-RUN COMPLETE] 9/9 checks passed. Zero API budget spent.
+```
 
 ---
 
