@@ -1,3 +1,8 @@
+import os
+
+os.environ.setdefault("ANTHROPIC_API_KEY", "test-dummy-key")
+os.environ.setdefault("PERPLEXITY_API_KEY", "test-dummy-key")
+
 from pathlib import Path
 from unittest import mock
 from unittest.mock import MagicMock, patch
